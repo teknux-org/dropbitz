@@ -27,9 +27,8 @@ public class FileUpload {
 	private static final String CODE = "sma";
 	
 	@GET
-	@Path("/")
-	public Response view() {
-		return Response.ok(new Viewable("/static/index.jsp")).build();
+	public Viewable index() {
+		return new Viewable("index");
 	}
 	
 	@POST
