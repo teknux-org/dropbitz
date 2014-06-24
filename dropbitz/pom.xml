@@ -15,15 +15,15 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler.version}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${maven-compiler.source}</source>
+					<target>${maven-compiler.target}</target>
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>${maven-source.version}</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -36,7 +36,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>${maven-javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -51,7 +51,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.2</version>
+				<version>${maven-shade.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -147,18 +147,32 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.18.1</version>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-multipart</artifactId>
-			<version>1.18.1</version>
+			<version>${jersey.version}</version>
 		</dependency>
 
 	</dependencies>
 
 	<properties>
+		<maven-compiler.source>1.8</maven-compiler.source>
+		<maven-compiler.target>${maven-compiler.source}</maven-compiler.target>
+
 		<maven-compiler.version>2.3.2</maven-compiler.version>
+		<maven-source.version>2.2.1</maven-source.version>
+		<maven-javadoc.version>2.9.1</maven-javadoc.version>
+
+		<maven-shade.version>2.2</maven-shade.version>
+
+		<jersey.version>1.18.1</jersey.version>
 
 		<jetty-bootstrap.version>1.0.1</jetty-bootstrap.version>
 
