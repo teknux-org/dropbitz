@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.rest;
+package org.teknux.dropbitz;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
