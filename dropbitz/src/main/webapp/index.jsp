@@ -4,28 +4,35 @@
         <meta charset="utf-8" />
         <title>Dropbitz</title>
 
-        <script src="/lib/dropzone.js"></script>
+        <link rel="stylesheet" type="text/css" href="/lib/dropzone/dropzone.css" /> 
+        <script src="/lib/dropzone/dropzone.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" /> 
     </head>
     <body>
         <div class="container">
-			Hey
+			<div class="dropzone-previews"></div>
 			
-			<form action="/rest/upload/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
+			<form method="post" action="/rest/upload/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
+				
+				<span>Please enter a code : </span>
+				<input type="text" name="code" />
+				<br />
+				
+				<span>Please enter your name : </span>
+				<input type="text" name="name" />
+				
 				<div class="fallback">
-    				<input name="file" type="file" multiple />
+					<input name="fallback" type="hidden" value="true"/>
+    				<input name="file" type="file" />
+    				<input type="submit" value="Save" />
   				</div>
   			</form>
     	</div>
     </body>
     <script type="text/javascript">
     	Dropzone.options.myAwesomeDropzone = {
-    	      init: function() {
-    		    this.on("sending", function(file, xhr, formData) {
-        		    alert(file.size);
-    		    	  formData.append("filesize", file.size); // Will send the filesize along with the file as POST data.
-    	    	});
-    		  },
-    		  paramName: "file", // The name that will be used to transfer the file
+   	    	  previewsContainer: ".dropzone-previews",
+    		  paramName: "file",
     		  maxFilesize: 20000, // MB
     		  accept: function(file, done) {
     		    if (file.name == "justinbieber.jpg") {
