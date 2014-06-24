@@ -5,7 +5,45 @@
 	id="dropbitz" version="3.0">
 
 	<servlet>
-		<servlet-name>rest.service</servlet-name>
+		<servlet-name>static</servlet-name>
+		<servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
+		<init-param>
+			<param-name>acceptRanges</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dirAllowed</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>redirectWelcome</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxCacheSize</param-name>
+			<param-value>2000000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxCachedFileSize</param-name>
+			<param-value>254000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxCachedFiles</param-name>
+			<param-value>1000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>useFileMappedBuffer</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>static</servlet-name>
+		<url-pattern>/static/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>default</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
@@ -14,7 +52,7 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>rest.service</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 </web-app>

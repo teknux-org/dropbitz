@@ -4,15 +4,15 @@
         <meta charset="utf-8" />
         <title>Dropbitz</title>
 
-        <link rel="stylesheet" type="text/css" href="/lib/dropzone/dropzone.css" /> 
-        <script src="/lib/dropzone/dropzone.js"></script>
-        <link rel="stylesheet" type="text/css" href="/css/style.css" /> 
+        <link rel="stylesheet" type="text/css" href="/static/lib/dropzone/dropzone.css" /> 
+        <script src="/static/lib/dropzone/dropzone.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css" /> 
     </head>
     <body>
         <div class="container">
 			<div class="dropzone-previews"></div>
 			
-			<form method="post" action="/rest/upload/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
+			<form method="post" action="/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
 				
 				<span>Please enter a code : </span>
 				<input type="text" name="code" />

@@ -8,24 +8,32 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
-@Path("upload")
+@Path("/")
 public class FileUpload {
 
 	private static final String DESTINATION_DIRECTORY = "/home/pp/Desktop";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 	private static final String CODE = "sma";
 	
+	@GET
+	@Path("/")
+	public Response view() {
+		return Response.ok(new Viewable("/static/index.jsp")).build();
+	}
+	
 	@POST
-	@Path("file")
+	@Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
     public Response uploadFile(
