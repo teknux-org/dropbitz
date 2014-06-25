@@ -18,8 +18,8 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
-import org.teknux.dropbitz.Application;
 import org.teknux.dropbitz.provider.Authenticated;
+import org.teknux.dropbitz.Application;
 
 @Path("/")
 public class FileUpload {
