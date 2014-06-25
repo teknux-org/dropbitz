@@ -12,12 +12,7 @@
         <div class="container">
 			<div class="dropzone-previews"></div>
 			
-			<form method="post" action="/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
-				
-				<span>Please enter a Secure Id : </span>
-				<input type="text" name="secureId" />
-				<br />
-				
+			<form method="post" action="/upload" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">		
 				<span>Please enter your name : </span>
 				<input type="text" name="name" />
 				
@@ -33,13 +28,7 @@
     	Dropzone.options.myAwesomeDropzone = {
    	    	  previewsContainer: ".dropzone-previews",
     		  paramName: "file",
-    		  maxFilesize: 20000, // MB
-    		  accept: function(file, done) {
-    		    if (file.name == "justinbieber.jpg") {
-    		      done("Naha, you don't.");
-    		    }
-    		    else { done(); }
-    		  }
+    		  maxFilesize: 20000
     		};
         </script>
 </html>

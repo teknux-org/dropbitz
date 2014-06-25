@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.rest;
+package org.teknux.dropbitz.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,47 +16,26 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.glassfish.jersey.server.mvc.Viewable;
-import org.teknux.dropbitz.provider.Authenticated;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.Application;
 
-@Path("/")
-public class FileUpload {
+@Path("/upload")
+public class UploadController {
 
-	private static final String DESTINATION_DIRECTORY = "/home/pp/Desktop";
+	private final Logger logger = LoggerFactory.getLogger(Application.class);
+	
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 	
-	@GET
-	public Viewable index() {
-		return new Viewable("index");
-	}
-
-    @GET
-    @Path("/secured")
-    @Authenticated
-    public Viewable secured() {
-        return new Viewable("index");
-    }
-	
 	@POST
-	@Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
     public Response uploadFile(
             @FormDataParam("file") final InputStream inputStream,
             @FormDataParam("file") final FormDataContentDisposition formDataContentDisposition,
-            @FormDataParam("secureId") final String secureId,
             @FormDataParam("name") final String name,
             @FormDataParam("fallback") final Boolean fallback) {
-		
-		if (secureId.isEmpty() || ! secureId.equals(Application.getConfigurationFile().getSecureId())) {
-			if (fallback != null) {
-				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("Secure Id Incorrect<br /><a href=\"/\">Retry</a>").build();
-			} else {
-				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("{\"error\":\"Secure Id incorrect\"}").build();
-			}
-		}
-		
+			
 		if (name.isEmpty()) {
 			if (fallback != null) {
 				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("Name missing<br /><a href=\"/\">Retry</a>").build();
@@ -78,10 +56,11 @@ public class FileUpload {
     			}
     		}
         	
-        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(DESTINATION_DIRECTORY, fileName);
+        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(Application.getConfigurationFile().getDirectory().getAbsolutePath(), fileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error("Can't get file", e);
+        	
             if (fallback != null) {
             	return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity("Can't get file").build();
             } else {

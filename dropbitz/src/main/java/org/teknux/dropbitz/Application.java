@@ -24,6 +24,13 @@ public class Application {
 			System.exit(1);
 		}
 		
+		try {
+			checkConfigurationFile(configurationFile);
+		} catch (ConfigurationException e) {
+			LOGGER.error("Bad configuration", e);
+			System.exit(1);
+		}
+		
 		LOGGER.debug("Starting Self...");
 		try {
 			JettyBootstrap.startSelf();
@@ -33,6 +40,13 @@ public class Application {
 		}
 	}
 	
+	private void checkConfigurationFile(ConfigurationFile configurationFile) throws ConfigurationException {
+		if (! configurationFile.getDirectory().isDirectory() || ! configurationFile.getDirectory().canWrite()) {
+			throw new ConfigurationException("Can't write in Directory");
+		}
+		
+	}
+
 	public static ConfigurationFile getConfigurationFile() {
 		return configurationFile;
 	}
