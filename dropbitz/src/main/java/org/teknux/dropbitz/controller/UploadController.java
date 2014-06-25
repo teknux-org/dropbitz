@@ -19,6 +19,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.Application;
+import org.teknux.dropbitz.provider.Authenticated;
 
 @Path("/upload")
 public class UploadController {
@@ -30,6 +31,7 @@ public class UploadController {
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
+	@Authenticated
     public Response uploadFile(
             @FormDataParam("file") final InputStream inputStream,
             @FormDataParam("file") final FormDataContentDisposition formDataContentDisposition,
@@ -38,7 +40,7 @@ public class UploadController {
 			
 		if (name.isEmpty()) {
 			if (fallback != null) {
-				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("Name missing<br /><a href=\"/\">Retry</a>").build();
+				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("Name missing<br /><a href=\"/drop\">Retry</a>").build();
 			} else {
 				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("{\"error\":\"Name missing\"}").build();
 			}
@@ -50,7 +52,7 @@ public class UploadController {
         try { 	
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			if (fallback != null) {
-    				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("File missing<br /><a href=\"/\">Retry</a>").build();
+    				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("File missing<br /><a href=\"/drop\">Retry</a>").build();
     			} else {
     				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("{\"error\":\"File missing\"}").build();
     			}
@@ -69,7 +71,7 @@ public class UploadController {
         }
 
         if (fallback != null) {
-        	return Response.status(Response.Status.OK.getStatusCode()).entity("File uploaded !<br /><a href=\"/\">Other file ?</a>").build();
+        	return Response.status(Response.Status.OK.getStatusCode()).entity("File uploaded !<br /><a href=\"/drop\">Other file ?</a>").build();
         } else {
         	return Response.status(Response.Status.OK.getStatusCode()).build();
         }
