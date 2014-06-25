@@ -7,7 +7,6 @@ import org.teknux.dropbitz.provider.AuthenticationFilter;
 public class JerseyResourceConfig extends ResourceConfig {
 
     public JerseyResourceConfig() {
-        super(MultiPartFeature.class);
-        register(AuthenticationFilter.class);
+        super(MultiPartFeature.class, AuthenticationFilter.class);
     }
 }

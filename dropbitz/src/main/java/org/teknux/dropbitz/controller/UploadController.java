@@ -6,6 +6,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -29,6 +32,12 @@ public class UploadController {
 	private final Logger logger = LoggerFactory.getLogger(Application.class);
 	
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
+	private static String HTML_NEWLINE = "<br />";
+	private static String HTML_BACKLINK = "<a href=\"/drop\">Back</a>";
+	
+	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
+	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can't get file";
+	private static String SUCCESS_MESSAGE_FILE_UPLOADED = "File uploaded";
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -40,42 +49,33 @@ public class UploadController {
             @FormDataParam("name") final String name,
             @FormDataParam("fallback") final Boolean fallback) {
 			
-		if (name.isEmpty()) {
-			if (fallback != null) {
-				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("Name missing<br /><a href=\"/drop\">Retry</a>").build();
-			} else {
-				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("{\"error\":\"Name missing\"}").build();
-			}
-		}
-		
     	String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
-    	String fileName = name + "-" + date + "-" + formDataContentDisposition.getFileName();
+    	String fileName = date + (name.isEmpty()?"":"-" + name) + "-" + formDataContentDisposition.getFileName();
     	
         try { 	
     		if (formDataContentDisposition.getFileName().isEmpty()) {
-    			if (fallback != null) {
-    				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("File missing<br /><a href=\"/drop\">Retry</a>").build();
-    			} else {
-    				return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity("{\"error\":\"File missing\"}").build();
-    			}
+    			return getResponse(fallback, ERROR_MESSAGE_FILE_MISSING, Status.BAD_REQUEST);
     		}
-        	
+    		       	
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(getConfigurationFile().getDirectory().getAbsolutePath(), fileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
-        	logger.error("Can't get file", e);
-        	
-            if (fallback != null) {
-            	return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity("Can't get file").build();
-            } else {
-            	return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity("{\"error\":\"Can't get file\"}").build();
-            }
+        	logger.error(ERROR_MESSAGE_FILE_IOEXCEPTION, e);
+        
+        	return getResponse(fallback, ERROR_MESSAGE_FILE_IOEXCEPTION, Status.INTERNAL_SERVER_ERROR);
         }
 
-        if (fallback != null) {
-        	return Response.status(Response.Status.OK.getStatusCode()).entity("File uploaded !<br /><a href=\"/drop\">Other file ?</a>").build();
-        } else {
-        	return Response.status(Response.Status.OK.getStatusCode()).build();
-        }
+        return getResponse(fallback, SUCCESS_MESSAGE_FILE_UPLOADED, Status.OK);
     }
+	
+	private Response getResponse(Boolean fallback, String message, Status status) {
+		if (fallback != null && fallback) {
+			return Response.status(status.getStatusCode()).entity(message + HTML_NEWLINE + HTML_BACKLINK).build();	
+		} else {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("error", message);
+		    
+		    return Response.status(status.getStatusCode()).entity(map).build();	
+		}
+	}
 }
