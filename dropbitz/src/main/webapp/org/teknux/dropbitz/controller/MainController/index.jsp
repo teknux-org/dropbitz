@@ -1,7 +1,9 @@
 <t:layout>
-	<div class="container">
+	<div class="blocShadow">
 		<c:if test="${(not empty model) && (model == true)}">
-			Incorrect Secure Id
+			<span class="errorMessage">
+				Incorrect Secure Id
+			</span>
 		</c:if>
 
 		<form method="post" action="/authenticate">
