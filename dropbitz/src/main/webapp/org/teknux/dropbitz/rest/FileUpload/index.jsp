@@ -14,8 +14,8 @@
 			
 			<form method="post" action="/file" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data">
 				
-				<span>Please enter a code : </span>
-				<input type="text" name="code" />
+				<span>Please enter a Secure Id : </span>
+				<input type="text" name="secureId" />
 				<br />
 				
 				<span>Please enter your name : </span>

@@ -18,18 +18,26 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.teknux.dropbitz.Application;
+import org.teknux.dropbitz.provider.Authenticated;
 
 @Path("/")
 public class FileUpload {
 
 	private static final String DESTINATION_DIRECTORY = "/home/pp/Desktop";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
-	private static final String CODE = "sma";
 	
 	@GET
 	public Viewable index() {
 		return new Viewable("index");
 	}
+
+    @GET
+    @Path("/secured")
+    @Authenticated
+    public Viewable secured() {
+        return new Viewable("index");
+    }
 	
 	@POST
 	@Path("/file")
@@ -38,15 +46,15 @@ public class FileUpload {
     public Response uploadFile(
             @FormDataParam("file") final InputStream inputStream,
             @FormDataParam("file") final FormDataContentDisposition formDataContentDisposition,
-            @FormDataParam("code") final String code,
+            @FormDataParam("secureId") final String secureId,
             @FormDataParam("name") final String name,
             @FormDataParam("fallback") final Boolean fallback) {
 		
-		if (code.isEmpty() || ! code.equals(CODE)) {
+		if (secureId.isEmpty() || ! secureId.equals(Application.getConfigurationFile().getSecureId())) {
 			if (fallback != null) {
-				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("Code incorrect<br /><a href=\"/\">Retry</a>").build();
+				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("Secure Id Incorrect<br /><a href=\"/\">Retry</a>").build();
 			} else {
-				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("{\"error\":\"Code incorrect\"}").build();
+				return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).entity("{\"error\":\"Secure Id incorrect\"}").build();
 			}
 		}
 		
