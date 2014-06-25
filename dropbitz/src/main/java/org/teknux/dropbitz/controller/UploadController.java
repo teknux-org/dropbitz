@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.Application;
 import org.teknux.dropbitz.provider.Authenticated;
 
+import static org.teknux.dropbitz.Application.getConfigurationFile;
+
 @Path("/upload")
 public class UploadController {
 
@@ -58,7 +60,7 @@ public class UploadController {
     			}
     		}
         	
-        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(Application.getConfigurationFile().getDirectory().getAbsolutePath(), fileName);
+        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(getConfigurationFile().getDirectory().getAbsolutePath(), fileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
         	logger.error("Can't get file", e);

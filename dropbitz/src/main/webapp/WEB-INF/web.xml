@@ -25,7 +25,7 @@
 		</init-param>
 		 <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.teknux.dropbitz.MyApplication</param-value>
+            <param-value>org.teknux.dropbitz.config.JerseyResourceConfig</param-value>
         </init-param>
 	</filter>
 

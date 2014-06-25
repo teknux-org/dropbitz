@@ -1,12 +1,12 @@
-package org.teknux.dropbitz;
+package org.teknux.dropbitz.config;
 
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.teknux.dropbitz.provider.AuthenticationFilter;
 
-public class MyApplication extends ResourceConfig {
+public class JerseyResourceConfig extends ResourceConfig {
 
-    public MyApplication() {
+    public JerseyResourceConfig() {
         super(MultiPartFeature.class);
         register(AuthenticationFilter.class);
     }
