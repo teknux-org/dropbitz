@@ -12,7 +12,10 @@ import org.teknux.jettybootstrap.JettyBootstrapException;
 
 public class Application {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
+    private static int EXIT_CODE_CONFIG_ERROR = 1;
+    private static int EXIT_CODE_JETTY_STARTUP_ERROR = 2;
+
+	private static Logger logger = LoggerFactory.getLogger(Application.class);
 	
 	private static ConfigurationFile configurationFile = null;
 	
@@ -20,23 +23,23 @@ public class Application {
 		try {
 			configurationFile = ConfigurationFileFactory.getConfiguration();
 		} catch (IOException | ConfigurationException | IllegalArgumentException e) {
-			LOGGER.error("Configuration file error", e);
-			System.exit(1);
+			logger.error("Configuration file error", e);
+			System.exit(EXIT_CODE_CONFIG_ERROR);
 		}
 		
 		try {
 			checkConfigurationFile(configurationFile);
 		} catch (ConfigurationException e) {
-			LOGGER.error("Bad configuration", e);
+			logger.error("Bad configuration", e);
 			System.exit(1);
 		}
 		
-		LOGGER.debug("Starting Self...");
+		logger.debug("Starting Self...");
 		try {
 			JettyBootstrap.startSelf();
 		} catch (JettyBootstrapException e) {
-			LOGGER.error("Internal Server Error", e);
-			System.exit(1);
+			logger.error("Internal Server Error", e);
+			System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
 		}
 	}
 	
