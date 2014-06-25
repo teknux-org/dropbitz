@@ -12,7 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
-import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
 @Path("/")
@@ -25,6 +24,10 @@ public class MainController {
 	
 	@GET
 	public Viewable index() {
+		
+		if (AuthenticationHelper.isSecured(request)) {
+			return new Viewable("drop");
+		}
 
 		Boolean retry = (Boolean) request.getSession().getAttribute(SESSION_ATTRIBUTE_IS_RETRIED);
 		if (retry != null && retry) {
@@ -34,22 +37,14 @@ public class MainController {
 		return new Viewable("index", retry);
 	}
 	
-	@GET
-	@Path("drop")
-	@Authenticated
-	public Viewable drop() {
-		return new Viewable("drop");
-	}
-	
 	@POST
 	@Path("authenticate")
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
-		if (AuthenticationHelper.authenticate(request, secureId)) {
-			return Response.seeOther(new URI("/drop")). build();
-		} else {
+		if (! AuthenticationHelper.authenticate(request, secureId)) {
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_RETRIED, Boolean.TRUE);
-			return Response.seeOther(new URI("/")).build();
 		}
+
+		return Response.seeOther(new URI("/")).build();
     }
 }

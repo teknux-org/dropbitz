@@ -33,7 +33,7 @@ public class UploadController {
 	
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 	private static String HTML_NEWLINE = "<br />";
-	private static String HTML_BACKLINK = "<a href=\"/drop\">Back</a>";
+	private static String HTML_BACKLINK = "<a href=\"/\">Back</a>";
 	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
 	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can't get file";
