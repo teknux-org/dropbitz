@@ -7,9 +7,9 @@
 		<meta charset="utf-8">
 		<title>DropBitz</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link href="/static/lib.bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
-			<script src="/static/lib.html5shiv/html5shiv.min.js"></script>
+			<script src="/static/lib/html5shiv/html5shiv.min.js"></script>
 		<![endif]-->
 		<link href="/static/css/style.css" rel="stylesheet">
 	</head>
@@ -54,8 +54,8 @@
       </div>
 
 </div>
-	<script src="/static/lib.jquery/2.1.1/jquery.min.js"></script>
-	<script src="/static/lib.bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/lib/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
 
 	</body>
 </html>
