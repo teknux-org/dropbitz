@@ -11,6 +11,8 @@ import org.teknux.dropbitz.config.ConfigurationFileFactory;
 import org.teknux.dropbitz.config.ConfigurationValidationException;
 import org.teknux.jettybootstrap.JettyBootstrap;
 import org.teknux.jettybootstrap.JettyBootstrapException;
+import org.teknux.jettybootstrap.configuration.JettyConfiguration;
+import org.teknux.jettybootstrap.configuration.JettyConnector;
 
 public class Application {
 
@@ -31,7 +33,16 @@ public class Application {
             checkConfigurationFile(configurationFile);
 
             logger.debug("Starting Application...");
-            JettyBootstrap.startSelf();
+            JettyConfiguration jettyConfiguration = new JettyConfiguration();
+            if (configurationFile.isSsl()) {
+            	jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
+            	jettyConfiguration.setSslPort(configurationFile.getPort());	
+            } else {
+            	jettyConfiguration.setPort(configurationFile.getPort());
+            }
+            JettyBootstrap jettyBootstrap = new JettyBootstrap(jettyConfiguration);
+            jettyBootstrap.addSelf().startServer();
+           
 		} catch (ConfigurationValidationException e) {
             logger.error("Configuration validation error", e);
             System.exit(EXIT_CODE_CONFIG_VALIDATION_ERROR);

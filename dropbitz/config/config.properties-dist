@@ -1,2 +1,4 @@
 secureId=dropbitz
 directory=/tmp
+;port=8080
+;ssl=false
