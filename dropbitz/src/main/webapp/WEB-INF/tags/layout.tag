@@ -8,7 +8,7 @@
 
         <link rel="stylesheet" type="text/css" href="/static/lib/dropzone/dropzone.css" /> 
         <script src="/static/lib/dropzone/dropzone.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/css/style.css" /> 
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
     </head>
     <body>
         <jsp:doBody/>
