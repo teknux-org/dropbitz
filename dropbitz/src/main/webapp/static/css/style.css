@@ -1,20 +1,64 @@
-.blocShadow
-{
-	padding: 10px;
-	margin-top: 50px;
-    background-color: white;
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px 2px #999999;
+html,body {
+  height:100%;
 }
 
-.errorMessage
-{
-    background: url('/static/images/error.png') no-repeat left center;
-    padding: 2px 2px 2px 25px;
-    color: #C00000;
-    font-weight: bold;
-    display: inline-block;
+.landing-page h1 {
+  font-family: Arial,sans-serif
+  font-size:80px;
+  color:#1196CA;
+}
+
+.landing-page-lead {
+	color:#5AD7F7;
+}
+
+
+/* Custom container */
+.container-full {
+  margin: 0 auto;
+  width: 100%;
+  min-height:100%;
+  background-color:#2A718D;
+  color:#eee;
+  overflow:hidden;
+}
+
+.container-full a {
+  color:#efefef;
+  text-decoration:none;
+}
+
+.container-full input {
+height: 45px;
+}
+
+.v-center {
+  margin-top:7%;
+}
+
+.bs-callout-danger {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #F1D9D9;
+    border-color: #BD302C;
+    border-left: 5px solid #BD302C;
+    border-right: 5px solid #BD302C;
+
+    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.bs-callout-danger h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #BD302C;
+    font-weight:bold;
+}
+
+.bs-callout-danger p {
+    margin-bottom: 0;
+    color: #BD302C;
 }
