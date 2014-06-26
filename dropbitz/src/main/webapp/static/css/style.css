@@ -12,6 +12,14 @@ html,body {
 	color:#5AD7F7;
 }
 
+.container-drop-header {
+  min-height: 64px;
+}
+
+.container-drop {
+  background-color:#2A718D;
+  color:#eee;
+}
 
 /* Custom container */
 .container-full {
@@ -29,7 +37,7 @@ html,body {
 }
 
 .container-full input {
-height: 45px;
+ height: 45px;
 }
 
 .v-center {
