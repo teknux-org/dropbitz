@@ -8,7 +8,7 @@
 	
 			<div class="fallback">
 				<input name="fallback" type="hidden" value="true" /> <input
-					name="file" type="file" /> <input type="submit" value="Save" />
+					name="file" type="file" /> <input type="submit" value="Upload" />
 			</div>
 		</form>
 	</div>

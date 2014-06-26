@@ -59,9 +59,12 @@ public class ConfigurationFileFactory {
 			logger.debug("Check if config file exists in resource [{}]...", RESOURCE_SEPARATOR + CONFIG_FILENAME);
 				
 			inputStream = ConfigurationFileFactory.class.getResourceAsStream(RESOURCE_SEPARATOR + CONFIG_FILENAME);
-			if (inputStream == null) { //If not, Create file in jar directory
+			if (inputStream != null) {
+				logger.warn("Use resource config");				
+			} else { //If not, Create file in jar directory
 				logger.debug("Create config file exists in jar directory [{}]...", file.getPath());
 				try {
+					logger.warn("File does not exits. Create...");
 					FileUtils.copyURLToFile(ConfigurationFileFactory.class.getResource(RESOURCE_SEPARATOR + CONFIG_FILENAME_DIST), file);
 					inputStream = new FileInputStream(file);
 				} catch (IOException e) {

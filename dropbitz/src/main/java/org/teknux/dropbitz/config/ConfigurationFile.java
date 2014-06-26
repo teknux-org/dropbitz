@@ -8,6 +8,7 @@ import org.skife.config.Default;
 public interface ConfigurationFile {
 
 	@Config("secureId")
+	@Default("")
 	String getSecureId();
 	
 	@Config("directory")

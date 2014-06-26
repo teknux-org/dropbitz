@@ -15,7 +15,7 @@ public class AuthenticationHelper {
     public static boolean isSecured(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Boolean isSecured = (Boolean) session.getAttribute(SESSION_ATTRIBUTE_IS_SECURED);
-        return isSecured != null && isSecured;
+        return (isSecured != null && isSecured) || Application.getConfigurationFile().getSecureId().isEmpty();
     }
 
     public static boolean authenticate(HttpServletRequest request, String secureId) {
