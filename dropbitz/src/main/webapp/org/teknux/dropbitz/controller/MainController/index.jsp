@@ -1,3 +1,5 @@
+<%@ page import="org.teknux.dropbitz.*" %>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -18,7 +20,7 @@
 
         <div class="col-lg-12 text-center v-center">
 
-          <h1>DropBitz</h1>
+          <h1><%= Application.getConfigurationFile().getTitle() %></h1>
           <p class="landing-page-lead">- Enter your Secure ID to start sharing files -</p>
 
           <br><br><br>
