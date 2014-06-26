@@ -20,4 +20,8 @@ public interface ConfigurationFile {
 	@Config("port")
 	@Default("8080")
 	int getPort();
+	
+	@Config("title")
+	@Default("DropBitz")
+	String getTitle();
 }

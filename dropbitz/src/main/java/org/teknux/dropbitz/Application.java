@@ -1,6 +1,5 @@
 package org.teknux.dropbitz;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class Application {
 		} catch (ConfigurationValidationException e) {
             logger.error("Configuration validation error", e);
             System.exit(EXIT_CODE_CONFIG_VALIDATION_ERROR);
-        } catch (IOException | ConfigurationException | IllegalArgumentException e) {
+        } catch (ConfigurationException | IllegalArgumentException e) {
 			logger.error("Configuration file error", e);
 			System.exit(EXIT_CODE_CONFIG_ERROR);
 		} catch (JettyBootstrapException e) {
@@ -55,7 +54,7 @@ public class Application {
 		}
 	}
 
-    protected ConfigurationFile loadConfiguration() throws IOException, ConfigurationException {
+    protected ConfigurationFile loadConfiguration() throws ConfigurationException {
         return ConfigurationFileFactory.getConfiguration();
     }
 	
