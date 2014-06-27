@@ -26,7 +26,7 @@ public class MainController {
 	public Viewable index() {
 		
 		if (AuthenticationHelper.isSecured(request)) {
-			return new Viewable("drop");
+			return new Viewable("/views/main/drop");
 		}
 
 		Boolean retry = (Boolean) request.getSession().getAttribute(SESSION_ATTRIBUTE_IS_RETRIED);
@@ -34,7 +34,7 @@ public class MainController {
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_RETRIED, Boolean.FALSE);
 		}
                 
-		return new Viewable("index", retry);
+		return new Viewable("/views/main/auth", retry);
 	}
 	
 	@POST

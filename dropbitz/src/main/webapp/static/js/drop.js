@@ -1,5 +1,5 @@
-Dropzone.options.myAwesomeDropzone = {
+Dropzone.options.dropzone = {
 	previewsContainer : ".dropzone-previews",
 	paramName : "file",
-	maxFilesize : 20000
+	maxFilesize : 100000
 };

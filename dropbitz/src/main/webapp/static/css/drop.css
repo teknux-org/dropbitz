@@ -1,0 +1,21 @@
+.container-drop-header {
+	min-height: 64px;
+}
+
+.container-drop {
+	background-color: #2A718D;
+}
+
+#dropzone {
+	width: 340px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.fallback {
+	color: #eee;
+}
+
+.fallback input {
+	margin: 10px;
+}
