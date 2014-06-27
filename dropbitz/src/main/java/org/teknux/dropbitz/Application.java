@@ -60,7 +60,7 @@ public class Application {
 	
 	protected void checkConfigurationFile(ConfigurationFile configurationFile) throws ConfigurationValidationException {
 		if (! configurationFile.getDirectory().isDirectory() || ! configurationFile.getDirectory().canWrite()) {
-			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{}]", configurationFile.getDirectory().getPath()));
+			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configurationFile.getDirectory().getPath()));
 		}
 		
 	}

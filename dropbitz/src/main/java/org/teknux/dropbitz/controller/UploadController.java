@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.Application;
+import org.teknux.dropbitz.Mail;
 import org.teknux.dropbitz.model.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
 
@@ -32,14 +33,19 @@ import static org.teknux.dropbitz.Application.getConfigurationFile;
 @Path("/upload")
 public class UploadController {
 
-	private final Logger logger = LoggerFactory.getLogger(Application.class);
+	private final Logger logger = LoggerFactory.getLogger(UploadController.class);
 	
 	private static final String CHARSET_UTF8 = "UTF-8";
 	private static final String CHARSET_ISO_8859_1 = "iso-8859-1";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 	
+	private static final String EMAIL_SUBJECT_OK = "DropBitz - File uploaded";
+	private static final String EMAIL_SUBJECT_ERROR = "DropBitz - File not uploaded";
+	private static final String EMAIL_MESSAGE_OK = "New file uploaded [{0}] by [{1}]";
+	private static final String EMAIL_MESSAGE_ERROR = "File not uploaded [{0}] by [{1}]\nError: [{2}]";
+	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
-	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can't get file";
+	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -71,9 +77,13 @@ public class UploadController {
         } catch (IOException e) {
         	logger.error(ERROR_MESSAGE_FILE_IOEXCEPTION, e);
         
+        	new Mail().sendEmail(EMAIL_SUBJECT_ERROR, MessageFormat.format(EMAIL_MESSAGE_ERROR, fileName, (name.isEmpty()?"UNKNOWN":name), ERROR_MESSAGE_FILE_IOEXCEPTION));
+        	
         	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, ERROR_MESSAGE_FILE_IOEXCEPTION);
         }
 
+        new Mail().sendEmail(EMAIL_SUBJECT_OK, MessageFormat.format(EMAIL_MESSAGE_OK, fileName, (name.isEmpty()?"UNKNOWN":name)));
+        
         return getResponse(fallback, Status.OK, fileName, null);
     }
 	
