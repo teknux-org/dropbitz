@@ -1,19 +1,19 @@
-<%@ page import="org.teknux.dropbitz.*"%>
-<c:set var="config" value="<%=Application.getConfigurationFile()%>"/>
+<#import "/views/layout/layout.ftl" as layout>
 
-<t:layout>
+<@layout.layout>
+	<#assign statics = "org.teknux.dropbitz.helper.BeansWrapperHelper"?new()>
+	
 	<link href="/static/css/auth.css" rel="stylesheet" type="text/css" />
 	
 	<div class="col-lg-12 text-center">
 		<div id="auth-title">
-			<h1>${config.title}</h1>
-			
+			<h1>${statics()["org.teknux.dropbitz.Application"].getConfigurationFile().getTitle()}</h1>
 			<span id="landing-page-lead">
 				- Enter your Secure ID to start sharing files -
 			</span>
 		</div>
 
-		<c:if test="${(not empty model) && (model == true)}">
+		<#if model>
 			<div id="auth-errormessage">
 				<div class="error-message">
 					<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -22,7 +22,7 @@
 					</span>
 				</div>
 			</div>
-		</c:if>
+		</#if>
 
 		<form class="col-lg-12" method="post" action="/authenticate">
 			<div id="auth-form-group" class="input-group">
@@ -33,4 +33,4 @@
 			</div>
 		</form>
 	</div>
-</t:layout>
+</@layout.layout>

@@ -26,15 +26,17 @@ public class MainController {
 	public Viewable index() {
 		
 		if (AuthenticationHelper.isSecured(request)) {
-			return new Viewable("/views/main/drop");
+			return new Viewable("/main/drop");
 		}
 
 		Boolean retry = (Boolean) request.getSession().getAttribute(SESSION_ATTRIBUTE_IS_RETRIED);
 		if (retry != null && retry) {
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_RETRIED, Boolean.FALSE);
+		} else {
+			retry = false;
 		}
-                
-		return new Viewable("/views/main/auth", retry);
+		
+		return new Viewable("/main/auth", retry);
 	}
 	
 	@POST

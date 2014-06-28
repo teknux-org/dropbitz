@@ -1,4 +1,6 @@
-<t:layout>
+<#import "/views/layout/layout.ftl" as layout>
+
+<@layout.layout>
 	<link href="/static/lib/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
 	<link href="/static/css/drop.css" rel="stylesheet" type="text/css" />
 	
@@ -23,4 +25,4 @@
 	
     <script src="/static/lib/dropzone/dropzone.js" type="text/javascript"></script>
 	<script src="/static/js/drop.js" type="text/javascript"></script>
-</t:layout>
+</@layout.layout>

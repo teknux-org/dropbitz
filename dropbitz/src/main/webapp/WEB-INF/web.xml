@@ -13,31 +13,20 @@
 		</init-param>
 		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>
-			<param-value>org.glassfish.jersey.server.mvc.jsp.JspMvcFeature</param-value>
+			<param-value>org.glassfish.jersey.media.multipart.MultiPartFeature,org.teknux.dropbitz.provider.AuthenticationFilter,org.glassfish.jersey.jackson.JacksonFeature,org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature</param-value>
 		</init-param>
-<!-- 		<init-param> -->
-<!-- 			<param-name>jersey.config.server.mvc.templateBasepath.jsp</param-name> -->
-<!-- 			<param-value>/views/*</param-value> -->
-<!-- 		</init-param> -->
+		<init-param>
+		    <param-name>jersey.config.server.mvc.templateBasePath.freemarker</param-name>
+		    <param-value>/views</param-value>
+		</init-param>
 		<init-param>
 			<param-name>jersey.config.servlet.filter.staticContentRegex</param-name>
 			<param-value>/static/.*</param-value>
 		</init-param>
-		 <init-param>
-            <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.teknux.dropbitz.config.JerseyResourceConfig</param-value>
-        </init-param>
 	</filter>
 
 	<filter-mapping>
 		<filter-name>default</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	<jsp-config>
-		<jsp-property-group>
-			<url-pattern>*.jsp</url-pattern>
-			<include-prelude>/WEB-INF/include-prelude.jsp</include-prelude>
-		</jsp-property-group>
-	</jsp-config>
 </web-app>
