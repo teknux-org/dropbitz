@@ -1,13 +1,11 @@
 <#import "/views/layout/layout.ftl" as layout>
 
 <@layout.layout>
-	<#assign statics = "org.teknux.dropbitz.helper.BeansWrapperHelper"?new()>
-	
 	<link href="/static/css/auth.css" rel="stylesheet" type="text/css" />
 	
 	<div class="col-lg-12 text-center">
 		<div id="auth-title">
-			<h1>${statics("org.teknux.dropbitz.Application").getConfigurationFile().getTitle()}</h1>
+			<h1>${statics["org.teknux.dropbitz.Application"].getConfigurationFile().getTitle()}</h1>
 			<span id="landing-page-lead">
 				- Enter your Secure ID to start sharing files -
 			</span>
