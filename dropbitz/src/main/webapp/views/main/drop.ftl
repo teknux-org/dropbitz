@@ -4,6 +4,15 @@
 	<link href="/static/lib/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
 	<link href="/static/css/drop.css" rel="stylesheet" type="text/css" />
 	
+	<div id="drop-errormessage" class="hidden">
+		<div class="error-message">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>
+			<span>
+				Session timeout. Please <a href="/">sign in</a>
+			</span>
+		</div>
+	</div>
+	
     <div class="container-drop-header">
     </div>
 

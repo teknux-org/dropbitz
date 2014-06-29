@@ -19,3 +19,9 @@
 .fallback input {
 	margin: 10px;
 }
+
+#drop-errormessage {
+	width: 340px;
+	text-align: center;
+	margin: 0 auto;
+}

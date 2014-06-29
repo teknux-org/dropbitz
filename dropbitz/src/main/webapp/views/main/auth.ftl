@@ -11,12 +11,12 @@
 			</span>
 		</div>
 
-		<#if model>
+		<#if model??>
 			<div id="auth-errormessage">
 				<div class="error-message">
 					<span class="glyphicon glyphicon-exclamation-sign"></span>
 					<span>
-						Incorrect Secure Id
+						${model}
 					</span>
 				</div>
 			</div>

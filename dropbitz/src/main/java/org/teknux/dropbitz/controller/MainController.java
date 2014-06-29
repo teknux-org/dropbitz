@@ -10,33 +10,23 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-
+import org.teknux.dropbitz.provider.Authenticated;
+import org.teknux.dropbitz.provider.AuthenticationFilter;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
 @Path("/")
 public class MainController {
 	
-	public static final String SESSION_ATTRIBUTE_IS_RETRIED = "IS_RETRIED";
+	private static final String SECURE_ID_ERROR_MESSAGE = "Incorrect Secure Id";
 	
 	@Context
 	private HttpServletRequest request;
 	
 	@GET
+	@Authenticated
 	public Viewable index() {
-		
-		if (AuthenticationHelper.isSecured(request)) {
-			return new Viewable("/main/drop");
-		}
-
-		Boolean retry = (Boolean) request.getSession().getAttribute(SESSION_ATTRIBUTE_IS_RETRIED);
-		if (retry != null && retry) {
-			request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_RETRIED, Boolean.FALSE);
-		} else {
-			retry = false;
-		}
-		
-		return new Viewable("/main/auth", retry);
+		return new Viewable("/main/drop");
 	}
 	
 	@POST
@@ -44,7 +34,7 @@ public class MainController {
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
 		if (! AuthenticationHelper.authenticate(request, secureId)) {
-			request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_RETRIED, Boolean.TRUE);
+			request.getSession().setAttribute(AuthenticationFilter.SESSION_ATTRIBUTE_ERROR_MESSAGE, SECURE_ID_ERROR_MESSAGE);
 		}
 
 		return Response.seeOther(new URI("/")).build();
