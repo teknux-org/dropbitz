@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -24,7 +23,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.Mail;
+import org.teknux.dropbitz.email.FreemarkerEmail;
+import org.teknux.dropbitz.model.DropEmailModel;
 import org.teknux.dropbitz.model.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
 
@@ -39,10 +39,10 @@ public class UploadController {
 	private static final String CHARSET_ISO_8859_1 = "iso-8859-1";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 	
+	private static final String UNKNOWN_NAME = "UNKNOWN";
+	
 	private static final String EMAIL_SUBJECT_OK = "DropBitz - File uploaded";
 	private static final String EMAIL_SUBJECT_ERROR = "DropBitz - File not uploaded";
-	private static final String EMAIL_MESSAGE_OK = "New file uploaded [{0}] by [{1}]";
-	private static final String EMAIL_MESSAGE_ERROR = "File not uploaded [{0}] by [{1}]\nError: [{2}]";
 	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
 	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
@@ -65,24 +65,25 @@ public class UploadController {
 			fileName = formDataContentDisposition.getFileName();
 		};
 		
+		String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+		String destFileName = date + (name.isEmpty()?"":"-" + name) + "-" + fileName;
+		
         try { 	
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
-    		}
-    	
-    		String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
-    		String destFileName = date + (name.isEmpty()?"":"-" + name) + "-" + fileName;
+    		}   	
+    		
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(getConfigurationFile().getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
         	logger.error(ERROR_MESSAGE_FILE_IOEXCEPTION, e);
         
-        	new Mail().sendEmail(EMAIL_SUBJECT_ERROR, MessageFormat.format(EMAIL_MESSAGE_ERROR, fileName, (name.isEmpty()?"UNKNOWN":name), ERROR_MESSAGE_FILE_IOEXCEPTION));
+            sendEmail(false, name, fileName, null);
         	
         	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, ERROR_MESSAGE_FILE_IOEXCEPTION);
         }
-
-        new Mail().sendEmail(EMAIL_SUBJECT_OK, MessageFormat.format(EMAIL_MESSAGE_OK, fileName, (name.isEmpty()?"UNKNOWN":name)));
+        
+        sendEmail(true, name, fileName, destFileName);
         
         return getResponse(fallback, Status.OK, fileName, null);
     }
@@ -100,5 +101,15 @@ public class UploadController {
 		    
 		    return Response.status(status.getStatusCode()).entity(map).build();	
 		}
+	}
+	
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {	
+		DropEmailModel dropEmailModel = new DropEmailModel();
+		dropEmailModel.setName(name.isEmpty()?UNKNOWN_NAME:name);
+		dropEmailModel.setFileName(fileName);
+		dropEmailModel.setFinalFileName(finalFileName);
+		dropEmailModel.setSuccess(success);
+		
+		FreemarkerEmail.getInstance().sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
 	}
 }
