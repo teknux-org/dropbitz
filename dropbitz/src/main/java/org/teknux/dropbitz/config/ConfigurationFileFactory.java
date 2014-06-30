@@ -30,10 +30,10 @@ public class ConfigurationFileFactory {
 	}
 
 	/**
-	 * Get configuration in jar directory, in resource or create config
+	 * Get configuration from jar directory, from resource or create new configuration file
 	 * 
-	 * @return
-	 * @throws ConfigurationException
+	 * @return ConfigurationFile
+	 * @throws ConfigurationException On failed
 	 */
 	public static ConfigurationFile getConfiguration() throws ConfigurationException {
 		logger.debug("Get configuration...");
@@ -42,29 +42,28 @@ public class ConfigurationFileFactory {
 		
 		File file = new File(getJarDir() + File.separator + CONFIG_FILENAME);
 
-		logger.debug("Check if config file exists in jar directory [{}]...", file.getPath());
+		logger.trace("Check if config file exists in jar directory [{}]...", file.getPath());
 		if (file.exists()) { //Check if file exists in jar directory
-			logger.debug("Check if config file is readable in jar directory [{}]...", file.getPath());
+			logger.trace("Check if config file is readable in jar directory [{}]...", file.getPath());
 			if (! file.canRead()) { //Check if file is readable in jar directory
 				throw new ConfigurationException(MessageFormat.format("Config file is not readable in jar directory [{0}]", file.getPath()));
 			} else { //Open config file in jar directory
-				logger.debug("Can not open config file in jar directory [{}]...", file.getPath());
 				try {
 					inputStream = new FileInputStream(file);
 				} catch (FileNotFoundException e) {
 					throw new ConfigurationException(MessageFormat.format("Can not read config file [{0}]", file.getPath()));
 				}
+				logger.debug("Use config file in jar directory");
 			}
 		} else { //Check if config file exits in resource
-			logger.debug("Check if config file exists in resource [{}]...", RESOURCE_SEPARATOR + CONFIG_FILENAME);
+			logger.trace("Check if config file exists in resource [{}]...", RESOURCE_SEPARATOR + CONFIG_FILENAME);
 				
 			inputStream = ConfigurationFileFactory.class.getResourceAsStream(RESOURCE_SEPARATOR + CONFIG_FILENAME);
 			if (inputStream != null) {
 				logger.warn("Use resource config");				
 			} else { //If not, Create file in jar directory
-				logger.debug("Create config file exists in jar directory [{}]...", file.getPath());
+				logger.warn("File does not exits. Create config file exists in jar directory [{}]...", file.getPath());
 				try {
-					logger.warn("File does not exits. Create...");
 					FileUtils.copyURLToFile(ConfigurationFileFactory.class.getResource(RESOURCE_SEPARATOR + CONFIG_FILENAME_DIST), file);
 					inputStream = new FileInputStream(file);
 				} catch (IOException e) {

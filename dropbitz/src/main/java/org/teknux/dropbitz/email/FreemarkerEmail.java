@@ -3,6 +3,7 @@ package org.teknux.dropbitz.email;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.MessageFormat;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -50,14 +51,35 @@ public class FreemarkerEmail {
 		}
 	}
 
+	/**
+	 * Send email
+	 * 
+	 * @param subject Email Subject
+	 * @param viewName Freemarker Template Name
+	 */
 	public void sendEmail(String subject, String viewName) {
 		sendEmail(subject, viewName, null);
 	}
 
+	/**
+	 * Send email
+	 * 
+	 * @param subject Email Subject
+	 * @param viewName Freemarker Template Name
+	 * @param model Object model for Freemarker template
+	 */
 	public void sendEmail(String subject, String viewName, Object model) {
 		sendEmail(subject, viewName, model, null);
 	}
 
+	/**
+	 * Send email
+	 * 
+	 * @param subject Email Subject
+	 * @param viewName Freemarker Template Name
+	 * @param model Object model for Freemarker template
+	 * @param viewNameAlt Alternative Freemarker Template Name (Non-HTML)
+	 */
 	public void sendEmail(String subject, String viewName, Object model, String viewNameAlt) {
 		if (config.isEmailEnable()) {
 			logger.debug("Email : Send new email...");
@@ -71,6 +93,7 @@ public class FreemarkerEmail {
 					email.setTextMsg(resolve(model, viewNameAlt));
 				}
 				email.send();
+				logger.debug("Email : Success");
 			} catch (EmailException | IOException | TemplateException e) {
 				logger.error("Email : Can not send message", e);
 			}
@@ -79,6 +102,12 @@ public class FreemarkerEmail {
 		}
 	}
 
+	/**
+	 * Build new email from configuration file
+	 * 
+	 * @return HtmlEmail
+	 * @throws EmailException
+	 */
 	private HtmlEmail getNewEmail() throws EmailException {
 		logger.trace("Email : Build new email...");
 		
@@ -93,10 +122,21 @@ public class FreemarkerEmail {
 		email.setSSLOnConnect(config.isSsl());
 		email.setFrom(config.getEmailFrom());
 		email.addTo(config.getEmailTo());
+		
+		logger.trace(MessageFormat.format("Email : From [{0}] to [{1}]", config.getEmailFrom(), String.join(",", config.getEmailTo())));
 
 		return email;
 	}
 
+	/**
+	 * Resolve template
+	 * 
+	 * @param model Object model for Freemarker template
+	 * @param viewName Freemarker Template Name
+	 * @return String
+	 * @throws IOException on load error
+	 * @throws TemplateException on template syntax error
+	 */
 	private String resolve(Object model, String viewName) throws IOException, TemplateException {
 		Template template = jerseyFreemarkerConfig.getTemplate(VIEWS_PATH + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();

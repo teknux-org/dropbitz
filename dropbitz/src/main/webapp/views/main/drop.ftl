@@ -7,9 +7,7 @@
 	<div id="drop-errormessage" class="hidden">
 		<div class="error-message">
 			<span class="glyphicon glyphicon-exclamation-sign"></span>
-			<span>
-				Session timeout. Please <a href="/">sign in</a>
-			</span>
+			<span id="drop-errormessage-content"></span>
 		</div>
 	</div>
 	

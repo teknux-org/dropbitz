@@ -32,15 +32,7 @@ public class Application {
             checkConfigurationFile(configurationFile);
 
             logger.debug("Starting Application...");
-            JettyConfiguration jettyConfiguration = new JettyConfiguration();
-            if (configurationFile.isSsl()) {
-            	jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
-            	jettyConfiguration.setSslPort(configurationFile.getPort());	
-            } else {
-            	jettyConfiguration.setPort(configurationFile.getPort());
-            }
-            JettyBootstrap jettyBootstrap = new JettyBootstrap(jettyConfiguration);
-            jettyBootstrap.addSelf().startServer();
+            startApplication();
            
 		} catch (ConfigurationValidationException e) {
             logger.error("Configuration validation error", e);
@@ -54,17 +46,50 @@ public class Application {
 		}
 	}
 
+	/**
+	 * Load configuration
+	 * 
+	 * @return ConfigurationFile
+	 * @throws ConfigurationException on error
+	 */
     protected ConfigurationFile loadConfiguration() throws ConfigurationException {
         return ConfigurationFileFactory.getConfiguration();
     }
 	
+    /**
+     * Check configuration
+     * 
+     * @param configurationFile Instance that contains configuration properties
+     * @throws ConfigurationValidationException on error
+     */
 	protected void checkConfigurationFile(ConfigurationFile configurationFile) throws ConfigurationValidationException {
 		if (! configurationFile.getDirectory().isDirectory() || ! configurationFile.getDirectory().canWrite()) {
 			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configurationFile.getDirectory().getPath()));
 		}
 		
 	}
+	
+	/**
+	 * Start Jetty Container
+	 * 
+	 * @throws JettyBootstrapException on error
+	 */
+	protected void startApplication() throws JettyBootstrapException {
+        JettyConfiguration jettyConfiguration = new JettyConfiguration();
+        if (configurationFile.isSsl()) {
+        	jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
+        	jettyConfiguration.setSslPort(configurationFile.getPort());	
+        } else {
+        	jettyConfiguration.setPort(configurationFile.getPort());
+        }
+        JettyBootstrap jettyBootstrap = new JettyBootstrap(jettyConfiguration);
+        jettyBootstrap.addSelf().startServer();
+	}
 
+	/**
+	 * Get configuration
+	 * @return ConfigurationFile on error
+	 */
 	public static ConfigurationFile getConfigurationFile() {
 		return configurationFile;
 	}

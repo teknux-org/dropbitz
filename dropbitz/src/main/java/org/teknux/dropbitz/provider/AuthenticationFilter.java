@@ -1,11 +1,15 @@
 package org.teknux.dropbitz.provider;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 
 /**
@@ -15,6 +19,8 @@ import java.io.IOException;
 @Authenticated
 public class AuthenticationFilter implements ContainerRequestFilter {
 
+	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+	
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
 	private static final String FORBIDDEN_ERROR_MESSAGE = "You don't have authorisation. Thank you to authenticate";
 	
@@ -23,7 +29,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
+    	logger.trace("Request on URI [{}]...", containerRequestContext.getUriInfo().getPath());
+    	
         if (!AuthenticationHelper.isSecured(request)) {
+        	logger.debug("Not authenticate, redirect to auth view...");
         	
     		String errorMessage = (String) request.getSession().getAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
     		if (errorMessage != null) {
