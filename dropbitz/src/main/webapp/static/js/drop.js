@@ -12,7 +12,7 @@ Dropzone.options.dropzone = {
 	success : function(file) {
 		$('#drop-errormessage').addClass("hidden");
 		
-		return Dropzone.prototype.defaultOptions.success(file);
+		return this.defaultOptions.success(file);
 	},
 	error : function(file, errorMessage, xhr) {
 		$('#drop-errormessage').removeClass("hidden");
@@ -23,6 +23,6 @@ Dropzone.options.dropzone = {
 			$("#drop-errormessage-content").html(errorMessage);
 		}
 		
-		return Dropzone.prototype.defaultOptions.error(file, errorMessage);
+		return this.defaultOptions.error(file, errorMessage);
 	}
 };
