@@ -97,7 +97,9 @@ public class UploadController {
 			return Response.status(status.getStatusCode()).entity(new Viewable("/upload/fallback", fallbackModel)).build();	
 		} else {
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("error", errorMessage);
+			if (errorMessage != null) {
+				map.put("error", errorMessage);
+			}
 		    
 		    return Response.status(status.getStatusCode()).entity(map).build();	
 		}
