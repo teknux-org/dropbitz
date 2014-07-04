@@ -1,7 +1,10 @@
 dropbitz
 ========
 
-TODO :
+[![Build Status](https://drone.io/github.com/teknux-org/dropbitz/status.png)](https://drone.io/github.com/teknux-org/dropbitz/latest)
+
+
+Roadmap :
 
 Community
 - Unit tests
@@ -10,7 +13,7 @@ Community
 
 Enterprise
 - User Admin : Can create operator, Set download directory
-- Multi SecureIds support (specific directory) => On SecureId creation, set customer name, expiration date : Show on screen SecureId + Direct Link => We can send theses informations by email
+- Multi SecureId support (specific directory) => On SecureId creation, set customer name, expiration date : Show on screen SecureId + Direct Link => We can send theses informations by email
 - Admin UI : SecureIds list + add + edit + remove
 - SecureId expiration date
 - URI with secureId in param
