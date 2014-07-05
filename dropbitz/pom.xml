@@ -162,9 +162,14 @@
 			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.glassfish.jersey.ext</groupId>
-		    <artifactId>jersey-mvc-freemarker</artifactId>
-		    <version>${jersey.version}</version>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-freemarker</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 
 		<!-- Config -->
