@@ -17,17 +17,22 @@
 			<link href="/static/css/styles.css" rel="stylesheet">
 		</head>
 		<body>
-			<div>
-				<#include "/views/layout/header.ftl"/>
-			</div>
-			<div class="spacer"></div>
-			<div id="content">
-		    	<#nested/>
-	    	</div>
-	    	<div class="spacer"></div>
+		    <div class="wrap">
+
+                <div>
+                    <#include "/views/layout/header.ftl"/>
+                </div>
+                <div class="spacer"></div>
+                <div id="content">
+                    <#nested/>
+                </div>
+                <div class="spacer"></div>
+
+		    </div>
 		    <div id="footer">
 		    	<#include "/views/layout/footer.ftl"/>
 		    </div>
+		    <script src="js/scripts.js"></script>
 		</body>
 	</html>
 </#macro>

@@ -18,10 +18,10 @@ i {
 }
   
 footer {
-  margin-top:20px;
   padding-top:20px;
   padding-bottom:20px;
   background-color:#efefef;
+  height: 60px;
 }
 
 /* count indicator near icons */
@@ -107,3 +107,13 @@ html, body {
 #header {
 	margin-top: 7%;
 }
+
+/* Sticky footer */
+/* Wrapper for page content to push down footer */
+      .wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
