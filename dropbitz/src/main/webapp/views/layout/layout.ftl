@@ -10,11 +10,13 @@
 			<!--[if lt IE 9]>
 				<script src="/static/lib/html5shiv/html5shiv.min.js" type="text/javascript"></script>
 			<![endif]-->
+
 			<link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css">
 			<script src="/static/lib/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
 			<link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		  	<script src="/static/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 			<link href="/static/css/styles.css" rel="stylesheet">
+			<script src="js/scripts.js" type="text/javascript"></script>
 		</head>
 		<body>
 		    <div class="wrap">
@@ -32,7 +34,6 @@
 		    <div id="footer">
 		    	<#include "/views/layout/footer.ftl"/>
 		    </div>
-		    <script src="js/scripts.js"></script>
 		</body>
 	</html>
 </#macro>

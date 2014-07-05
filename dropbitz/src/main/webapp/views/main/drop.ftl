@@ -10,9 +10,6 @@
 			<span id="drop-errormessage-content"></span>
 		</div>
 	</div>
-	
-    <div class="container-drop-header">
-    </div>
 
 	<div class="container-drop">
 		<form id="dropzone" method="post" action="/upload" class="dropzone" enctype="multipart/form-data">
