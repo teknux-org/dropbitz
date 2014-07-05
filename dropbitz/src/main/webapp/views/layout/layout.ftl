@@ -10,13 +10,14 @@
 			<!--[if lt IE 9]>
 				<script src="/static/lib/html5shiv/html5shiv.min.js" type="text/javascript"></script>
 			<![endif]-->
+			<link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css">
 			<script src="/static/lib/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
 			<link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		  	<script src="/static/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-			<link href="/static/css/style.css" rel="stylesheet">
+			<link href="/static/css/styles.css" rel="stylesheet">
 		</head>
 		<body>
-			<div id="header">
+			<div>
 				<#include "/views/layout/header.ftl"/>
 			</div>
 			<div class="spacer"></div>
