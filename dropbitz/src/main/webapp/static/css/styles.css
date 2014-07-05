@@ -1,5 +1,10 @@
+@font-face {
+  font-family: "Orbitron";
+  src: url("/static/fonts/Orbitron-Regular.ttf") format("truetype");
+}
+
 .navbar-inverse .brand {
-    font-family: 'Orbitron', serif;
+    font-family: "Orbitron", serif;
     font-size: 28px;
     color: #DDD;
     letter-spacing: 1px;
