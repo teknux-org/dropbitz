@@ -9,7 +9,8 @@ import org.teknux.dropbitz.model.IUser;
 /**
  * Manages all aspects of user
  */
-public interface IUserService {
+public interface IUserService extends
+		IService {
 
 	/**
 	 * Retrieve the user object for the specified username.
