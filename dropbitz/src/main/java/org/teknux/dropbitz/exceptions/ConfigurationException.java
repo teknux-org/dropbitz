@@ -1,8 +1,8 @@
-package org.teknux.dropbitz.config;
+package org.teknux.dropbitz.exceptions;
 
-public class ConfigurationException extends Exception {
+public class ConfigurationException extends DropBitzException {
 
-	private static final long serialVersionUID = 3855898924513137363L;
+	private static final long serialVersionUID = 1L;
 
 	public ConfigurationException(String s) {
 		super(s);

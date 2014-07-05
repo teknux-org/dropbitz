@@ -4,10 +4,10 @@ import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.ConfigurationException;
 import org.teknux.dropbitz.config.ConfigurationFile;
 import org.teknux.dropbitz.config.ConfigurationFileFactory;
-import org.teknux.dropbitz.config.ConfigurationValidationException;
+import org.teknux.dropbitz.exceptions.ConfigurationException;
+import org.teknux.dropbitz.exceptions.ConfigurationValidationException;
 import org.teknux.jettybootstrap.JettyBootstrap;
 import org.teknux.jettybootstrap.JettyBootstrapException;
 import org.teknux.jettybootstrap.configuration.JettyConfiguration;

@@ -20,13 +20,12 @@ public class MainControllerTest extends BaseControllerTest {
 	}
 
 	@Test
-	public void testAuth() {
+	public void testAuth(boolean authNeeded) {
 		Form form = new Form();
-		form.param("secureId", "abcd");
+		form.param("secureId", "bigup is awesome");
 
 		final Response r = getWebTarget("/authenticate").request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-		// TODO should be Status.SEE_OTHER
-		Assert.assertEquals(Status.OK.getStatusCode(), r.getStatus());
+		Assert.assertEquals(Status.SEE_OTHER.getStatusCode(), r.getStatus());
 	}
 
 	@Test
