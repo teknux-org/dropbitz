@@ -10,10 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -23,12 +25,12 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.email.FreemarkerEmail;
+import org.teknux.dropbitz.config.ConfigurationFile;
 import org.teknux.dropbitz.model.DropEmailModel;
 import org.teknux.dropbitz.model.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
-
-import static org.teknux.dropbitz.Application.getConfigurationFile;
+import org.teknux.dropbitz.services.IEmailService;
+import org.teknux.dropbitz.services.ServiceManager;
 
 @Path("/upload")
 public class UploadController {
@@ -46,6 +48,9 @@ public class UploadController {
 	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
 	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
+	
+	@Context
+	private ServletContext context;
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -72,8 +77,8 @@ public class UploadController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
     		}   	
-    		
-        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(getConfigurationFile().getDirectory().getAbsolutePath(), destFileName);
+    		ConfigurationFile config = ServiceManager.get(context).getConfigurationService().getConfiguration();
+        	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
         	logger.error(ERROR_MESSAGE_FILE_IOEXCEPTION, e);
@@ -105,13 +110,14 @@ public class UploadController {
 		}
 	}
 	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {	
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {        
 		DropEmailModel dropEmailModel = new DropEmailModel();
 		dropEmailModel.setName(name.isEmpty()?UNKNOWN_NAME:name);
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		
-		FreemarkerEmail.getInstance().sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
+		final IEmailService emailService  = ServiceManager.get(context).getEmailService();
+		emailService.sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
 	}
 }

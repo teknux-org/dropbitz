@@ -53,4 +53,14 @@ public class InMemoryUserService implements
 		return userMap.values();
 	}
 
+	@Override
+	public void start() {
+
+	}
+
+	@Override
+	public void stop() {
+		userMap = null;
+	}
+
 }

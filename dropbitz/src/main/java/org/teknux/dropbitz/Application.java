@@ -22,19 +22,23 @@ public class Application {
 
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	private static ConfigurationFile configurationFile = null;
+	private static volatile ConfigurationFile configurationFile = null;
 
 	private JettyBootstrap jettyBootstrap;
 
 	public Application() {
-		this(true);
+		this(null, true);
 	}
 
-	public Application(boolean join) {
+	public Application(ConfigurationFile configuration, boolean join) {
 		try {
-			logger.debug("Loading application configuration...");
-			configurationFile = loadConfiguration();
-
+			if (configuration == null) {
+				logger.debug("Loading application configuration...");
+				configurationFile = loadConfiguration();
+			} else {
+				logger.debug("Using provided application configuration...");
+				configurationFile = configuration;
+			}
 			logger.debug("Validating application configuration...");
 			checkConfigurationFile(configurationFile);
 
@@ -97,11 +101,6 @@ public class Application {
 		jettyBootstrap.addSelf().startServer(join);
 	}
 
-	/**
-	 * Get configuration
-	 * 
-	 * @return ConfigurationFile on error
-	 */
 	public static ConfigurationFile getConfigurationFile() {
 		return configurationFile;
 	}

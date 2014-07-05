@@ -32,7 +32,7 @@ public class StartApplicationRule implements
 
 	protected void startIfRequired() {
 		if (application == null) {
-			application = new Application(false);
+			application = new Application(null, false);
 		}
 	}
 
