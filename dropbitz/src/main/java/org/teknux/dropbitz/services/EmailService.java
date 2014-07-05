@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.email;
+package org.teknux.dropbitz.services;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,35 +20,31 @@ import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class FreemarkerEmail {
-	private final Logger logger = LoggerFactory
-			.getLogger(FreemarkerEmail.class);
+public class EmailService implements IEmailService {
+	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-	private static final String VIEWS_PATH = "/webapp/views/email";
 	private static final String VIEW_EXTENSION = ".ftl";
+	
+	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
 
-	private static FreemarkerEmail instance;
 	private ConfigurationFile config = Application.getConfigurationFile();
 
+	private String viewsPath = DEFAULT_VIEWS_PATH;
+	
 	@Inject
 	private ServletContext servletContext;
 
 	private JerseyFreemarkerConfig jerseyFreemarkerConfig;
 
-	public static FreemarkerEmail getInstance() {
-		if (instance == null) {
-			instance = new FreemarkerEmail();
-		}
-
-		return instance;
-	}
-
-	// Singleton
-	private FreemarkerEmail() {
+	public EmailService() {
 		if (config.isEmailEnable()) {
 			// Init Freemarker
 			jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
 		}
+	}
+	
+	public void setDefaultViewsPath(String viewsPath) {
+	    this.viewsPath = viewsPath;
 	}
 
 	/**
@@ -138,7 +134,7 @@ public class FreemarkerEmail {
 	 * @throws TemplateException on template syntax error
 	 */
 	private String resolve(Object model, String viewName) throws IOException, TemplateException {
-		Template template = jerseyFreemarkerConfig.getTemplate(VIEWS_PATH + viewName + VIEW_EXTENSION);
+		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
 		template.process(model, writer);
 		

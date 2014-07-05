@@ -1,5 +1,7 @@
 package org.teknux.dropbitz.controller;
 
+import static org.teknux.dropbitz.Application.getConfigurationFile;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -23,12 +25,10 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.email.FreemarkerEmail;
 import org.teknux.dropbitz.model.DropEmailModel;
 import org.teknux.dropbitz.model.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
-
-import static org.teknux.dropbitz.Application.getConfigurationFile;
+import org.teknux.dropbitz.services.EmailService;
 
 @Path("/upload")
 public class UploadController {
@@ -105,13 +105,13 @@ public class UploadController {
 		}
 	}
 	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {	
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {        
 		DropEmailModel dropEmailModel = new DropEmailModel();
 		dropEmailModel.setName(name.isEmpty()?UNKNOWN_NAME:name);
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		
-		FreemarkerEmail.getInstance().sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
+		(new EmailService()).sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
 	}
 }
