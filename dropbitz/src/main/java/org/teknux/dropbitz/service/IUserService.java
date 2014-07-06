@@ -1,8 +1,8 @@
-package org.teknux.dropbitz.services;
+package org.teknux.dropbitz.service;
 
 import java.util.Collection;
 
-import org.teknux.dropbitz.exceptions.StorageException;
+import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
 
 

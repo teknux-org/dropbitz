@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.services;
+package org.teknux.dropbitz.service;
 
 import java.util.Objects;
 

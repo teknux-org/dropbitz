@@ -1,6 +1,7 @@
-package org.teknux.dropbitz.model;
+package org.teknux.dropbitz.model.view;
 
-public class FallbackModel {
+
+public class FallbackModel extends Model {
 	private String fileName;
 	private String errorMessage;
 	

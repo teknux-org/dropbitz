@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.services.ServiceManager;
+import org.teknux.dropbitz.service.ServiceManager;
 
 
 /**

@@ -14,7 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.skife.config.ConfigurationObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.exceptions.ConfigurationException;
+import org.teknux.dropbitz.exception.ConfigurationException;
 
 public class ConfigurationFileFactory {
 

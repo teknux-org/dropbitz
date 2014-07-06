@@ -1,16 +1,17 @@
 package org.teknux.dropbitz.provider;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
-import org.glassfish.jersey.server.mvc.Viewable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import java.io.IOException;
+import org.glassfish.jersey.server.mvc.Viewable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.freemarker.View;
 
 /**
  * Custom authentication filter used to control decorated Jax-RS resource with @Authenticated annotation.
@@ -41,7 +42,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     			errorMessage = FORBIDDEN_ERROR_MESSAGE;
     		}
 
-    		containerRequestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(new Viewable("/main/auth", errorMessage)).build());
+    		containerRequestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(new Viewable(View.AUTH.getTemplateName(), errorMessage)).build());
         }
     }
 }
