@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.services;
+package org.teknux.dropbitz.service;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -10,7 +10,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.ConfigurationFile;
+import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
 
 import freemarker.template.Template;
@@ -111,7 +111,7 @@ public class EmailService implements
 	private HtmlEmail getNewEmail() throws EmailException {
 		logger.trace("Email : Build new email...");
 
-		final ConfigurationFile config = configService.getConfiguration();
+		final Configuration config = configService.getConfiguration();
 		HtmlEmail email = null;
 
 		email = new HtmlEmail();

@@ -4,10 +4,10 @@ import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.ConfigurationFile;
-import org.teknux.dropbitz.config.ConfigurationFileFactory;
-import org.teknux.dropbitz.exceptions.ConfigurationException;
-import org.teknux.dropbitz.exceptions.ConfigurationValidationException;
+import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.config.ConfigurationFactory;
+import org.teknux.dropbitz.exception.ConfigurationException;
+import org.teknux.dropbitz.exception.ConfigurationValidationException;
 import org.teknux.jettybootstrap.JettyBootstrap;
 import org.teknux.jettybootstrap.JettyBootstrapException;
 import org.teknux.jettybootstrap.configuration.JettyConfiguration;
@@ -22,7 +22,7 @@ public class Application {
 
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	private static volatile ConfigurationFile configurationFile = null;
+	private static volatile Configuration configuration = null;
 
 	private JettyBootstrap jettyBootstrap;
 
@@ -30,17 +30,17 @@ public class Application {
 		this(null, true);
 	}
 
-	public Application(ConfigurationFile configuration, boolean join) {
+	public Application(Configuration configuration, boolean join) {
 		try {
 			if (configuration == null) {
 				logger.debug("Loading application configuration...");
-				configurationFile = loadConfiguration();
+				Application.configuration = loadConfiguration();
 			} else {
 				logger.debug("Using provided application configuration...");
-				configurationFile = configuration;
+				Application.configuration = configuration;
 			}
 			logger.debug("Validating application configuration...");
-			checkConfigurationFile(configurationFile);
+			checkConfiguration(Application.configuration);
 
 			logger.debug("Starting Application...");
 			startApplication(join);
@@ -60,25 +60,25 @@ public class Application {
 	/**
 	 * Load configuration
 	 * 
-	 * @return ConfigurationFile
+	 * @return Configuration
 	 * @throws ConfigurationException
 	 *             on error
 	 */
-	protected ConfigurationFile loadConfiguration() throws ConfigurationException {
-		return ConfigurationFileFactory.getConfiguration();
+	protected Configuration loadConfiguration() throws ConfigurationException {
+		return ConfigurationFactory.getConfiguration();
 	}
 
 	/**
 	 * Check configuration
 	 * 
-	 * @param configurationFile
+	 * @param configuration
 	 *            Instance that contains configuration properties
 	 * @throws ConfigurationValidationException
 	 *             on error
 	 */
-	protected void checkConfigurationFile(ConfigurationFile configurationFile) throws ConfigurationValidationException {
-		if (!configurationFile.getDirectory().isDirectory() || !configurationFile.getDirectory().canWrite()) {
-			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configurationFile.getDirectory().getPath()));
+	protected void checkConfiguration(Configuration configuration) throws ConfigurationValidationException {
+		if (!configuration.getDirectory().isDirectory() || !configuration.getDirectory().canWrite()) {
+			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configuration.getDirectory().getPath()));
 		}
 
 	}
@@ -91,18 +91,18 @@ public class Application {
 	 */
 	protected void startApplication(boolean join) throws JettyBootstrapException {
 		JettyConfiguration jettyConfiguration = new JettyConfiguration();
-		if (configurationFile.isSsl()) {
+		if (configuration.isSsl()) {
 			jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
-			jettyConfiguration.setSslPort(configurationFile.getPort());
+			jettyConfiguration.setSslPort(configuration.getPort());
 		} else {
-			jettyConfiguration.setPort(configurationFile.getPort());
+			jettyConfiguration.setPort(configuration.getPort());
 		}
 		jettyBootstrap = new JettyBootstrap(jettyConfiguration);
 		jettyBootstrap.addSelf().startServer(join);
 	}
 
-	public static ConfigurationFile getConfigurationFile() {
-		return configurationFile;
+	public static Configuration getConfiguration() {
+		return configuration;
 	}
 
 	public JettyBootstrap getJettyBootstrap() {

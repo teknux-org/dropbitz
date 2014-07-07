@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.services;
+package org.teknux.dropbitz.service;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +19,12 @@ public class InMemoryUserService implements
 	@Override
 	public IUser getUser(String username) {
 		return userMap.get(username);
+	}
+
+	@Override
+	public void createUser(IUser user) {
+		Objects.requireNonNull(user.getEmail());
+		updateUser(user.getEmail(), user);
 	}
 
 	@Override

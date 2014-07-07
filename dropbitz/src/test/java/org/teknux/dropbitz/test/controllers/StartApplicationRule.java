@@ -1,10 +1,10 @@
-package org.teknux.dropbitz.test;
+package org.teknux.dropbitz.test.controllers;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.teknux.dropbitz.Application;
-import org.teknux.dropbitz.config.ConfigurationFile;
+import org.teknux.dropbitz.config.Configuration;
 
 
 public class StartApplicationRule implements
@@ -40,7 +40,7 @@ public class StartApplicationRule implements
 		return application;
 	}
 
-	public ConfigurationFile getConfiguration() {
-		return Application.getConfigurationFile();
+	public Configuration getConfiguration() {
+		return Application.getConfiguration();
 	}
 }

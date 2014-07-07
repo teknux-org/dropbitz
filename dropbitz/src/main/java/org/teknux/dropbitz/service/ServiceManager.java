@@ -1,9 +1,10 @@
-package org.teknux.dropbitz.services;
+package org.teknux.dropbitz.service;
 
 import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
+import org.teknux.dropbitz.exception.DropBitzException;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 
@@ -16,6 +17,7 @@ public class ServiceManager implements
 	private IUserService userService;
 	private IConfigurationService configurationService;
 	private IEmailService emailService;
+	private StorageService storageService;
 
 	private final ServletContext servletContext;
 
@@ -27,11 +29,14 @@ public class ServiceManager implements
 		return servletContext;
 	}
 
-	public synchronized void start() {
+	public synchronized void start() throws DropBitzException {
+		storageService = new StorageService();
+		storageService.start();
+
 		configurationService = new ConfigurationService();
 		configurationService.start();
 
-		userService = new InMemoryUserService();
+		userService = new DatabaseStorageService(storageService);
 		userService.start();
 
 		emailService = new EmailService(this);
@@ -41,6 +46,7 @@ public class ServiceManager implements
 	public synchronized void stop() {
 		userService.stop();
 		configurationService.stop();
+		storageService.stop();
 	}
 
 	public synchronized static ServiceManager get(ServletContext context) {
@@ -50,6 +56,10 @@ public class ServiceManager implements
 
 	public IUserService getUserService() {
 		return userService;
+	}
+
+	public StorageService getStorageService() {
+		return storageService;
 	}
 
 	public IConfigurationService getConfigurationService() {

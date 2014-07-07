@@ -22,18 +22,18 @@ import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.ConfigurationFile;
-import org.teknux.dropbitz.model.DropEmailModel;
-import org.teknux.dropbitz.model.FallbackModel;
+import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.freemarker.View;
+import org.teknux.dropbitz.model.view.DropEmailModel;
+import org.teknux.dropbitz.model.view.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
-import org.teknux.dropbitz.services.IEmailService;
-import org.teknux.dropbitz.services.ServiceManager;
+import org.teknux.dropbitz.service.IEmailService;
+import org.teknux.dropbitz.service.ServiceManager;
 
 @Path("/upload")
-public class UploadController {
+public class UploadController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(UploadController.class);
 	
@@ -77,7 +77,7 @@ public class UploadController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
     		}   	
-    		ConfigurationFile config = ServiceManager.get(context).getConfigurationService().getConfiguration();
+    		Configuration config = ServiceManager.get(context).getConfigurationService().getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
@@ -99,7 +99,7 @@ public class UploadController {
 			fallbackModel.setFileName(fileName);
 			fallbackModel.setErrorMessage(errorMessage);
 			
-			return Response.status(status.getStatusCode()).entity(new Viewable("/upload/fallback", fallbackModel)).build();	
+			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK, fallbackModel)).build();	
 		} else {
 			Map<String, String> map = new HashMap<String, String>();
 			if (errorMessage != null) {

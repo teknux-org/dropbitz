@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.test;
+package org.teknux.dropbitz.test.controllers;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

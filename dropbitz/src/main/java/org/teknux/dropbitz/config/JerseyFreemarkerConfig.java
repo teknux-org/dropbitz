@@ -7,9 +7,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import org.jvnet.hk2.annotations.Optional;
-
 import jersey.repackaged.com.google.common.collect.Lists;
+
+import org.jvnet.hk2.annotations.Optional;
+import org.teknux.dropbitz.freemarker.helper.UserHelper;
+
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -43,5 +45,6 @@ public class JerseyFreemarkerConfig extends Configuration {
 
 		//Add shared variables
 		setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
+		setSharedVariable("user", new UserHelper());
 	}
 }

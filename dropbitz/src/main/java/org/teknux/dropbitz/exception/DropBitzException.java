@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.exceptions;
+package org.teknux.dropbitz.exception;
 
 /**
  * Base for DropBitz all exceptions

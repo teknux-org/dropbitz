@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.model;
+package org.teknux.dropbitz.model.view;
 
 public class DropEmailModel {
 	public String name;
