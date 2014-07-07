@@ -10,6 +10,14 @@
     letter-spacing: 1px;
 }
 
+.brand-font {
+    font-family: "Orbitron", serif;
+}
+
+/***********************/
+/*         Theme       */
+/***********************/
+
 .navbar-static-top {
   margin-bottom:20px;
 }
@@ -20,13 +28,6 @@ i {
 
 .nav > li > a {
   color:#787878;
-}
-  
-footer {
-  padding-top:20px;
-  padding-bottom:20px;
-  background-color:#efefef;
-  height: 60px;
 }
 
 /* count indicator near icons */
@@ -54,7 +55,7 @@ footer {
 }
 
 /***********************/
-/* TO BE REMOVED AFTER */
+/*        Global       */
 /***********************/
 
 html, body {
@@ -113,12 +114,27 @@ html, body {
 	margin-top: 7%;
 }
 
+/*****************/
 /* Sticky footer */
+/*****************/
+
+
 /* Wrapper for page content to push down footer */
-      .wrap {
-        min-height: 100%;
-        height: auto !important;
-        height: 100%;
-        /* Negative indent footer by it's height */
-        margin: 0 auto -60px;
-      }
+.wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -60px;
+}
+
+#push {
+	height: 60px;
+}
+
+footer {
+  padding-top:20px;
+  padding-bottom:20px;
+  background-color:#efefef;
+  height: 60px;
+}

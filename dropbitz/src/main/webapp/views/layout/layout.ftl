@@ -27,8 +27,8 @@
                 <div id="content">
                     <#nested/>
                 </div>
-                <div class="spacer"></div>
 
+                <div id="push"></div>
 		    </div>
 		    <div id="footer">
 		    	<#include "/views/layout/footer.ftl"/>
