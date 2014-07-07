@@ -22,6 +22,12 @@ public class InMemoryUserService implements
 	}
 
 	@Override
+	public void createUser(IUser user) {
+		Objects.requireNonNull(user.getEmail());
+		updateUser(user.getEmail(), user);
+	}
+
+	@Override
 	public void updateUser(IUser user) {
 		Objects.requireNonNull(user);
 		Objects.requireNonNull(user.getEmail());

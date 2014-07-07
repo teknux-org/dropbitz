@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.test;
+package org.teknux.dropbitz.test.controllers;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
