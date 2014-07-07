@@ -31,6 +31,7 @@ public class DropBitzServlet extends ServletContainer {
 			filterConfig.getServletContext().setAttribute(CONTEXT_ATTRIBUTE_SERVICE_MANAGER, serviceManager);
 			logger.trace("Service Manager started");
 		} catch (Exception e) {
+			logger.error("Error while starting application services", e);
 			throw new UnavailableException("Error while initializing application services");
 		}
 

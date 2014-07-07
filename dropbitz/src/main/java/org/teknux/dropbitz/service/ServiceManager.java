@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
+import org.teknux.dropbitz.exception.DropBitzException;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 
@@ -28,7 +29,7 @@ public class ServiceManager implements
 		return servletContext;
 	}
 
-	public synchronized void start() {
+	public synchronized void start() throws DropBitzException {
 		storageService = new StorageService();
 		storageService.start();
 

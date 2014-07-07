@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.exception.DropBitzException;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
@@ -23,7 +24,7 @@ public class StorageService implements
 		IService {
 
 	public static final String DATABASE_NAME = "dropbitz.db";
-	public static final String BACKUP_NAME = "dropbitz.db";
+	public static final String BACKUP_NAME = "dropbitz.db.bak";
 
 	private final Logger logger = LoggerFactory.getLogger(StorageService.class);
 
@@ -40,7 +41,7 @@ public class StorageService implements
 	}
 
 	@Override
-	public void start() {
+	public void start() throws DropBitzException {
 		logger.debug("Starting storage service...");
 
 		try {
@@ -59,7 +60,7 @@ public class StorageService implements
 			logger.debug("Storage service started.");
 
 		} catch (IOException | Db4oIOException e) {
-			logger.error("Error opening storage file", e);
+			throw new DropBitzException("Error opening storage file", e);
 		}
 	}
 

@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.teknux.dropbitz.exception.DropBitzException;
 import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
 import org.teknux.dropbitz.model.User;
@@ -27,7 +28,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testDatabase() throws IOException, StorageException {
+	public void testDatabase() throws IOException, StorageException, DropBitzException {
 		final StorageService srv = new StorageService(testFolder.getRoot() + "/database.db");
 		srv.start(); // start the service
 		final IUserService userService = new DatabaseStorageService(srv);
