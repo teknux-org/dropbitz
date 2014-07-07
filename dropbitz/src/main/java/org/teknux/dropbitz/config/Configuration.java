@@ -6,7 +6,7 @@ import org.skife.config.Config;
 import org.skife.config.Default;
 import org.skife.config.DefaultNull;
 
-public interface ConfigurationFile {
+public interface Configuration {
 
 	@Config("secureId")
 	@Default("")

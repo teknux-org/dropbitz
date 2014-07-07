@@ -24,5 +24,10 @@
       </ul>
     </div>
   </div><!-- /container -->
+  <#if user()>
+  	Connected
+  <#else>
+  	Disconnected
+  </#if>
 </div>
 <!-- /Header -->
