@@ -1,6 +1,6 @@
 package org.teknux.dropbitz.service;
 
-import org.teknux.dropbitz.config.ConfigurationFile;
+import org.teknux.dropbitz.config.Configuration;
 
 
 /**
@@ -9,5 +9,5 @@ import org.teknux.dropbitz.config.ConfigurationFile;
 public interface IConfigurationService extends
 		IService {
 
-	public ConfigurationFile getConfiguration();
+	public Configuration getConfiguration();
 }

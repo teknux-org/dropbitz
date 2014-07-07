@@ -24,7 +24,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.ConfigurationFile;
+import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.model.view.FallbackModel;
@@ -77,7 +77,7 @@ public class UploadController extends AbstractController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
     		}   	
-    		ConfigurationFile config = ServiceManager.get(context).getConfigurationService().getConfiguration();
+    		Configuration config = ServiceManager.get(context).getConfigurationService().getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {

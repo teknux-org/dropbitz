@@ -5,18 +5,18 @@
 	
 	<div class="col-lg-12 text-center">
 		<div id="auth-title">
-			<h1>${statics["org.teknux.dropbitz.Application"].getConfigurationFile().getTitle()}</h1>
+			<h1>${statics["org.teknux.dropbitz.Application"].getConfiguration().getTitle()}</h1>
 			<span id="landing-page-lead">
 				- Enter your Secure ID to start sharing files -
 			</span>
 		</div>
 
-		<#if model??>
+		<#if model.errorMessage??>
 			<div id="auth-errormessage">
 				<div class="error-message">
 					<span class="glyphicon glyphicon-exclamation-sign"></span>
 					<span>
-						${model}
+						${model.errorMessage}
 					</span>
 				</div>
 			</div>
