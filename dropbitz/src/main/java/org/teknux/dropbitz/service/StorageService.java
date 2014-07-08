@@ -17,6 +17,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.constraints.UniqueFieldValueConstraint;
 import com.db4o.defragment.Defragment;
+import com.db4o.ext.Db4oException;
 import com.db4o.ext.Db4oIOException;
 
 
@@ -48,27 +49,38 @@ public class StorageService implements
 		logger.debug("Starting storage service...");
 
 		try {
-			final File dbFile = new File(storageFile);
-			final Path dbFilePath = FileSystems.getDefault().getPath(storageFile);
-			// backup and defragment
-			if (dbFile.exists()) {
-				final Path dbDirPath = dbFilePath.getParent();
-				Objects.requireNonNull(dbDirPath, "Storage file has not parent directory");
-				logger.trace("Optimizing storage");
-				Defragment.defrag(dbFile.getPath(), dbDirPath.resolve(BACKUP_NAME).toString());
-			}
+			maintainDatabase(storageFile);
 			logger.trace("Opening storage file");
-
-			EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
-			configuration.common().objectClass(User.class).objectField("email").indexed(true);
-			configuration.common().add(new UniqueFieldValueConstraint(User.class, "email"));
-			objectContainer = Db4oEmbedded.openFile(storageFile);
-
+			openDatabase();
 			logger.debug("Storage service started.");
 
 		} catch (IOException | Db4oIOException e) {
 			throw new DropBitzException("Error opening storage file", e);
 		}
+	}
+
+	private void maintainDatabase(final String storageFile) throws IOException {
+		final File dbFile = new File(storageFile);
+		final Path dbFilePath = FileSystems.getDefault().getPath(storageFile);
+		// backup and defragment
+		if (dbFile.exists()) {
+			final Path dbDirPath = dbFilePath.getParent();
+			Objects.requireNonNull(dbDirPath, "Storage file has not parent directory");
+			final File backupFile = dbDirPath.resolve(BACKUP_NAME).toFile();
+			if (backupFile.exists()) {
+				logger.trace("Removing previous database backup");
+				backupFile.delete();
+			}
+			logger.trace("Optimizing storage");
+			Defragment.defrag(dbFile.getPath(), dbDirPath.resolve(BACKUP_NAME).toString());
+		}
+	}
+
+	private void openDatabase() throws Db4oException {
+		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+		configuration.common().objectClass(User.class).objectField("email").indexed(true);
+		configuration.common().add(new UniqueFieldValueConstraint(User.class, "email"));
+		objectContainer = Db4oEmbedded.openFile(storageFile);
 	}
 
 	@Override
