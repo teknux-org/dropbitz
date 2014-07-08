@@ -8,16 +8,28 @@
     <div class="container">
 
         <form  id="drop-file-area" method="post" action="/upload" enctype="multipart/form-data">
-            <div class="well">
-                <blockquote>Drag &amp; Drop files here or click "Add Files" button</blockquote>
-                <input class="form-control input-lg" type="text" name="name" placeholder="Enter your name"/>
+
+            <div class="control-group">
+                <label>Name</label>
+                <div class="controls">
+                    <input name="name" type="text" class="form-control" placeholder="Enter Name">
+                </div>
+            </div>
+
+            <div id="dropzone" class="control-group">
+                <label>Drop Files Here</label>
+                <div class="controls">
+                    <div class="well text-center">
+                        <span class="glyphicon glyphicon-cloud-upload" style="font-size:64px;"></span>
+                    </div>
+                </div>
             </div>
 
             <!-- UPLOAD GLOBAL CONTROL -->
             <div id="actions" class="row">
               <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
+                <span class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
                 </span>
@@ -33,35 +45,36 @@
               </div>
             </div>
 
-            <!-- UPLOAD PROGRESS -->
-            <div class="table table-striped" class="files" id="previews">
 
-              <div id="template" class="file-row">
-                <!-- This is used as the file preview template -->
-                <div>
-                    <span class="preview"><img data-dz-thumbnail /></span>
-                </div>
-                <div>
-                    <p class="name" data-dz-name></p>
-                </div>
-                <div>
-                    <p class="size" data-dz-size></p>
-                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                      <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+            <!-- UPLOAD PROGRESS -->
+                <div class="table table-striped" class="files" id="previews">
+
+                  <div id="template" class="file-row">
+                    <!-- This is used as the file preview template -->
+                    <div>
+                        <span class="preview"><img data-dz-thumbnail /></span>
                     </div>
+                    <div>
+                        <p class="name" data-dz-name></p>
+                    </div>
+                    <div>
+                        <p class="size" data-dz-size></p>
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        </div>
+                    </div>
+                    <div>
+                      <button data-dz-remove class="btn btn-warning cancel">
+                          <i class="glyphicon glyphicon-ban-circle"></i>
+                          <span>Cancel</span>
+                      </button>
+                      <button data-dz-remove class="btn btn-danger delete">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Hide</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <button data-dz-remove class="btn btn-warning cancel">
-                      <i class="glyphicon glyphicon-ban-circle"></i>
-                      <span>Cancel</span>
-                  </button>
-                  <button data-dz-remove class="btn btn-danger delete">
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Hide</span>
-                  </button>
-                </div>
-              </div>
-            </div>
 
             <!-- FALLBACK FORM -->
             <div class="fallback">
@@ -83,6 +96,10 @@
             }
 
             #actions {
+                display: none;
+            }
+
+            #dropzone {
                 display: none;
             }
         </style>

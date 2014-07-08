@@ -63,7 +63,7 @@ html, body {
 	margin: 0 auto;
 	width: 100%;
 	min-height: 100%;
-	background-color: #2A718D;
+	/*background-color: #2A718D;*/
 }
 
 .spacer {
@@ -137,4 +137,9 @@ footer {
   padding-bottom:20px;
   background-color:#efefef;
   height: 60px;
+}
+
+/* PANEL */
+.control-group {
+    margin-bottom: 10px;
 }
