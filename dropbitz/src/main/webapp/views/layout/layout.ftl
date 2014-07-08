@@ -15,7 +15,7 @@
 			<link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		  	<script src="/static/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 			<link href="/static/css/styles.css" rel="stylesheet">
-			<script src="js/scripts.js" type="text/javascript"></script>
+			<script src="/static/js/scripts.js" type="text/javascript"></script>
 		</head>
 		<body>
 		    <div class="wrap">

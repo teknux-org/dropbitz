@@ -10,12 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,8 +27,6 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.model.view.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
-import org.teknux.dropbitz.service.IEmailService;
-import org.teknux.dropbitz.service.ServiceManager;
 
 @Path("/upload")
 public class UploadController extends AbstractController {
@@ -48,9 +44,6 @@ public class UploadController extends AbstractController {
 	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
 	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
-	
-	@Context
-	private ServletContext context;
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -77,7 +70,7 @@ public class UploadController extends AbstractController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
     		}   	
-    		Configuration config = ServiceManager.get(context).getConfigurationService().getConfiguration();
+    		Configuration config = getServiceManager().getConfigurationService().getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
@@ -117,7 +110,6 @@ public class UploadController extends AbstractController {
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		
-		final IEmailService emailService  = ServiceManager.get(context).getEmailService();
-		emailService.sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getEmailService().sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
 	}
 }

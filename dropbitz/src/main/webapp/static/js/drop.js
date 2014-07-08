@@ -54,11 +54,11 @@ myDropzone.on("success", function(progress) {
     $('#drop-errormessage').addClass("hidden");
 });
 
-myDropzone.on("error", function(progress) {
-    $('#drop-errormessage').addClass("hidden");
+myDropzone.on("error", function(file, errorMessage, xhr) {
+    $('#drop-errormessage').removeClass("hidden");
 
     if (typeof xhr !== 'undefined' && xhr.status == 403) {
-        $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/'>sign in</a>");
+        $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/auth'>sign in</a>");
     } else {
         $("#drop-errormessage-content").html(errorMessage);
     }
