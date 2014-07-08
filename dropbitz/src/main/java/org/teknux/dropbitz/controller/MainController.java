@@ -27,6 +27,13 @@ public class MainController extends AbstractController {
 	public Viewable index() {
 		return viewable(View.DROP);
 	}
+
+    @GET
+    @Path("logout")
+    public Response logout() throws URISyntaxException {
+        AuthenticationHelper.logout(getHttpServletRequest());
+        return Response.seeOther(new URI("/")).build();
+    }
 	
 	@GET
 	@Path("auth")

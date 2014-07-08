@@ -24,7 +24,7 @@ public interface Configuration {
 	int getPort();
 	
 	@Config("title")
-	@Default("DropBitz")
+	@Default("")
 	String getTitle();
 	
 	@Config("email.enable")

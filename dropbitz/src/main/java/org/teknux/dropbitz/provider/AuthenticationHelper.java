@@ -40,4 +40,9 @@ public class AuthenticationHelper {
 		}
 		return isAuthorized;
 	}
+
+    public static void logout(HttpServletRequest request) {
+        request.getSession().removeAttribute(SESSION_ATTRIBUTE_IS_SECURED);
+        logger.trace("Logout success");
+    }
 }
