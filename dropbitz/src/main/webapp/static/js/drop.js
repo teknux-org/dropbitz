@@ -1,28 +1,65 @@
-Dropzone.options.dropzone = {
-	previewsContainer : ".dropzone-previews",
-	paramName : "file",
-	maxFilesize : 100000,
-	accept: function(file, done) {
-		if ($("input[name='name']").val().length == 0) {
-			done("Please enter your name");
-		} else {
-	    	done();
-    	}
-	  },
-	success : function(file) {
-		$('#drop-errormessage').addClass("hidden");
-		
-		return this.defaultOptions.success(file);
-	},
-	error : function(file, errorMessage, xhr) {
-		$('#drop-errormessage').removeClass("hidden");
-		
-		if (typeof xhr !== 'undefined' && xhr.status == 403) {
-			$("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/'>sign in</a>");
-		} else {
-			$("#drop-errormessage-content").html(errorMessage);
-		}
-		
-		return this.defaultOptions.error(file, errorMessage);
-	}
+// Get the template HTML and remove it from the doument
+var previewNode = document.querySelector("#template");
+previewNode.id = "";
+
+var previewTemplate = previewNode.parentNode.innerHTML;
+previewNode.parentNode.removeChild(previewNode);
+
+var myDropzone = new Dropzone("#drop-file-area", { // Make the whole body a dropzone
+    url: "/upload", // Set the url
+    paramName : "file",
+    maxFilesize : 100000,
+    thumbnailWidth: 80,
+    thumbnailHeight: 80,
+    parallelUploads: 20,
+    previewTemplate: previewTemplate,
+    autoQueue: true, // Make sure the files aren't queued until manually added
+    previewsContainer: "#previews", // Define the container to display the previews
+    clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+
+    error: function(file, errorMessage, xhr) {
+        $('#drop-errormessage').removeClass("hidden");
+
+        if (typeof xhr !== 'undefined' && xhr.status == 403) {
+            $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/'>sign in</a>");
+            } else {
+           	    $("#drop-errormessage-content").html(errorMessage);
+            }
+
+        file.previewElement.querySelector(".cancel").remove();
+        return this.defaultOptions.error(file, errorMessage);
+    }
+});
+
+myDropzone.on("addedfile", function(file) {
+    // Hookup the start button
+    //file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+});
+
+// Update the total progress bar
+myDropzone.on("totaluploadprogress", function(progress) {
+    document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+});
+
+myDropzone.on("sending", function(file) {
+    // Show the total progress bar when upload starts
+    document.querySelector("#total-progress").style.opacity = "1";
+    // And disable the start button
+    //file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+});
+
+// Hide the total progress bar when nothing's uploading anymore
+myDropzone.on("queuecomplete", function(progress) {
+    document.querySelector("#total-progress").style.opacity = "0";
+});
+
+// Setup the buttons for all transfers
+// The "add files" button doesn't need to be setup because the config
+// `clickable` has already been specified.
+document.querySelector("#actions .cancel").onclick = function() {
+    myDropzone.removeAllFiles(true);
 };
+
+myDropzone.on("success", function(progress) {
+    $('#drop-errormessage').addClass("hidden");
+});
