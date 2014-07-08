@@ -10,7 +10,7 @@ import org.teknux.dropbitz.model.IUser;
  * Manages all aspects of user management
  */
 public interface IUserService extends
-		IService {
+		AutoCloseable {
 
 	/**
 	 * Retrieve the user object for the specified username.
@@ -29,20 +29,12 @@ public interface IUserService extends
 	void createUser(IUser user) throws StorageException;
 
 	/**
-	 * Updates a user object. This method does not allow to rename a user.
+	 * Updates a user object.
 	 *
 	 * @param user
 	 *            the user to update
 	 */
 	void updateUser(IUser user) throws StorageException;
-
-	/**
-	 * Updates a user object. Allows to rename the user.
-	 *
-	 * @param user
-	 *            the user to update
-	 */
-	void updateUser(String username, IUser user) throws StorageException;
 
 	/**
 	 * Deletes the user object from storage.

@@ -10,9 +10,12 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.DropBitzException;
+import org.teknux.dropbitz.model.User;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
+import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.constraints.UniqueFieldValueConstraint;
 import com.db4o.defragment.Defragment;
 import com.db4o.ext.Db4oIOException;
 
@@ -55,6 +58,10 @@ public class StorageService implements
 				Defragment.defrag(dbFile.getPath(), dbDirPath.resolve(BACKUP_NAME).toString());
 			}
 			logger.trace("Opening storage file");
+
+			EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+			configuration.common().objectClass(User.class).objectField("email").indexed(true);
+			configuration.common().add(new UniqueFieldValueConstraint(User.class, "email"));
 			objectContainer = Db4oEmbedded.openFile(storageFile);
 
 			logger.debug("Storage service started.");

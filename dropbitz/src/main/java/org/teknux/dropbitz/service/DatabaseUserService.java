@@ -14,15 +14,17 @@ import com.db4o.ext.Db4oException;
 
 
 /**
- * Persistent user storage/service.
+ * Persistent user storage/service. This service is not thread safe and consumes resource that need to be freed.
+ * 
+ * @see AutoCloseable
  */
-public class DatabaseStorageService implements
+public class DatabaseUserService implements
 		IUserService {
 
-	private final StorageService storageService;
+	private final ObjectContainer container;
 
-	public DatabaseStorageService(StorageService storageService) {
-		this.storageService = storageService;
+	public DatabaseUserService(StorageService storageService) {
+		container = storageService.getObjectContainer();
 	}
 
 	@Override
@@ -45,6 +47,10 @@ public class DatabaseStorageService implements
 		Objects.requireNonNull(user);
 		Objects.requireNonNull(user.getEmail());
 
+		if (getUser(user.getEmail()) != null) {
+			throw new StorageException("User with username " + user.getEmail() + " already exists");
+		}
+		// creates/stores the user
 		update(container -> container.store(user));
 	}
 
@@ -53,28 +59,15 @@ public class DatabaseStorageService implements
 		Objects.requireNonNull(user);
 		Objects.requireNonNull(user.getEmail());
 
-		updateUser(user.getEmail(), user);
-	}
-
-	@Override
-	public void updateUser(String username, IUser user) throws StorageException {
-		Objects.requireNonNull(username);
-		Objects.requireNonNull(user);
-
-		update(container -> {
-			final User example = new User();
-			example.setEmail(user.getEmail()); // find by old email
-			ObjectSet<User> resultSet = container.queryByExample(example);
-			if (resultSet.isEmpty())
-				throw new StorageException("User does not exists : " + user);
-			final User storedUser = resultSet.next();
-			storedUser.setEmail(username); // update email
-			storedUser.setName(user.getName());
-			storedUser.setPassword(user.getPassword());
-			storedUser.setActive(user.isActive());
-			storedUser.setAdmin(user.isAdmin());
-			container.store(storedUser); // update existing user
-		});
+		// check if the username has changed
+//		IUser previousUser = getUser(user.getEmail());
+//		if (previousUser != null && !Objects.equals(previousUser.getEmail(), user.getEmail())) {
+//			if (getUser(user.getEmail()) != null) { // check the new email does not exists already
+//				throw new StorageException("User with username " + user.getEmail() + " already exists");
+//			}
+//		}
+		// update the user in db
+		update(container -> container.store(user));
 	}
 
 	@Override
@@ -110,37 +103,21 @@ public class DatabaseStorageService implements
 		});
 	}
 
-	@Override
-	public void start() {
-
-	}
-
-	@Override
-	public void stop() {
-
-	}
-
 	private void update(final UpdateOperation runnable) throws StorageException {
-		final ObjectContainer container = storageService.getObjectContainer();
 		try {
 			runnable.execute(container);
-			container.commit();
+			container.commit(); // commit
 		} catch (Exception e) {
-			container.rollback();
+			container.rollback(); // rollback the transaction
 			throw new StorageException(e);
-		} finally {
-			container.close();
 		}
 	}
 
 	private <T> T select(final SelectOperation<T> runnable) throws StorageException {
-		final ObjectContainer container = storageService.getObjectContainer();
 		try {
 			return runnable.execute(container);
 		} catch (Exception e) {
 			throw new StorageException(e);
-		} finally {
-			container.close();
 		}
 	}
 
@@ -152,6 +129,13 @@ public class DatabaseStorageService implements
 	private interface UpdateOperation {
 
 		void execute(ObjectContainer container) throws Db4oException, StorageException;
+	}
+
+	@Override
+	public void close() throws Exception {
+		if (container != null) {
+			container.close();
+		}
 	}
 
 }

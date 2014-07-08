@@ -14,7 +14,6 @@ import org.teknux.dropbitz.util.DropBitzServlet;
 public class ServiceManager implements
 		IService {
 
-	private IUserService userService;
 	private IConfigurationService configurationService;
 	private IEmailService emailService;
 	private StorageService storageService;
@@ -36,15 +35,11 @@ public class ServiceManager implements
 		configurationService = new ConfigurationService();
 		configurationService.start();
 
-		userService = new DatabaseStorageService(storageService);
-		userService.start();
-
 		emailService = new EmailService(this);
 		emailService.start();
 	}
 
 	public synchronized void stop() {
-		userService.stop();
 		configurationService.stop();
 		storageService.stop();
 	}
@@ -54,12 +49,12 @@ public class ServiceManager implements
 		return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
 	}
 
+	/**
+	 * @return a new instance of the user service. this service uses resources that needs to be free when done.
+	 * @see AutoCloseable
+	 */
 	public IUserService getUserService() {
-		return userService;
-	}
-
-	public StorageService getStorageService() {
-		return storageService;
+		return new DatabaseUserService(this.storageService);
 	}
 
 	public IConfigurationService getConfigurationService() {

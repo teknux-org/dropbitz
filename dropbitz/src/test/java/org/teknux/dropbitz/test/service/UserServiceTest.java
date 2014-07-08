@@ -1,100 +1,122 @@
 package org.teknux.dropbitz.test.service;
 
-import java.io.IOException;
 import java.util.UUID;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Rule;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.teknux.dropbitz.exception.DropBitzException;
 import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
 import org.teknux.dropbitz.model.User;
-import org.teknux.dropbitz.service.DatabaseStorageService;
+import org.teknux.dropbitz.service.DatabaseUserService;
 import org.teknux.dropbitz.service.IUserService;
-import org.teknux.dropbitz.service.InMemoryUserService;
 import org.teknux.dropbitz.service.StorageService;
 
 
 public class UserServiceTest {
 
-	@Rule
-	public TemporaryFolder testFolder = new TemporaryFolder();
+	@ClassRule
+	public static TemporaryFolder testFolder = new TemporaryFolder();
 
-	@Test
-	public void testInMemory() throws StorageException {
-		runTests(new InMemoryUserService());
-	}
+	public static IUserService userService;
 
-	@Test
-	public void testDatabase() throws IOException, StorageException, DropBitzException {
+	@BeforeClass
+	public static void begin() throws DropBitzException {
 		final StorageService srv = new StorageService(testFolder.getRoot() + "/database.db");
-		srv.start(); // start the service
-		final IUserService userService = new DatabaseStorageService(srv);
-
-		runTests(userService);
-
-		srv.stop();
+		srv.start();
+		userService = new DatabaseUserService(srv);
 	}
 
-	private void runTests(final IUserService service) throws StorageException {
-		testSelect(service);
-		testCreate(service);
-		testUpdate(service);
-		testDelete(service);
-		testUsernameIsUnique(service);
+	@AfterClass
+	public static void end() throws Exception {
+		userService.close();
 	}
 
-	private void testUsernameIsUnique(final IUserService service) throws StorageException {
-		// TODO check uniqueness of username
+	@Test
+	public void testUsernameIsUnique() throws StorageException {
+		final String id = UUID.randomUUID().toString();
+		final User u = createUser(id);
+
+		userService.createUser(u);
+		Assert.assertNotNull(userService.getUser(u.getEmail())); // check exists
+		checkUser(u, id);
+
+		try {
+			final User duplicate = createUser(id);
+			userService.createUser(duplicate);
+			Assert.fail("Should throw a StorageException!");
+			Assert.assertNull(userService.getUser(duplicate.getEmail())); // check exists
+
+		} catch (StorageException e) {
+			// we expect an exception here :)
+		} finally {
+			userService.deleteUser(u);
+		}
+
 	}
 
-	private void testSelect(final IUserService service) throws StorageException {
+	@Test
+	public void benchmark() throws StorageException {
+		for (int i = 0; i < 100; i++) {
+			final User u = createUser(UUID.randomUUID().toString());
+			userService.createUser(u);
+			userService.getUser(u.getEmail());
+			userService.deleteUser(u);
+		}
+	}
+
+	@Test
+	public void testSelect() throws StorageException {
 		final User u1 = createUser(UUID.randomUUID().toString());
 		final User u2 = createUser(UUID.randomUUID().toString());
 		final User u3 = createUser(UUID.randomUUID().toString());
 
-		service.createUser(u1);
-		service.createUser(u2);
-		service.createUser(u3);
+		userService.createUser(u1);
+		userService.createUser(u2);
+		userService.createUser(u3);
 
-		Assert.assertEquals(3, service.getUsers().size());
+		Assert.assertEquals(3, userService.getUsers().size());
 
-		service.deleteUser(u1);
-		service.deleteUser(u2);
-		service.deleteUser(u3);
+		userService.deleteUser(u1);
+		userService.deleteUser(u2);
+		userService.deleteUser(u3);
 
-		Assert.assertEquals(0, service.getUsers().size());
+		Assert.assertEquals(0, userService.getUsers().size());
 	}
 
-	private void testCreate(final IUserService service) throws StorageException {
+	@Test
+	public void testCreate() throws StorageException {
 		final String id = UUID.randomUUID().toString();
 		final User u = createUser(id);
 
-		service.createUser(u);
-		Assert.assertNotNull(service.getUser(u.getEmail())); // check exists
+		userService.createUser(u);
+		Assert.assertNotNull(userService.getUser(u.getEmail())); // check exists
 		checkUser(u, id);
 
-		service.deleteUser(u); // delete
-		Assert.assertNull(service.getUser(u.getEmail())); // check exists
+		userService.deleteUser(u); // delete
+		Assert.assertNull(userService.getUser(u.getEmail())); // check exists
 	}
 
-	private void testUpdate(final IUserService service) throws StorageException {
+	@Test
+	public void testUpdate() throws StorageException {
 		final String id = UUID.randomUUID().toString();
 		final User u = createUser(id);
 
-		service.createUser(u);
-		Assert.assertNotNull(service.getUser(u.getEmail())); // check exists
+		userService.createUser(u);
+		Assert.assertNotNull(userService.getUser(u.getEmail())); // check exists
 		checkUser(u, id);
 
 		// test simple update fields
 		boolean active = !u.isActive();
 		u.setActive(active);
 		u.setName("test");
-		service.updateUser(u); // update
+		userService.updateUser(u); // update
 
-		final IUser updatedUser = service.getUser(u.getEmail());
+		final IUser updatedUser = userService.getUser(u.getEmail());
 		Assert.assertNotNull(updatedUser);
 		Assert.assertEquals(updatedUser.getName(), "test");
 		Assert.assertEquals(updatedUser.isActive(), active);
@@ -104,22 +126,23 @@ public class UserServiceTest {
 		//Assert.assertNotNull(service.getUser("New Name")); // check exists
 
 		// test user was not duplicated
-		Assert.assertEquals(1, service.getUsers().size()); // check exists
+		Assert.assertEquals(1, userService.getUsers().size()); // check exists
 
-		service.deleteUser(u); // delete
-		Assert.assertNull(service.getUser(u.getEmail())); // check exists
+		userService.deleteUser(u); // delete
+		Assert.assertNull(userService.getUser(u.getEmail())); // check exists
 	}
 
-	private void testDelete(final IUserService service) throws StorageException {
+	@Test
+	public void testDelete() throws StorageException {
 		final String id = UUID.randomUUID().toString();
 		final User u = createUser(id);
 
-		service.createUser(u);
-		Assert.assertNotNull(service.getUser(u.getEmail())); // check exists
+		userService.createUser(u);
+		Assert.assertNotNull(userService.getUser(u.getEmail())); // check exists
 		checkUser(u, id);
 
-		service.deleteUser(u); // delete
-		Assert.assertNull(service.getUser(u.getEmail())); // check exists
+		userService.deleteUser(u); // delete
+		Assert.assertNull(userService.getUser(u.getEmail())); // check exists
 	}
 
 	private User createUser(final String username) {
