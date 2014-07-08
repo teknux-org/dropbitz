@@ -1,5 +1,9 @@
 function message(id, message, type, closable) {
-	if (typeof(id) != 'undefined') {
+	if (typeof(id) == 'undefined' && typeof(message) == 'undefined') {
+		$(".alert").alert('close');
+		
+		$("#messages").addClass("hidden");
+	} else {
 		if (typeof(message) == 'undefined') {
 			$("#message-id-" + id).alert('close');
 

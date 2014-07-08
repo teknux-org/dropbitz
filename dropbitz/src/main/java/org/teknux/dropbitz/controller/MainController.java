@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teknux.dropbitz.freemarker.View;
-import org.teknux.dropbitz.model.view.AuthModel;
+import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
@@ -32,17 +32,16 @@ public class MainController extends AbstractController {
 	@Path("auth")
     public Response auth() {
 	    Status status = Status.OK;
-	    AuthModel authModel = new AuthModel();
 	    
         String errorMessage = (String) getSession().getAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
         if (errorMessage != null) {
             getSession().removeAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
             
             status = Status.FORBIDDEN;
-            authModel.setErrorMessage(errorMessage);
+            addMessage(errorMessage, Type.DANGER);
         }      
 	    
-        return Response.status(status).entity(viewable(View.AUTH, authModel)).build();
+        return Response.status(status).entity(viewable(View.AUTH)).build();
     }
 	
 	@POST

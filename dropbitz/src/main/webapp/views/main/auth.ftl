@@ -11,17 +11,6 @@
 			</span>
 		</div>
 
-		<#if model.errorMessage??>
-			<div id="auth-errormessage">
-				<div class="error-message">
-					<span class="glyphicon glyphicon-exclamation-sign"></span>
-					<span>
-						${model.errorMessage}
-					</span>
-				</div>
-			</div>
-		</#if>
-
 		<form class="col-lg-12" method="post" action="/authenticate">
 			<div id="auth-form-group" class="input-group">
 				<input class="form-control input-lg" type="password" name="secureId" placeholder="Enter your secure id" />

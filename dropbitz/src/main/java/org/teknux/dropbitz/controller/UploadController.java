@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -24,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.freemarker.View;
+import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
-import org.teknux.dropbitz.model.view.FallbackModel;
 import org.teknux.dropbitz.provider.Authenticated;
 
 @Path("/upload")
@@ -44,6 +45,9 @@ public class UploadController extends AbstractController {
 	
 	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
 	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
+	
+    private static final String FALLBACK_MESSAGE_OK = "File ''{0}'' uploaded successfully";
+    private static final String FALLBACK_MESSAGE_ERROR = "File ''{0}'' not uploaded : {1}";
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -88,11 +92,13 @@ public class UploadController extends AbstractController {
 	
 	private Response getResponse(Boolean fallback, Status status, String fileName, String errorMessage) {
 		if (fallback != null && fallback) {
-			FallbackModel fallbackModel = new FallbackModel();
-			fallbackModel.setFileName(fileName);
-			fallbackModel.setErrorMessage(errorMessage);
+		    if (errorMessage == null) {	        
+		        addMessage(MessageFormat.format(FALLBACK_MESSAGE_OK, fileName), Type.SUCCESS);
+		    } else {
+		        addMessage(MessageFormat.format(FALLBACK_MESSAGE_ERROR, fileName, errorMessage), Type.DANGER);
+		    }
 			
-			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK, fallbackModel)).build();	
+			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK)).build();	
 		} else {
 			Map<String, String> map = new HashMap<String, String>();
 			if (errorMessage != null) {

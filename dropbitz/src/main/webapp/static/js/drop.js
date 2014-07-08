@@ -18,13 +18,9 @@ var myDropzone = new Dropzone("#drop-file-area", { // Make the whole body a drop
     clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
 
     error: function(file, errorMessage, xhr) {
-        $('#drop-errormessage').removeClass("hidden");
-
         if (typeof xhr !== 'undefined' && xhr.status == 403) {
-            $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/'>sign in</a>");
-            } else {
-           	    $("#drop-errormessage-content").html(errorMessage);
-            }
+        	message("error", "Session timeout. Please authenticate. <a href='/'>sign in</a>", "danger", true);
+        }
 
         file.previewElement.querySelector(".cancel").remove();
         return this.defaultOptions.error(file, errorMessage);

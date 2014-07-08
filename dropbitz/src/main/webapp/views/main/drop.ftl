@@ -7,13 +7,6 @@
 
 <div class="container">
 
-	<div id="drop-errormessage" class="hidden">
-		<div class="error-message">
-			<span class="glyphicon glyphicon-exclamation-sign"></span>
-			<span id="drop-errormessage-content"></span>
-		</div>
-	</div>
-
     <form  id="drop-file-area" method="post" action="/upload" enctype="multipart/form-data">
         <div class="well">
             <blockquote>Drag &amp; Drop files here or click "Add Files" button</blockquote>
