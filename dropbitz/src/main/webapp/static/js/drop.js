@@ -15,7 +15,20 @@ var myDropzone = new Dropzone("#drop-file-area", { // Make the whole body a drop
     previewTemplate: previewTemplate,
     autoQueue: true, // Make sure the files aren't queued until manually added
     previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+    clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+
+    error: function(file, errorMessage, xhr) {
+        $('#drop-errormessage').removeClass("hidden");
+
+        if (typeof xhr !== 'undefined' && xhr.status == 403) {
+            $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/'>sign in</a>");
+            } else {
+           	    $("#drop-errormessage-content").html(errorMessage);
+            }
+
+        file.previewElement.querySelector(".cancel").remove();
+        return this.defaultOptions.error(file, errorMessage);
+    }
 });
 
 myDropzone.on("addedfile", function(file) {
@@ -43,23 +56,10 @@ myDropzone.on("queuecomplete", function(progress) {
 // Setup the buttons for all transfers
 // The "add files" button doesn't need to be setup because the config
 // `clickable` has already been specified.
-document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-};
 document.querySelector("#actions .cancel").onclick = function() {
     myDropzone.removeAllFiles(true);
 };
 
 myDropzone.on("success", function(progress) {
     $('#drop-errormessage').addClass("hidden");
-});
-
-myDropzone.on("error", function(file, errorMessage, xhr) {
-    $('#drop-errormessage').removeClass("hidden");
-
-    if (typeof xhr !== 'undefined' && xhr.status == 403) {
-        $("#drop-errormessage-content").html("Session timeout. Please authenticate. <a href='/auth'>sign in</a>");
-    } else {
-        $("#drop-errormessage-content").html(errorMessage);
-    }
 });

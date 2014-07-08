@@ -52,7 +52,11 @@ public class StorageService implements
 				final Path dbDirPath = dbFilePath.getParent();
 				Objects.requireNonNull(dbDirPath, "Storage file has not parent directory");
 				logger.trace("Optimizing storage");
-				Defragment.defrag(dbFile.getPath(), dbDirPath.resolve(BACKUP_NAME).toString());
+                final File backupFile = dbDirPath.resolve(BACKUP_NAME).toFile();
+                if (backupFile.exists()) {
+                    backupFile.delete();
+                }
+                Defragment.defrag(dbFile.getPath(), backupFile.toPath().toString());
 			}
 			logger.trace("Opening storage file");
 			objectContainer = Db4oEmbedded.openFile(storageFile);

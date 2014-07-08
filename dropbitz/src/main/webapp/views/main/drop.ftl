@@ -68,7 +68,6 @@
         </div>
         <div>
             <p class="name" data-dz-name></p>
-            <strong class="error text-danger" data-dz-errormessage></strong>
         </div>
         <div>
             <p class="size" data-dz-size></p>
