@@ -80,7 +80,7 @@ public class StorageService implements
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 		configuration.common().objectClass(User.class).objectField("email").indexed(true);
 		configuration.common().add(new UniqueFieldValueConstraint(User.class, "email"));
-		objectContainer = Db4oEmbedded.openFile(storageFile);
+		objectContainer = Db4oEmbedded.openFile(configuration, storageFile);
 	}
 
 	@Override
