@@ -1,7 +1,11 @@
 package org.teknux.dropbitz.model.view;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import org.teknux.dropbitz.model.Message;
 
 public interface IModel {
     ServletContext getServletContext();
@@ -11,4 +15,8 @@ public interface IModel {
     HttpServletRequest getHttpServletRequest();
 
     void setHttpServletRequest(HttpServletRequest request);
+    
+    List<Message> getMessages();
+
+    void setMessages(List<Message> messages);
 }

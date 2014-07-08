@@ -23,6 +23,7 @@
                 <div>
                     <#include "/views/layout/header.ftl"/>
                 </div>
+                <#include "/views/layout/messages.ftl"/>
                 <div class="spacer"></div>
                 <div id="content">
                     <#nested/>
