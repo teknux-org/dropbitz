@@ -21,6 +21,7 @@ div.table {
 div.table .file-row {
     display: table-row;
 }
+
 div.table .file-row > div {
     display: table-cell;
     vertical-align: top;
@@ -43,6 +44,12 @@ div.table .file-row:nth-child(odd) {
     transition: opacity 0.3s linear;
 }
 
+/* File Upload Error text color */
+.dz-error p.name {
+    color: #a94442;
+    text-decoration: line-through;
+}
+
 /* Hide the delete button initially */
 #previews .file-row .delete {
     display: none;
@@ -53,6 +60,8 @@ div.table .file-row:nth-child(odd) {
 #previews .file-row.dz-success .cancel {
     display: none;
 }
-#previews .file-row.dz-success .delete {
+
+#previews .file-row.dz-success .delete,
+#previews .file-row.dz-error .delete {
     display: block;
 }
