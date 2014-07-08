@@ -17,6 +17,7 @@ public class ServiceManager implements
 	private IConfigurationService configurationService;
 	private IEmailService emailService;
 	private StorageService storageService;
+	private I18nService i18nService;
 
 	private final ServletContext servletContext;
 
@@ -37,6 +38,9 @@ public class ServiceManager implements
 
 		emailService = new EmailService(this);
 		emailService.start();
+		
+		i18nService = new I18nService("i18n.dropbitz");
+		i18nService.start();
 	}
 
 	public synchronized void stop() {
@@ -64,4 +68,8 @@ public class ServiceManager implements
 	public IEmailService getEmailService() {
 		return emailService;
 	}
+
+    public I18nService getI18nService() {
+        return i18nService;
+    }
 }
