@@ -21,7 +21,7 @@ public interface IModel {
 
     void setMessages(List<Message> messages);
     
-    Locale getLang();
+    Locale getLocale();
     
-    void setLang(Locale lang);
+    void setLocale(Locale locale);
 }

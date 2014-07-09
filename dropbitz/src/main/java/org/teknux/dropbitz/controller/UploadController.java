@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -28,6 +29,7 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
+import org.teknux.dropbitz.service.I18nService;
 
 @Path("/upload")
 public class UploadController extends AbstractController {
@@ -100,13 +102,23 @@ public class UploadController extends AbstractController {
 		}
 	}
 	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {        
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {
+	    Configuration config = getServiceManager().getConfigurationService().getConfiguration();
+	    
+	    Locale locale = null;
+	    if (config.getEmailLang() != null) {
+            locale = I18nService.getLocaleFromString(config.getEmailLang());
+        } else {
+            locale = getHttpServletRequest().getLocale();
+        }
+	    
 		DropEmailModel dropEmailModel = new DropEmailModel();
-		dropEmailModel.setName(name.isEmpty()?i18n("drop.email.name.unknown"):name);
+		dropEmailModel.setName(name.isEmpty()?i18n("drop.email.name.unknown", locale):name);
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
+		dropEmailModel.setLocale(locale);
 		
-		getServiceManager().getEmailService().sendEmail(i18n(success?"drop.email.subject.ok":"drop.email.subject.error"), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getEmailService().sendEmail(i18n(success?"drop.email.subject.ok":"drop.email.subject.error", locale), "/drop", dropEmailModel, "/dropalt");
 	}
 }

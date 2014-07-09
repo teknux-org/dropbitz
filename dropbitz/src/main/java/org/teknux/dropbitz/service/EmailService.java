@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -156,7 +155,7 @@ public class EmailService implements
 		
         model.setServletContext(servletContext);
         if (config.getEmailLang() != null) {
-            model.setLang(new Locale(config.getEmailLang()));
+            model.setLocale(I18nService.getLocaleFromString(config.getEmailLang()));
         }
         
         Map<String,IModel> map = new HashMap<String,IModel>();

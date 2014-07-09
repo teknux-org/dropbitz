@@ -12,7 +12,7 @@ public class Model implements IModel {
     private ServletContext servletContext;
     private HttpServletRequest httpServletRequest;
     private List<Message> messages;
-    private Locale lang;
+    private Locale locale;
     
     public Model() {
         
@@ -42,11 +42,11 @@ public class Model implements IModel {
         this.messages = messages;
     }
     
-    public Locale getLang() {
-        return lang;
+    public Locale getLocale() {
+        return locale;
     }
 
-    public void setLang(Locale lang) {
-        this.lang = lang;
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

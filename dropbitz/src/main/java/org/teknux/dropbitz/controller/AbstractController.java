@@ -95,10 +95,13 @@ public class AbstractController {
     }
     
     protected String i18n(String key) {
-        return i18n(key, getHttpServletRequest().getLocale());
+        return i18n(key, null);
     }
     
     protected String i18n(String key, Locale locale) {
+        if (locale == null) {
+            locale = getHttpServletRequest().getLocale();
+        }
         return getServiceManager().getI18nService().get(key, locale);
     }
 }
