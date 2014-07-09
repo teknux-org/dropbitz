@@ -6,3 +6,4 @@
 /.idea/
 /dropbitz.iml
 /config
+/src/main/resources/config.properties
