@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -36,12 +38,12 @@ public class EmailService implements
 
 	private JerseyFreemarkerConfig jerseyFreemarkerConfig;
 
-	private final IConfigurationService configService;
-	private final ServiceManager serviceManager;
+	private final Configuration config;
+	private final ServletContext servletContext;
 
-	public EmailService(final ServiceManager sm) {
-		this.serviceManager = sm;
-		this.configService = sm.getConfigurationService();
+	public EmailService(final ServiceManager serviceManager) {
+		this.servletContext = serviceManager.getServletContext();
+		this.config = serviceManager.getConfigurationService().getConfiguration();
 	}
 
 	public void setDefaultViewsPath(String viewsPath) {
@@ -87,7 +89,7 @@ public class EmailService implements
 	 *            Alternative Freemarker Template Name (Non-HTML)
 	 */
 	public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
-		if (configService.getConfiguration().isEmailEnable()) {
+		if (config.isEmailEnable()) {
 			logger.debug("Email : Send new email...");
 
 			try {
@@ -117,7 +119,6 @@ public class EmailService implements
 	private HtmlEmail getNewEmail() throws EmailException {
 		logger.trace("Email : Build new email...");
 
-		final Configuration config = configService.getConfiguration();
 		HtmlEmail email = null;
 
 		email = new HtmlEmail();
@@ -149,13 +150,14 @@ public class EmailService implements
 	 *             on template syntax error
 	 */
 	private String resolve(IModel model, String viewName) throws IOException, TemplateException {
-	    final Configuration config = configService.getConfiguration();
 	    
 		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
 		
-        model.setServletContext(serviceManager.getServletContext());
-        model.setLang(new Locale(config.getEmailLang()));
+        model.setServletContext(servletContext);
+        if (config.getEmailLang() != null) {
+            model.setLang(new Locale(config.getEmailLang()));
+        }
         
         Map<String,IModel> map = new HashMap<String,IModel>();
         map.put(MODEL_NAME_ATTRIBUTE, model);
@@ -167,9 +169,9 @@ public class EmailService implements
 
 	@Override
 	public void start() {
-		if (configService.getConfiguration().isEmailEnable()) {
+		if (config.isEmailEnable()) {
 			// Init Freemarker
-			jerseyFreemarkerConfig = new JerseyFreemarkerConfig(serviceManager.getServletContext());
+			jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
 		}
 	}
 
