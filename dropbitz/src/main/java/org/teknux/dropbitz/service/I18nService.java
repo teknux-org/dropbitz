@@ -3,19 +3,17 @@ package org.teknux.dropbitz.service;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.teknux.dropbitz.exception.DropBitzException;
-
 
 public class I18nService implements IService{
     private String resourceBaseName;
-    private ResourceBundle resourceBundle = null;
 
     public I18nService(String resourceBaseName) {
         this.resourceBaseName = resourceBaseName;
     }
-    
-    public String get(String key) {
-
+        
+    public String get(String key, Locale locale) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(resourceBaseName, locale);
+                
         if (resourceBundle.containsKey(key)) {
             return resourceBundle.getString(key);
         } else {
@@ -24,8 +22,7 @@ public class I18nService implements IService{
     }
 
     @Override
-    public void start() throws DropBitzException {
-        resourceBundle = ResourceBundle.getBundle(resourceBaseName, Locale.getDefault());
+    public void start() {
     }
 
     @Override

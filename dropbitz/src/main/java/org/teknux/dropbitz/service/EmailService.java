@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -148,11 +149,14 @@ public class EmailService implements
 	 *             on template syntax error
 	 */
 	private String resolve(IModel model, String viewName) throws IOException, TemplateException {
+	    final Configuration config = configService.getConfiguration();
+	    
 		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
 		
         model.setServletContext(serviceManager.getServletContext());
-
+        model.setLang(new Locale(config.getEmailLang()));
+        
         Map<String,IModel> map = new HashMap<String,IModel>();
         map.put(MODEL_NAME_ATTRIBUTE, model);
         

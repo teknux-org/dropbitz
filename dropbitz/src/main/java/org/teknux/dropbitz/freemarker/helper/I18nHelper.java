@@ -1,6 +1,7 @@
 package org.teknux.dropbitz.freemarker.helper;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.ServiceManager;
@@ -18,13 +19,22 @@ public class I18nHelper implements TemplateMethodModelEx {
 
     @Override
     public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException {
-        if (arguments.size() != 1) {
-            throw new TemplateModelException("Specify argument key");
+        if (arguments.size() < 1 || arguments.size() > 2) {
+            throw new TemplateModelException("Bad arguments");
         }
         if (arguments.get(0).getClass() != SimpleScalar.class) {
-            throw new TemplateModelException("Bad argument type");
-        }          
+            throw new TemplateModelException("Bad argument 1 type");
+        }
         String key = ((SimpleScalar) arguments.get(0)).getAsString();
+        Locale locale = null;
+        if (arguments.size() >= 2) {
+            if (arguments.get(1).getClass() != SimpleScalar.class) {
+                throw new TemplateModelException("Bad argument 2 type");
+            } else {
+                String strLocale = ((SimpleScalar) arguments.get(1)).getAsString();
+                locale = new Locale(strLocale);
+            }
+        }
 
         Environment environment = Environment.getCurrentEnvironment();
         if (environment == null) {
@@ -46,6 +56,14 @@ public class I18nHelper implements TemplateMethodModelEx {
             throw new TemplateModelException("Can not get ServiceManager");
         }
 
-        return serviceManager.getI18nService().get(key);
+        if (locale == null) {
+            if (iModel.getLang() != null) {
+                locale = iModel.getLang();
+            } else {
+                locale = iModel.getHttpServletRequest().getLocale();
+            }
+        }
+        
+        return serviceManager.getI18nService().get(key, locale);
     }
 }

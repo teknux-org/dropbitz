@@ -11,3 +11,4 @@ directory=/tmp
 ;email.password=
 ;email.from=
 ;email.to=
+;email.lang=

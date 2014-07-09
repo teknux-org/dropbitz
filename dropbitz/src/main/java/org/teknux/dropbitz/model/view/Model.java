@@ -1,6 +1,7 @@
 package org.teknux.dropbitz.model.view;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ public class Model implements IModel {
     private ServletContext servletContext;
     private HttpServletRequest httpServletRequest;
     private List<Message> messages;
+    private Locale lang;
     
     public Model() {
         
@@ -38,5 +40,13 @@ public class Model implements IModel {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+    
+    public Locale getLang() {
+        return lang;
+    }
+
+    public void setLang(Locale lang) {
+        this.lang = lang;
     }
 }

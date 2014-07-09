@@ -58,4 +58,8 @@ public interface Configuration {
 	@Config("email.to")
 	@DefaultNull
 	String[] getEmailTo();
+	
+	@Config("email.lang")
+    @DefaultNull
+    String getEmailLang();
 }

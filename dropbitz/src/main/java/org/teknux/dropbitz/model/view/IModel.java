@@ -1,6 +1,7 @@
 package org.teknux.dropbitz.model.view;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,4 +20,8 @@ public interface IModel {
     List<Message> getMessages();
 
     void setMessages(List<Message> messages);
+    
+    Locale getLang();
+    
+    void setLang(Locale lang);
 }
