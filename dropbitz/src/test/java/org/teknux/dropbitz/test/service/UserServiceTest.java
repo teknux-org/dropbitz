@@ -1,10 +1,11 @@
 package org.teknux.dropbitz.test.service;
 
+import java.io.IOException;
 import java.util.UUID;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -22,22 +23,11 @@ public class UserServiceTest {
 	@ClassRule
 	public static TemporaryFolder testFolder = new TemporaryFolder();
 
-	public static IUserService userService;
-
-	@BeforeClass
-	public static void begin() throws DropBitzException {
-		final StorageService srv = new StorageService(testFolder.getRoot() + "/database.db");
-		srv.start();
-		userService = new DatabaseUserService(srv);
-	}
-
-	@AfterClass
-	public static void end() throws Exception {
-		userService.close();
-	}
+	public StorageService storageService;
+	public IUserService userService;
 
 	@Test
-	public void testUsernameIsUnique() throws StorageException {
+	public void testUsernameIsUniqueOnCreation() throws StorageException {
 		final String id = UUID.randomUUID().toString();
 		final User u = createUser(id);
 
@@ -45,18 +35,43 @@ public class UserServiceTest {
 		Assert.assertNotNull(userService.getUser(u.getEmail())); // check exists
 		checkUser(u, id);
 
+		// try to CREATE with a duplicated username
+		final User duplicate = createUser(id);
 		try {
-			final User duplicate = createUser(id);
 			userService.createUser(duplicate);
 			Assert.fail("Should throw a StorageException!");
-			Assert.assertNull(userService.getUser(duplicate.getEmail())); // check exists
 
 		} catch (StorageException e) {
-			// we expect an exception here :)
+			// we expect this
 		} finally {
 			userService.deleteUser(u);
 		}
+	}
 
+	@Test
+	public void testUsernameIsUniqueOnUpdate() throws StorageException {
+		final String id1 = UUID.randomUUID().toString();
+		final String id2 = UUID.randomUUID().toString();
+		final User u1 = createUser(id1);
+		final User u2 = createUser(id2);
+
+		userService.createUser(u1);
+		userService.createUser(u2);
+		Assert.assertNotNull(userService.getUser(u1.getEmail())); // check exists
+		Assert.assertNotNull(userService.getUser(u2.getEmail())); // check exists
+
+		// try to UPDATE with a duplicated username
+		u1.setEmail(id2);
+		try {
+			userService.updateUser(u1);
+			Assert.fail("Should throw a StorageException!");
+
+		} catch (StorageException e) {
+			// we expect this
+		} finally {
+			userService.deleteUser(id1);
+			userService.deleteUser(id2);
+		}
 	}
 
 	@Test
@@ -163,4 +178,22 @@ public class UserServiceTest {
 		Assert.assertEquals(user.isActive(), true);
 		Assert.assertEquals(user.isAdmin(), true);
 	}
+
+	@Before
+	public void before() throws DropBitzException, IOException {
+		storageService = new StorageService(testFolder.getRoot().getPath() + "/" + UUID.randomUUID() + ".db");
+		storageService.start();
+		userService = new DatabaseUserService(storageService);
+	}
+
+	@After
+	public void done() throws Exception {
+		if (userService != null) {
+			userService.close();
+		}
+		if (storageService != null) {
+			storageService.stop();
+		}
+	}
+
 }

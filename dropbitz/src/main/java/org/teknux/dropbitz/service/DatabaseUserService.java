@@ -24,6 +24,7 @@ public class DatabaseUserService implements
 	private final ObjectContainer container;
 
 	public DatabaseUserService(StorageService storageService) {
+		Objects.requireNonNull(storageService);
 		container = storageService.getObjectContainer();
 	}
 
@@ -59,13 +60,14 @@ public class DatabaseUserService implements
 		Objects.requireNonNull(user);
 		Objects.requireNonNull(user.getEmail());
 
+		if (!container.ext().isActive(user)) {
+			throw new IllegalArgumentException("Object is not managed by this service, please create or fetch the object first. Object : " + user);
+		}
 		// check if the username has changed
-//		IUser previousUser = getUser(user.getEmail());
-//		if (previousUser != null && !Objects.equals(previousUser.getEmail(), user.getEmail())) {
-//			if (getUser(user.getEmail()) != null) { // check the new email does not exists already
-//				throw new StorageException("User with username " + user.getEmail() + " already exists");
-//			}
-//		}
+		IUser previousUser = getUser(user.getEmail());
+		if (previousUser != null && previousUser != user) { // found an object with a different MEMORY ADDRESS
+			throw new StorageException("User with username " + user.getEmail() + " already exists");
+		}
 		// update the user in db
 		update(container -> container.store(user));
 	}
