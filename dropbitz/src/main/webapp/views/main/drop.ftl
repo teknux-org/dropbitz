@@ -31,7 +31,11 @@
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <div class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
+<<<<<<< HEAD
                     <span>Add files...</span>
+=======
+                    <span>${i18n("drop.zone.add")}</span>
+>>>>>>> 96408fb5bf96c31195547b9220c311fa90cad6c4
                 </div>
               </div>
 
