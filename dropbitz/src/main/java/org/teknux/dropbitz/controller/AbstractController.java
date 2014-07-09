@@ -92,4 +92,8 @@ public class AbstractController {
         }
         messages.add(m);
     }
+    
+    protected String i18n(String key) {
+        return getServiceManager().getI18nService().get(key);
+    }
 }

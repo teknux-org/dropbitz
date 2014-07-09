@@ -10,14 +10,14 @@
         <form  id="drop-file-area" method="post" action="/upload" enctype="multipart/form-data">
 
             <div class="control-group">
-                <label>Name</label>
+                <label>${i18n("drop.name.label")}</label>
                 <div class="controls">
-                    <input name="name" type="text" class="form-control" placeholder="Enter Name">
+                    <input name="name" type="text" class="form-control" placeholder="${i18n("drop.name.value")}">
                 </div>
             </div>
 
             <div id="dropzone" class="control-group">
-                <label>Drop Files Here</label>
+                <label>${i18n("drop.zone.label")}</label>
                 <div class="controls">
                     <div class="well text-center">
                         <span class="glyphicon glyphicon-cloud-upload" style="font-size:64px;"></span>
@@ -61,11 +61,11 @@
                     <div>
                       <button data-dz-remove class="btn btn-warning cancel">
                           <i class="glyphicon glyphicon-ban-circle"></i>
-                          <span>Cancel</span>
+                          <span>${i18n("drop.button.cancel")}</span>
                       </button>
                       <button data-dz-remove class="btn btn-danger delete">
                         <i class="glyphicon glyphicon-trash"></i>
-                        <span>Hide</span>
+                        <span>${i18n("drop.button.hide")}</span>
                       </button>
                     </div>
                   </div>

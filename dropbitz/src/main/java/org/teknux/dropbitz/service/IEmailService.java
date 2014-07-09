@@ -1,5 +1,7 @@
 package org.teknux.dropbitz.service;
 
+import org.teknux.dropbitz.model.view.IModel;
+
 /**
  * Service to send emails.
  */
@@ -8,7 +10,7 @@ public interface IEmailService extends
 
 	void sendEmail(String subject, String viewName);
 
-	void sendEmail(String subject, String viewName, Object model);
+    void sendEmail(String subject, String viewName, IModel model);
 
-	void sendEmail(String subject, String viewName, Object model, String viewNameAlt);
+    void sendEmail(String subject, String viewName, IModel model, String viewNameAlt);
 }
