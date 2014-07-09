@@ -34,21 +34,12 @@ public class UploadController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(UploadController.class);
 	
+	private final static String DROPZONE_ERROR_ATTRIBUTE = "error";
+	
 	private static final String CHARSET_UTF8 = "UTF-8";
 	private static final String CHARSET_ISO_8859_1 = "iso-8859-1";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
-	
-	private static final String UNKNOWN_NAME = "UNKNOWN";
-	
-	private static final String EMAIL_SUBJECT_OK = "DropBitz - File uploaded";
-	private static final String EMAIL_SUBJECT_ERROR = "DropBitz - File not uploaded";
-	
-	private static String ERROR_MESSAGE_FILE_MISSING = "File missing";
-	private static String ERROR_MESSAGE_FILE_IOEXCEPTION = "Can not copy file";
-	
-    private static final String FALLBACK_MESSAGE_OK = "File ''{0}'' uploaded successfully";
-    private static final String FALLBACK_MESSAGE_ERROR = "File ''{0}'' not uploaded : {1}";
-	
+		
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
@@ -72,17 +63,17 @@ public class UploadController extends AbstractController {
 		
         try { 	
     		if (formDataContentDisposition.getFileName().isEmpty()) {
-    			return getResponse(fallback, Status.BAD_REQUEST, fileName, ERROR_MESSAGE_FILE_MISSING);
+    			return getResponse(fallback, Status.BAD_REQUEST, fileName, i18n("drop.file.missing"));
     		}   	
     		Configuration config = getServiceManager().getConfigurationService().getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
-        	logger.error(ERROR_MESSAGE_FILE_IOEXCEPTION, e);
+        	logger.error("Can not copy file", e);
         
             sendEmail(false, name, fileName, null);
         	
-        	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, ERROR_MESSAGE_FILE_IOEXCEPTION);
+        	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n("drop.file.error"));
         }
         
         sendEmail(true, name, fileName, destFileName);
@@ -93,16 +84,16 @@ public class UploadController extends AbstractController {
 	private Response getResponse(Boolean fallback, Status status, String fileName, String errorMessage) {
 		if (fallback != null && fallback) {
 		    if (errorMessage == null) {	        
-		        addMessage(MessageFormat.format(FALLBACK_MESSAGE_OK, fileName), Type.SUCCESS);
+		        addMessage(MessageFormat.format(i18n("drop.fallback.message.ok"), fileName), Type.SUCCESS);
 		    } else {
-		        addMessage(MessageFormat.format(FALLBACK_MESSAGE_ERROR, fileName, errorMessage), Type.DANGER);
+		        addMessage(MessageFormat.format(i18n("drop.fallback.message.error"), fileName, errorMessage), Type.DANGER);
 		    }
 			
 			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK)).build();	
 		} else {
 			Map<String, String> map = new HashMap<String, String>();
 			if (errorMessage != null) {
-				map.put("error", errorMessage);
+				map.put(DROPZONE_ERROR_ATTRIBUTE, errorMessage);
 			}
 		    
 		    return Response.status(status.getStatusCode()).entity(map).build();	
@@ -111,11 +102,11 @@ public class UploadController extends AbstractController {
 	
 	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {        
 		DropEmailModel dropEmailModel = new DropEmailModel();
-		dropEmailModel.setName(name.isEmpty()?UNKNOWN_NAME:name);
+		dropEmailModel.setName(name.isEmpty()?i18n("drop.email.name.unknown"):name);
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		
-		getServiceManager().getEmailService().sendEmail((success?EMAIL_SUBJECT_OK:EMAIL_SUBJECT_ERROR), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getEmailService().sendEmail(i18n(success?"drop.email.subject.ok":"drop.email.subject.error"), "/drop", dropEmailModel, "/dropalt");
 	}
 }

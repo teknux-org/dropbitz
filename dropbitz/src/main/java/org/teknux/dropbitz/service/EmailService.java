@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
+import org.teknux.dropbitz.model.view.IModel;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -22,6 +25,8 @@ public class EmailService implements
 
 	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
+	private static final String MODEL_NAME_ATTRIBUTE = "model";
+	
 	private static final String VIEW_EXTENSION = ".ftl";
 
 	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
@@ -64,7 +69,7 @@ public class EmailService implements
 	 * @param model
 	 *            Object model for Freemarker template
 	 */
-	public void sendEmail(String subject, String viewName, Object model) {
+	public void sendEmail(String subject, String viewName, IModel model) {
 		sendEmail(subject, viewName, model, null);
 	}
 
@@ -80,7 +85,7 @@ public class EmailService implements
 	 * @param viewNameAlt
 	 *            Alternative Freemarker Template Name (Non-HTML)
 	 */
-	public void sendEmail(String subject, String viewName, Object model, String viewNameAlt) {
+	public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
 		if (configService.getConfiguration().isEmailEnable()) {
 			logger.debug("Email : Send new email...");
 
@@ -142,10 +147,16 @@ public class EmailService implements
 	 * @throws TemplateException
 	 *             on template syntax error
 	 */
-	private String resolve(Object model, String viewName) throws IOException, TemplateException {
+	private String resolve(IModel model, String viewName) throws IOException, TemplateException {
 		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
-		template.process(model, writer);
+		
+        model.setServletContext(serviceManager.getServletContext());
+
+        Map<String,IModel> map = new HashMap<String,IModel>();
+        map.put(MODEL_NAME_ATTRIBUTE, model);
+        
+		template.process(map, writer);
 
 		return writer.toString();
 	}

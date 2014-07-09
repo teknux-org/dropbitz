@@ -1,6 +1,6 @@
 package org.teknux.dropbitz.model.view;
 
-public class DropEmailModel {
+public class DropEmailModel extends Model{
 	public String name;
 	public String fileName;
 	public String finalFileName;

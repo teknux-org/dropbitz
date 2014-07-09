@@ -1,12 +1,12 @@
-A new file just been uploaded from DropBitz !
+${i18n("drop.email.info")}
 
-- Name : ${name}
-- Original FileName : ${fileName}
-<#if finalFileName??>
-- Final FileName : ${finalFileName}
+- ${i18n("drop.email.name")} : ${model.name}
+- ${i18n("drop.email.filename.origin")} : ${model.fileName}
+<#if model.finalFileName??>
+- ${i18n("drop.email.filename.final")} : ${model.finalFileName}
 </#if>
-<#if success>
-- Status : OK
+<#if model.success>
+- ${i18n("drop.email.status")} : ${i18n("drop.email.status.ok")}
 <#else>
-- Status : ERROR
+- ${i18n("drop.email.status")} : ${i18n("drop.email.status.error")}
 </#if>

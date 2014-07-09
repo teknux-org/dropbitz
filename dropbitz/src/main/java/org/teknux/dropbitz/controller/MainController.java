@@ -19,7 +19,6 @@ import org.teknux.dropbitz.provider.AuthenticationHelper;
 @Path("/")
 public class MainController extends AbstractController {
 	
-	private static final String SECURE_ID_ERROR_MESSAGE = "Incorrect Secure Id";
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
 	
 	@GET
@@ -56,7 +55,7 @@ public class MainController extends AbstractController {
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
 		if (! AuthenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
-			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, SECURE_ID_ERROR_MESSAGE);
+			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n("auth.secureid.error"));
 		}
 
 		return Response.seeOther(new URI("/")).build();
