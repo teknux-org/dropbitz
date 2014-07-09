@@ -5,7 +5,6 @@
 	
 	<div class="col-lg-12 text-center">
 		<div id="auth-title">
-			<h1>${statics["org.teknux.dropbitz.Application"].getConfiguration().getTitle()}</h1>
 			<span id="landing-page-lead">
 				- Enter your Secure ID to start sharing files -
 			</span>

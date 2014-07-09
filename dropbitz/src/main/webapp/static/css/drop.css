@@ -65,3 +65,7 @@ div.table .file-row:nth-child(odd) {
 #previews .file-row.dz-error .delete {
     display: block;
 }
+
+.drop-icon {
+
+}

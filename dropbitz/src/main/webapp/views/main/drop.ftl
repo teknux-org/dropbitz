@@ -1,8 +1,8 @@
 <#import "/views/layout/layout.ftl" as layout>
 
 <@layout.layout>
-	<link href="/static/lib/dropzone/dropzone.css" rel="stylesheet" type="text/css" />
-	<link href="/static/css/drop.css" rel="stylesheet" type="text/css" />
+	<link href="/static/lib/dropzone/dropzone.css" rel="stylesheet" type="text/css"/>
+	<link href="/static/css/drop.css" rel="stylesheet" type="text/css"/>
 	<script src="/static/lib/dropzone/dropzone.js" type="text/javascript"></script>
 
     <div class="container">
@@ -29,31 +29,26 @@
             <div id="actions" class="row">
               <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-primary fileinput-button">
+                <div class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
-                </span>
+                </div>
               </div>
 
               <div class="col-lg-5">
                 <!-- The global file processing state -->
-                <span class="fileupload-process">
+                <div class="fileupload-process">
                   <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
                   </div>
-                </span>
+                </div>
               </div>
             </div>
 
-
             <!-- UPLOAD PROGRESS -->
-                <div class="table table-striped" class="files" id="previews">
+                <div class="table table-striped files" id="previews">
 
                   <div id="template" class="file-row">
-                    <!-- This is used as the file preview template -->
-                    <div>
-                        <span class="preview"><img data-dz-thumbnail /></span>
-                    </div>
                     <div>
                         <p class="name" data-dz-name></p>
                     </div>
@@ -87,21 +82,7 @@
     </div>
 
     <script src="/static/js/drop.js" type="text/javascript"></script>
-
-    <!-- FALLBACK STYLE -->
     <noscript>
-        <style type="text/css">
-            #previews {
-                display: none;
-            }
-
-            #actions {
-                display: none;
-            }
-
-            #dropzone {
-                display: none;
-            }
-        </style>
+        <link href="/static/css/fallback.css" rel="stylesheet" type="text/css" />
     </noscript>
 </@layout.layout>
