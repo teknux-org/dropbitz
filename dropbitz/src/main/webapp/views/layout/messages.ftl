@@ -1,4 +1,4 @@
-<script src="/static/js/messages.js" type="text/javascript"></script>
+<script src="${url("/static/js/messages.js")}" type="text/javascript"></script>
 <div id="messages" <#if !model.messages??> class="hidden"</#if>>
     <#if model.messages??>
     	<#foreach message in model.messages>

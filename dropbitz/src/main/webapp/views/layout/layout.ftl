@@ -8,14 +8,14 @@
 			<title>DropBitz</title>
 			
 			<!--[if lt IE 9]>
-				<script src="/static/lib/html5shiv/html5shiv.min.js" type="text/javascript"></script>
+				<script src="${url("/static/lib/html5shiv/html5shiv.min.js")}" type="text/javascript"></script>
 			<![endif]-->
 
-			<script src="/static/lib/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
-			<link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-		  	<script src="/static/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-			<link href="/static/css/styles.css" rel="stylesheet" type="text/css">
-			<script src="/static/js/scripts.js" type="text/javascript"></script>
+			<script src="${url("/static/lib/jquery/jquery-2.1.1.min.js")}" type="text/javascript"></script>
+			<link href="${url("/static/lib/bootstrap/css/bootstrap.min.css")}" rel="stylesheet" type="text/css"/>
+		  	<script src="${url("/static/lib/bootstrap/js/bootstrap.min.js")}" type="text/javascript"></script>
+			<link href="${url("/static/css/styles.css")}" rel="stylesheet" type="text/css">
+			<script src="${url("/static/js/scripts.js")}" type="text/javascript"></script>
 		</head>
 		<body>
 		    <div class="wrap">
