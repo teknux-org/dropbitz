@@ -3,11 +3,44 @@
   src: url("/static/fonts/Orbitron-Regular.ttf") format("truetype");
 }
 
+a {
+    color: #05CFC7;
+}
+
+a:hover, a:focus {
+    color: #07C0B9;
+}
+
 .navbar-inverse .brand {
     font-family: "Orbitron", serif;
     font-size: 28px;
     color: #DDD;
     letter-spacing: 1px;
+    text-transform: none;
+}
+
+.navbar-inverse {
+    background-color: #474747;
+    border-color: #05CFC7;
+    text-transform: uppercase;
+}
+
+.navbar-static-top {
+    border-width: 0 0 4px;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+    background-color: #07C0B9;
+    border-color: #06B4AE;
+}
+
+.btn-primary {
+    background-color: #05CFC7;
+    border-color: #07C0B9;
 }
 
 .brand-font {

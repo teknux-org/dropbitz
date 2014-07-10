@@ -1,10 +1,10 @@
-#landing-page-lead {
-	color: #5AD7F7;
+.auth-title {
+	color: #474747;
+	padding-bottom: 60px;	
 }
 
-#auth-title {
-	color: #eee;
-	padding-bottom: 60px;	
+.auth-title h4 {
+    font-weight: 100;
 }
 
 #auth-errormessage {
