@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.config.ConfigurationFactory;
 import org.teknux.dropbitz.exception.ConfigurationException;
@@ -31,6 +32,9 @@ public class Application {
 	}
 
 	public Application(Configuration configuration, boolean join) {
+		// make JDK logging redirect to LogBack
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 		try {
 			if (configuration == null) {
 				logger.debug("Loading application configuration...");
