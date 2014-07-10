@@ -1,13 +1,13 @@
 <#import "/views/layout/layout.ftl" as layout>
 
 <@layout.layout>
-	<link href="/static/lib/dropzone/dropzone.css" rel="stylesheet" type="text/css"/>
-	<link href="/static/css/drop.css" rel="stylesheet" type="text/css"/>
-	<script src="/static/lib/dropzone/dropzone.js" type="text/javascript"></script>
+	<link href="${url("/static/lib/dropzone/dropzone.css")}" rel="stylesheet" type="text/css"/>
+	<link href="${url("/static/css/drop.css")}" rel="stylesheet" type="text/css"/>
+	<script src="${url("/static/lib/dropzone/dropzone.js")}" type="text/javascript"></script>
 
     <div class="container">
 
-        <form  id="drop-file-area" method="post" action="/upload" enctype="multipart/form-data">
+        <form  id="drop-file-area" method="post" action="${url("/upload")}" enctype="multipart/form-data">
 
             <div class="control-group">
                 <label>${i18n("drop.name.label")}</label>
@@ -81,8 +81,11 @@
 
     </div>
 
-    <script src="/static/js/drop.js" type="text/javascript"></script>
+    <script src="${url("/static/js/drop.js")}" type="text/javascript"></script>
+    <script type="text/javascript">
+    	initDropzone("${url()}");
+    </script>
     <noscript>
-        <link href="/static/css/fallback.css" rel="stylesheet" type="text/css" />
+        <link href="${url("/static/css/fallback.css")}" rel="stylesheet" type="text/css" />
     </noscript>
 </@layout.layout>

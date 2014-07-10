@@ -102,7 +102,7 @@ public class Application {
 			jettyConfiguration.setPort(configuration.getPort());
 		}
 		jettyBootstrap = new JettyBootstrap(jettyConfiguration);
-		jettyBootstrap.addSelf().startServer(join);
+		jettyBootstrap.addSelf(configuration.getBasePath()).startServer(join);
 	}
 
 	public static Configuration getConfiguration() {

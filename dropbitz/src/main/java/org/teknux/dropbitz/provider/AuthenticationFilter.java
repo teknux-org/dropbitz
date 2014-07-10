@@ -2,6 +2,8 @@ package org.teknux.dropbitz.provider;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -23,6 +25,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	
 	private static final String FORBIDDEN_ERROR_MESSAGE = "You don't have authorisation. Thank you to authenticate";
 		
+	@Inject
+	private ServletContext servletContext;
+	
     @Context
     private HttpServletRequest httpServletRequest;
     
@@ -43,7 +48,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         	}
         	
         	//Redirect to auth page
-    	    httpServletResponse.sendRedirect("/auth");
+    	    httpServletResponse.sendRedirect(servletContext.getContextPath() + "/auth");
         }
     }
 }

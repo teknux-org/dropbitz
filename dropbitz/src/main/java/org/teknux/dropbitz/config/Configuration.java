@@ -8,6 +8,10 @@ import org.skife.config.DefaultNull;
 
 public interface Configuration {
 
+    @Config("basePath")
+    @Default("/")
+    String getBasePath();
+    
 	@Config("secureId")
 	@Default("")
 	String getSecureId();

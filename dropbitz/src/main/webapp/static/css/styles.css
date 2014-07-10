@@ -1,13 +1,19 @@
 @font-face {
   font-family: "Orbitron";
-  src: url("/static/fonts/Orbitron-Regular.ttf") format("truetype");
+  src: url("../fonts/Orbitron-Regular.ttf") format("truetype");
 }
 
 a {
     color: #05CFC7;
 }
 
-a:hover, a:focus {
+a:hover,
+a:focus {
+    color: #07C0B9;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
     color: #07C0B9;
 }
 

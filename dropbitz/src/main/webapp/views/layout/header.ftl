@@ -14,9 +14,9 @@
 
         <#if user()>
 
-            <li><a href="/"><i class="glyphicon glyphicon-cloud-upload"></i> ${i18n("header.button.upload")}</a></li>
-            <li><a href="/admin"><i class="glyphicon glyphicon-cog"></i> ${i18n("header.button.admin")}</a></li>
-            <li><a href="/logout"><i class="glyphicon glyphicon-lock"></i> ${i18n("header.button.logout")}</a></li>
+            <li><a href="${url("/")}"><i class="glyphicon glyphicon-cloud-upload"></i> ${i18n("header.button.upload")}</a></li>
+            <li><a href="${url("/admin")}"><i class="glyphicon glyphicon-cog"></i> ${i18n("header.button.admin")}</a></li>
+            <li><a href="${url("/logout")}"><i class="glyphicon glyphicon-lock"></i> ${i18n("header.button.logout")}</a></li>
 
         </#if>
 

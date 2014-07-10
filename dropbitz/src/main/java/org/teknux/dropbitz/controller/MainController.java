@@ -31,7 +31,7 @@ public class MainController extends AbstractController {
     @Path("logout")
     public Response logout() throws URISyntaxException {
         AuthenticationHelper.logout(getHttpServletRequest());
-        return Response.seeOther(new URI("/")).build();
+        return Response.seeOther(new URI(getServletContext().getContextPath() + "/auth")).build();
     }
 	
 	@GET
@@ -58,6 +58,6 @@ public class MainController extends AbstractController {
 			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n("auth.secureid.error"));
 		}
 
-		return Response.seeOther(new URI("/")).build();
+		return Response.seeOther(new URI(getServletContext().getContextPath())).build();
     }
 }
