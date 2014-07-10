@@ -19,7 +19,7 @@ public class MainControllerTest extends BaseControllerTest {
 
 	public void testAuth() {
 		Form form = new Form();
-		form.param("secureId", "bigup is awesome");
+		form.param("secureId", "bigup is not awesome");
 
 		final Response r = getWebTarget("/authenticate").request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 		Assert.assertEquals(Status.SEE_OTHER.getStatusCode(), r.getStatus());

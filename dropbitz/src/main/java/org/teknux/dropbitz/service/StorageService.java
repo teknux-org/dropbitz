@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.exception.DropBitzException;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.User;
 
 import com.db4o.Db4oEmbedded;
@@ -45,7 +45,7 @@ public class StorageService implements
 	}
 
 	@Override
-	public void start() throws DropBitzException {
+	public void start(final ServiceManager serviceManager) throws ServiceException {
 		logger.debug("Starting storage service...");
 
 		try {
@@ -55,7 +55,7 @@ public class StorageService implements
 			logger.debug("Storage service started.");
 
 		} catch (IOException | Db4oIOException e) {
-			throw new DropBitzException("Error opening storage file", e);
+			throw new ServiceException("Error opening storage file", e);
 		}
 	}
 

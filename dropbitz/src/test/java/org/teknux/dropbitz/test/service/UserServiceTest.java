@@ -1,6 +1,5 @@
 package org.teknux.dropbitz.test.service;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.junit.After;
@@ -9,7 +8,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.teknux.dropbitz.exception.DropBitzException;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
 import org.teknux.dropbitz.model.User;
@@ -180,9 +179,9 @@ public class UserServiceTest {
 	}
 
 	@Before
-	public void before() throws DropBitzException, IOException {
+	public void before() throws ServiceException {
 		storageService = new StorageService(testFolder.getRoot().getPath() + "/" + UUID.randomUUID() + ".db");
-		storageService.start();
+		storageService.start(null);
 		userService = new DatabaseUserService(storageService);
 	}
 

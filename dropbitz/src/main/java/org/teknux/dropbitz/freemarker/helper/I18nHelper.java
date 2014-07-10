@@ -3,6 +3,7 @@ package org.teknux.dropbitz.freemarker.helper;
 import java.util.List;
 import java.util.Locale;
 
+import org.teknux.dropbitz.exception.I18nServiceException;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.I18nService;
 import org.teknux.dropbitz.service.ServiceManager;
@@ -33,7 +34,11 @@ public class I18nHelper implements TemplateMethodModelEx {
                 throw new TemplateModelException("Bad argument 2 type");
             } else {
                 String lang = ((SimpleScalar) arguments.get(1)).getAsString();
-                locale = I18nService.getLocaleFromString(lang);
+                try {
+                    locale = I18nService.getLocaleFromString(lang);
+                } catch (I18nServiceException e) {
+                    throw new TemplateModelException(e);
+                }
             }
         }
 
@@ -69,6 +74,6 @@ public class I18nHelper implements TemplateMethodModelEx {
             }
         }
         
-        return serviceManager.getI18nService().get(key, locale);
+        return serviceManager.getService(I18nService.class).get(key, locale);
     }
 }

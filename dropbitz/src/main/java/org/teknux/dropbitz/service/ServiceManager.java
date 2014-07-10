@@ -1,23 +1,41 @@
 package org.teknux.dropbitz.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
-import org.teknux.dropbitz.exception.DropBitzException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 
 /**
  * Central access point for services
  */
-public class ServiceManager implements
-		IService {
+public class ServiceManager {
+    
+    private static Logger logger = LoggerFactory.getLogger(ServiceManager.class);
 
-	private IConfigurationService configurationService;
-	private IEmailService emailService;
-	private StorageService storageService;
-	private I18nService i18nService;
+    /**
+     * Service list that will be started by manager
+     */
+    @SuppressWarnings("serial")
+    private final static List<Class <? extends IService>> SERVICE_CLASSES = new ArrayList<Class<? extends IService>>() {{
+        add(ConfigurationService.class);
+        add(StorageService.class);
+        add(EmailService.class);
+        add(I18nService.class);
+    }};
+    
+    /**
+     * Running Service List
+     */
+	private Map<Class<? extends IService>, IService> services = new HashMap<Class<? extends IService>, IService>();
 
 	private final ServletContext servletContext;
 
@@ -29,23 +47,34 @@ public class ServiceManager implements
 		return servletContext;
 	}
 
-	public synchronized void start() throws DropBitzException {
-		storageService = new StorageService();
-		storageService.start();
-
-		configurationService = new ConfigurationService();
-		configurationService.start();
-
-		emailService = new EmailService(this);
-		emailService.start();
-		
-		i18nService = new I18nService("i18n.dropbitz");
-		i18nService.start();
+	public synchronized void start() throws ServiceException {
+	    logger.trace("Starting {} Services...", SERVICE_CLASSES.size());
+		for (Class<? extends IService> serviceClass : SERVICE_CLASSES) {
+		    logger.trace("Starting Service [{}]...", serviceClass.getSimpleName());
+		    
+		    IService service = null;
+		    try {
+                service = serviceClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new ServiceException(e);
+            }
+		    service.start(this);
+		    services.put(serviceClass, service);
+		    
+		    logger.trace("Service [{}] started", serviceClass.getSimpleName());
+		}
+		logger.trace("{} Services started", SERVICE_CLASSES.size());
 	}
 
 	public synchronized void stop() {
-		configurationService.stop();
-		storageService.stop();
+	    logger.trace("Stopping {} Services...", services.size());
+	    for (IService service : services.values()) {
+	        logger.trace("Stopping Service [{}]...", service.getClass().getSimpleName());
+	        service.stop();
+	        logger.trace("Service [{}] stopped", service.getClass().getSimpleName());
+	    }
+	    services.clear();
+	    logger.trace("{} Services stopped", services.size());
 	}
 
 	public synchronized static ServiceManager get(ServletContext context) {
@@ -53,23 +82,11 @@ public class ServiceManager implements
 		return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
 	}
 
-	/**
-	 * @return a new instance of the user service. this service uses resources that needs to be free when done.
-	 * @see AutoCloseable
-	 */
-	public IUserService getUserService() {
-		return new DatabaseUserService(this.storageService);
+    @SuppressWarnings("unchecked")
+    public <T extends IService> T getService(Class<T> serviceClass) {
+        if (! services.containsKey(serviceClass)) {
+            throw new IllegalArgumentException("Service unreachable");
+        }
+	    return (T)services.get(serviceClass);
 	}
-
-	public IConfigurationService getConfigurationService() {
-		return configurationService;
-	}
-
-	public IEmailService getEmailService() {
-		return emailService;
-	}
-
-    public I18nService getI18nService() {
-        return i18nService;
-    }
 }

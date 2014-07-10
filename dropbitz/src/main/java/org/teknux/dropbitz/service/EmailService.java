@@ -23,7 +23,7 @@ import freemarker.template.TemplateException;
 
 
 public class EmailService implements
-		IEmailService {
+        IService {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -37,12 +37,10 @@ public class EmailService implements
 
 	private JerseyFreemarkerConfig jerseyFreemarkerConfig;
 
-	private final Configuration config;
-	private final ServletContext servletContext;
+	private Configuration config;
+	private ServletContext servletContext;
 
-	public EmailService(final ServiceManager serviceManager) {
-		this.servletContext = serviceManager.getServletContext();
-		this.config = serviceManager.getConfigurationService().getConfiguration();
+	public EmailService() {
 	}
 
 	public void setDefaultViewsPath(String viewsPath) {
@@ -154,9 +152,6 @@ public class EmailService implements
 		Writer writer = new StringWriter();
 		
         model.setServletContext(servletContext);
-        if (config.getEmailLang() != null) {
-            model.setLocale(I18nService.getLocaleFromString(config.getEmailLang()));
-        }
         
         Map<String,IModel> map = new HashMap<String,IModel>();
         map.put(MODEL_NAME_ATTRIBUTE, model);
@@ -167,8 +162,12 @@ public class EmailService implements
 	}
 
 	@Override
-	public void start() {
+	public void start(final ServiceManager serviceManager) {
+       this.config = serviceManager.getService(ConfigurationService.class).getConfiguration();
+	        
 		if (config.isEmailEnable()) {
+		    this.servletContext = serviceManager.getServletContext();
+		    
 			// Init Freemarker
 			jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
 		}
