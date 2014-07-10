@@ -5,14 +5,14 @@
 	
 	<div class="col-lg-12 text-center">
 		<div class="auth-title">
-			<h4>${i18n("auth.info")}</h4>
+			<h4>${i18n(i18nKey.AUTH_INFO)}</h4>
 		</div>
 
 		<form class="col-lg-12" method="post" action="${url("/authenticate")}">
 			<div id="auth-form-group" class="input-group">
-				<input class="form-control input-lg" type="password" name="secureId" placeholder="${i18n("auth.value")}" />
+				<input class="form-control input-lg" type="password" name="secureId" placeholder="${i18n(i18nKey.AUTH_VALUE)}" />
 				<span class="input-group-btn">
-					<button class="btn btn-lg btn-primary" type="submit">${i18n("auth.submit")}</button>
+					<button class="btn btn-lg btn-primary" type="submit">${i18n(i18nKey.AUTH_SUBMIT)}</button>
 				</span>
 			</div>
 		</form>

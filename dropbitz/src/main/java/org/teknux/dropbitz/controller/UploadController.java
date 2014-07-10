@@ -25,6 +25,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.exception.I18nServiceException;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
@@ -66,7 +67,7 @@ public class UploadController extends AbstractController {
 		
         try { 	
     		if (formDataContentDisposition.getFileName().isEmpty()) {
-    			return getResponse(fallback, Status.BAD_REQUEST, fileName, i18n("drop.file.missing"));
+    			return getResponse(fallback, Status.BAD_REQUEST, fileName, i18n(I18nKey.DROP_FILE_MISSING));
     		}   	
     		Configuration config = getServiceManager().getConfigurationService().getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
@@ -76,7 +77,7 @@ public class UploadController extends AbstractController {
         
             sendEmail(false, name, fileName, null);
         	
-        	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n("drop.file.error"));
+        	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n(I18nKey.DROP_FILE_ERROR));
         }
         
         sendEmail(true, name, fileName, destFileName);
@@ -87,9 +88,9 @@ public class UploadController extends AbstractController {
 	private Response getResponse(Boolean fallback, Status status, String fileName, String errorMessage) {
 		if (fallback != null && fallback) {
 		    if (errorMessage == null) {	        
-		        addMessage(MessageFormat.format(i18n("drop.fallback.message.ok"), fileName), Type.SUCCESS);
+		        addMessage(MessageFormat.format(i18n(I18nKey.DROP_FALLBACK_MESSAGE_OK), fileName), Type.SUCCESS);
 		    } else {
-		        addMessage(MessageFormat.format(i18n("drop.fallback.message.error"), fileName, errorMessage), Type.DANGER);
+		        addMessage(MessageFormat.format(i18n(I18nKey.DROP_FALLBACK_MESSAGE_ERROR), fileName, errorMessage), Type.DANGER);
 		    }
 			
 			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK)).build();	
@@ -119,12 +120,12 @@ public class UploadController extends AbstractController {
         }
 	    
 		DropEmailModel dropEmailModel = new DropEmailModel();
-		dropEmailModel.setName(name.isEmpty()?i18n("drop.email.name.unknown", locale):name);
+		dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		dropEmailModel.setLocale(locale);
 		
-		getServiceManager().getEmailService().sendEmail(i18n(success?"drop.email.subject.ok":"drop.email.subject.error", locale), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getEmailService().sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
 	}
 }

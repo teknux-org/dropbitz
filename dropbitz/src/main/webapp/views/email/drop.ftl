@@ -8,7 +8,7 @@
 							<span>DropBitz</span>
 						</h3>
 						<p>
-							${i18n("drop.email.info")}
+							${i18n(i18nKey.DROP_EMAIL_INFO)}
 						</p>
 					</td>
 				</tr>
@@ -18,7 +18,7 @@
 							<table cellpadding="0" cellspacing="0" border="0">
 								<tr>
 									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n("drop.email.name")}
+										${i18n(i18nKey.DROP_EMAIL_NAME)}
 									</td>
 									<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
 										${model.name}
@@ -26,7 +26,7 @@
 								</tr>
 								<tr>
 									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n("drop.email.filename.origin")}
+										${i18n(i18nKey.DROP_EMAIL_FILENAME_ORIGIN)}
 									</td>
 									<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
 										${model.fileName}
@@ -35,7 +35,7 @@
 								<#if model.finalFileName??>
 									<tr>
 										<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-											${i18n("drop.email.filename.final")}
+											${i18n(i18nKey.DROP_EMAIL_FILENAME_FINAL)}
 										</td>
 										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
 											${model.finalFileName}
@@ -44,15 +44,15 @@
 								</#if>
 								<tr>
 									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n("drop.email.status")}
+										${i18n(i18nKey.DROP_EMAIL_STATUS)}
 									</td>
 									<#if model.success>
 										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#2CA255;font-weight:bold" valign="top">
-											${i18n("drop.email.status.ok")}
+											${i18n(i18nKey.DROP_EMAIL_STATUS_OK)}
 										</td>
 									<#else>
 										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#E92F21;font-weight:bold" valign="top">
-											${i18n("drop.email.status.error")}
+											${i18n(i18nKey.DROP_EMAIL_STATUS_ERROR)}
 										</td>
 									</#if>
 									</td>

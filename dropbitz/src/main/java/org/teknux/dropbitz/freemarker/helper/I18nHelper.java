@@ -10,6 +10,7 @@ import org.teknux.dropbitz.service.ServiceManager;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
@@ -24,10 +25,14 @@ public class I18nHelper implements TemplateMethodModelEx {
         if (arguments.size() < 1 || arguments.size() > 2) {
             throw new TemplateModelException("Bad arguments");
         }
-        if (arguments.get(0).getClass() != SimpleScalar.class) {
+        String key = null;
+        if (arguments.get(0).getClass() == SimpleScalar.class) {
+            key = ((SimpleScalar) arguments.get(0)).getAsString();
+        } else if (arguments.get(0).getClass() == StringModel.class){
+            key = ((StringModel) arguments.get(0)).getAsString();
+        } else {
             throw new TemplateModelException("Bad argument 1 type");
         }
-        String key = ((SimpleScalar) arguments.get(0)).getAsString();
         Locale locale = null;
         if (arguments.size() >= 2) {
             if (arguments.get(1).getClass() != SimpleScalar.class) {

@@ -1,12 +1,12 @@
-${i18n("drop.email.info")}
+${i18n(i18nKey.DROP_EMAIL_INFO)}
 
-- ${i18n("drop.email.name")} : ${model.name}
-- ${i18n("drop.email.filename.origin")} : ${model.fileName}
+- ${i18n(i18nKey.DROP_EMAIL_NAME)} : ${model.name}
+- ${i18n(i18nKey.DROP_EMAIL_FILENAME_ORIGIN)} : ${model.fileName}
 <#if model.finalFileName??>
-- ${i18n("drop.email.filename.final")} : ${model.finalFileName}
+- ${i18n(i18nKey.DROP_EMAIL_FILENAME_FINAL)} : ${model.finalFileName}
 </#if>
 <#if model.success>
-- ${i18n("drop.email.status")} : ${i18n("drop.email.status.ok")}
+- ${i18n(i18nKey.DROP_EMAIL_STATUS)} : ${i18n(i18nKey.DROP_EMAIL_STATUS_OK)}
 <#else>
-- ${i18n("drop.email.status")} : ${i18n("drop.email.status.error")}
+- ${i18n(i18nKey.DROP_EMAIL_STATUS)} : ${i18n(i18nKey.DROP_EMAIL_STATUS_ERROR)}
 </#if>

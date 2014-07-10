@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.jvnet.hk2.annotations.Optional;
+import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.freemarker.helper.I18nHelper;
 import org.teknux.dropbitz.freemarker.helper.UrlHelper;
 import org.teknux.dropbitz.freemarker.helper.UserHelper;
@@ -21,10 +22,11 @@ import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
+import freemarker.template.TemplateModelException;
 
 public class JerseyFreemarkerConfig extends Configuration {
 	@Inject
-	public JerseyFreemarkerConfig(@Optional final ServletContext servletContext) {
+	public JerseyFreemarkerConfig(@Optional final ServletContext servletContext) throws TemplateModelException {
 		super();
 
 		//Copy of original configuration (org.glassfish.jersey.server.mvc.freemarker.FreemarkerViewProcessor)
@@ -49,6 +51,7 @@ public class JerseyFreemarkerConfig extends Configuration {
 		setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
 		setSharedVariable("user", new UserHelper());
 		setSharedVariable("i18n", new I18nHelper());
+        setSharedVariable("i18nKey", BeansWrapper.getDefaultInstance().getStaticModels().get(I18nKey.class.getName()));
 		setSharedVariable("url", new UrlHelper());
 	}
 }

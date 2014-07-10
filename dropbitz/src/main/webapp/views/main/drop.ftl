@@ -10,14 +10,14 @@
         <form  id="drop-file-area" method="post" action="${url("/upload")}" enctype="multipart/form-data">
 
             <div class="control-group">
-                <label>${i18n("drop.name.label")}</label>
+                <label>${i18n(i18nKey.DROP_NAME_LABEL)}</label>
                 <div class="controls">
-                    <input name="name" type="text" class="form-control" placeholder="${i18n("drop.name.value")}">
+                    <input name="name" type="text" class="form-control" placeholder="${i18n(i18nKey.DROP_NAME_VALUE)}">
                 </div>
             </div>
 
             <div id="dropzone" class="control-group">
-                <label>${i18n("drop.zone.label")}</label>
+                <label>${i18n(i18nKey.DROP_ZONE_LABEL)}</label>
                 <div class="controls">
                     <div class="well text-center">
                         <span class="glyphicon glyphicon-cloud-upload" style="font-size:64px;"></span>
@@ -31,7 +31,7 @@
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <div class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span>${i18n("drop.zone.add")}</span>
+                    <span>${i18n(i18nKey.DROP_ZONE_ADD)}</span>
                 </div>
               </div>
 
@@ -61,11 +61,11 @@
                     <div>
                       <button data-dz-remove class="btn btn-warning cancel">
                           <i class="glyphicon glyphicon-ban-circle"></i>
-                          <span>${i18n("drop.button.cancel")}</span>
+                          <span>${i18n(i18nKey.DROP_BUTTON_CANCEL)}</span>
                       </button>
                       <button data-dz-remove class="btn btn-danger delete">
                         <i class="glyphicon glyphicon-trash"></i>
-                        <span>${i18n("drop.button.hide")}</span>
+                        <span>${i18n(i18nKey.DROP_BUTTON_HIDE)}</span>
                       </button>
                     </div>
                   </div>

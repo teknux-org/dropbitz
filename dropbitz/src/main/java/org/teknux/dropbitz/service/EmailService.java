@@ -16,10 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.view.IModel;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 
 public class EmailService implements
@@ -162,14 +164,18 @@ public class EmailService implements
 	}
 
 	@Override
-	public void start(final ServiceManager serviceManager) {
+	public void start(final ServiceManager serviceManager) throws ServiceException {
        this.config = serviceManager.getConfigurationService().getConfiguration();
 	        
 		if (config.isEmailEnable()) {
 		    this.servletContext = serviceManager.getServletContext();
 		    
 			// Init Freemarker
-			jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
+			try {
+                jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
+            } catch (TemplateModelException e) {
+                throw new ServiceException(e);
+            }
 		}
 	}
 

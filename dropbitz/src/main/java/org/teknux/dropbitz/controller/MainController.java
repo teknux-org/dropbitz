@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.provider.Authenticated;
@@ -55,7 +56,7 @@ public class MainController extends AbstractController {
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
 		if (! AuthenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
-			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n("auth.secureid.error"));
+			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
 		}
 
 		return Response.seeOther(new URI(getServletContext().getContextPath())).build();
