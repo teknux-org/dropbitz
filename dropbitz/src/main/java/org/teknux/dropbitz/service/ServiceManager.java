@@ -1,6 +1,7 @@
 package org.teknux.dropbitz.service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class ServiceManager {
 	/**
 	 * Running Service List
 	 */
-	private final Map<Class<? extends IService>, IService> services = new HashMap<Class<? extends IService>, IService>();
+	private final Map<Class<? extends IService>, IService> services = new LinkedHashMap<>();
 
 	private final ServletContext servletContext;
 
