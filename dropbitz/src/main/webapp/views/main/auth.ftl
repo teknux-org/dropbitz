@@ -4,10 +4,8 @@
 	<link href="/static/css/auth.css" rel="stylesheet" type="text/css" />
 	
 	<div class="col-lg-12 text-center">
-		<div id="auth-title">
-			<span id="landing-page-lead">
-				- ${i18n("auth.info")} -
-			</span>
+		<div class="auth-title">
+			<h4>${i18n("auth.info")}</h4>
 		</div>
 
 		<form class="col-lg-12" method="post" action="/authenticate">
