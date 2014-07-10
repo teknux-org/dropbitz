@@ -110,12 +110,17 @@
 			<version>${janino.version}</version>
 		</dependency>
 
-        <dependency>
-            <groupId>com.db4o</groupId>
-            <artifactId>db4o-core-java5</artifactId>
-            <version>${db4o.version}</version>
-        </dependency>
-        
+		<!-- Persistence -->
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-core-java5</artifactId>
+			<version>${db4o.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 
 		<!-- Tests -->
 		<dependency>
@@ -195,8 +200,8 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<janino.version>2.6.1</janino.version>
-        <db4o.version>8.0-SNAPSHOT</db4o.version>
-        
+		<db4o.version>8.0-SNAPSHOT</db4o.version>
+
 		<junit.version>4.11</junit.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

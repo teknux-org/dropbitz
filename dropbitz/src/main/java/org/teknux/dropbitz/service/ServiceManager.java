@@ -1,9 +1,13 @@
 package org.teknux.dropbitz.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
@@ -12,62 +16,69 @@ import org.teknux.dropbitz.util.DropBitzServlet;
  * Central access point for services
  */
 public class ServiceManager {
-    private ConfigurationService configurationService;
-    private EmailService emailService;
-    private StorageService storageService;
-    private I18nService i18nService;
 
-    private final ServletContext servletContext;
+	private static Logger logger = LoggerFactory.getLogger(ServiceManager.class);
 
-    public ServiceManager(ServletContext context) {
-        this.servletContext = context;
-    }
+	/**
+	 * Running Service List
+	 */
+	private final Map<Class<? extends IService>, IService> services = new HashMap<Class<? extends IService>, IService>();
 
-    public ServletContext getServletContext() {
-        return servletContext;
-    }
+	private final ServletContext servletContext;
 
-    public synchronized void start() throws ServiceException {
-        storageService = new StorageService();
-        storageService.start(this);
+	public ServiceManager(ServletContext context) {
+		this.servletContext = context;
 
-        configurationService = new ConfigurationService();
-        configurationService.start(this);
+		services.put(ConfigurationService.class, new ConfigurationService());
+		services.put(StorageService.class, new StorageService());
+		services.put(EmailService.class, new EmailService());
+		services.put(I18nService.class, new I18nService());
+	}
 
-        emailService = new EmailService();
-        emailService.start(this);
-        
-        i18nService = new I18nService();
-        i18nService.start(this);
-    }
+	public ServletContext getServletContext() {
+		return servletContext;
+	}
 
-    public synchronized void stop() {
-        configurationService.stop();
-        storageService.stop();
-    }
+	public void start() throws ServiceException {
+		synchronized (services) {
+			logger.trace("Starting {} Services...", services.size());
+			for (final IService service : services.values()) {
+				logger.trace("Starting Service [{}]...", service.getClass().getSimpleName());
+				service.start(this);
+				logger.trace("Service [{}] started", service.getClass().getSimpleName());
+			}
+			logger.trace("{} Services started", services.size());
+		}
+	}
 
-    public synchronized static ServiceManager get(ServletContext context) {
-        Objects.requireNonNull(context);
-        return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
-    }
+	public void stop() {
+		synchronized (services) {
+			logger.trace("Stopping {} Services...", services.size());
+			for (final IService service : services.values()) {
+				logger.trace("Stopping Service [{}]...", service.getClass().getSimpleName());
+				service.stop();
+				logger.trace("Service [{}] stopped", service.getClass().getSimpleName());
+			}
+			logger.trace("{} Services stopped", services.size());
+		}
+	}
 
-    /**
-     * @return a new instance of the user service. this service uses resources that needs to be free when done.
-     * @see AutoCloseable
-     */
-    public IUserService getUserService() {
-        return new DatabaseUserService(this.storageService);
-    }
+	public static ServiceManager get(ServletContext context) {
+		Objects.requireNonNull(context);
+		return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
+	}
 
-    public ConfigurationService getConfigurationService() {
-        return configurationService;
-    }
-
-    public EmailService getEmailService() {
-        return emailService;
-    }
-
-    public I18nService getI18nService() {
-        return i18nService;
-    }
+	public <T> T getService(final Class<T> serviceClass) {
+		synchronized (services) {
+			final IService wantedService = services.get(serviceClass);
+			if (wantedService == null || !serviceClass.isAssignableFrom(wantedService.getClass())) {
+				throw new IllegalArgumentException("Service Unavailable");
+			}
+			final T castedService = serviceClass.cast(wantedService);
+			if (castedService == null) {
+				throw new IllegalArgumentException("Error accessing service");
+			}
+			return castedService;
+		}
+	}
 }

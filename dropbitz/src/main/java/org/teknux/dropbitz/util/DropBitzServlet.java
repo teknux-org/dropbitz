@@ -9,7 +9,6 @@ import javax.servlet.UnavailableException;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.service.ServiceManager;
 
 
@@ -31,7 +30,7 @@ public class DropBitzServlet extends ServletContainer {
 			serviceManager.start();
 			filterConfig.getServletContext().setAttribute(CONTEXT_ATTRIBUTE_SERVICE_MANAGER, serviceManager);
 			logger.trace("Service Manager started");
-		} catch (ServiceException e) {
+		} catch (Exception e) { // we need to catch any exceptions
 			logger.error("Error while starting application services", e);
 			throw new UnavailableException("Error while initializing application services");
 		}

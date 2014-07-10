@@ -165,7 +165,8 @@ public class EmailService implements
 
 	@Override
 	public void start(final ServiceManager serviceManager) throws ServiceException {
-       this.config = serviceManager.getConfigurationService().getConfiguration();
+
+       this.config = serviceManager.getService(ConfigurationService.class).getConfiguration();
 	        
 		if (config.isEmailEnable()) {
 		    this.servletContext = serviceManager.getServletContext();

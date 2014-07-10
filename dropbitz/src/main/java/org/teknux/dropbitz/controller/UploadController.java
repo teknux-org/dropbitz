@@ -31,6 +31,8 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
+import org.teknux.dropbitz.service.ConfigurationService;
+import org.teknux.dropbitz.service.EmailService;
 import org.teknux.dropbitz.service.I18nService;
 
 @Path("/upload")
@@ -69,7 +71,7 @@ public class UploadController extends AbstractController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, i18n(I18nKey.DROP_FILE_MISSING));
     		}   	
-    		Configuration config = getServiceManager().getConfigurationService().getConfiguration();
+    		Configuration config = getServiceManager().getService(ConfigurationService.class).getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
@@ -105,7 +107,7 @@ public class UploadController extends AbstractController {
 	}
 	
 	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {
-	    Configuration config = getServiceManager().getConfigurationService().getConfiguration();
+	    Configuration config = getServiceManager().getService(ConfigurationService.class).getConfiguration();
 	    
 	    Locale locale = null;
 	    if (config.getEmailLang() != null) {
@@ -126,6 +128,6 @@ public class UploadController extends AbstractController {
 		dropEmailModel.setSuccess(success);
 		dropEmailModel.setLocale(locale);
 		
-		getServiceManager().getEmailService().sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getService(EmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
 	}
 }

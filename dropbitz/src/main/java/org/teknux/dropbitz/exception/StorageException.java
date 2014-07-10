@@ -3,7 +3,7 @@ package org.teknux.dropbitz.exception;
 /**
  * Exception thrown when a storage problem occured
  */
-public class StorageException extends Exception {
+public class StorageException extends DropBitzException {
 
 	private static final long serialVersionUID = 1L;
 

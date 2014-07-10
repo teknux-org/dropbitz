@@ -17,6 +17,7 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.model.view.Model;
+import org.teknux.dropbitz.service.I18nService;
 import org.teknux.dropbitz.service.ServiceManager;
 
 public class AbstractController {
@@ -102,6 +103,6 @@ public class AbstractController {
         if (locale == null) {
             locale = getHttpServletRequest().getLocale();
         }
-        return getServiceManager().getI18nService().get(key, locale);
+        return getServiceManager().getService(I18nService.class).get(key, locale);
     }
 }

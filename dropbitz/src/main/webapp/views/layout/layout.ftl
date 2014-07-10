@@ -23,7 +23,9 @@
                 <div>
                     <#include "/views/layout/header.ftl"/>
                 </div>
-                <#include "/views/layout/messages.ftl"/>
+                <div class="container">
+                    <#include "/views/layout/messages.ftl"/>
+                </div>
                 <div class="spacer"></div>
                 <div id="content">
                     <#nested/>
