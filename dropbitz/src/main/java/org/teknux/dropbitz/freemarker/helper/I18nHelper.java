@@ -74,6 +74,6 @@ public class I18nHelper implements TemplateMethodModelEx {
             }
         }
         
-        return serviceManager.getService(I18nService.class).get(key, locale);
+        return serviceManager.getI18nService().get(key, locale);
     }
 }

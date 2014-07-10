@@ -163,7 +163,7 @@ public class EmailService implements
 
 	@Override
 	public void start(final ServiceManager serviceManager) {
-       this.config = serviceManager.getService(ConfigurationService.class).getConfiguration();
+       this.config = serviceManager.getConfigurationService().getConfiguration();
 	        
 		if (config.isEmailEnable()) {
 		    this.servletContext = serviceManager.getServletContext();
