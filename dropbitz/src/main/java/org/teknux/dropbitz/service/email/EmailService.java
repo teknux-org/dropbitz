@@ -1,23 +1,24 @@
-package org.teknux.dropbitz.service;
+package org.teknux.dropbitz.service.email;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
 import org.teknux.dropbitz.exception.ServiceException;
+import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.IModel;
+import org.teknux.dropbitz.service.ConfigurationService;
+import org.teknux.dropbitz.service.IService;
+import org.teknux.dropbitz.service.ServiceManager;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -26,21 +27,23 @@ import freemarker.template.TemplateModelException;
 
 public class EmailService implements
         IService {
-
-	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
-
+    
+    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    
+    private LinkedBlockingQueue<DropbitzEmail> emailQueue;
+    
 	private static final String MODEL_NAME_ATTRIBUTE = "model";
-	
 	private static final String VIEW_EXTENSION = ".ftl";
-
 	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
 
 	private String viewsPath = DEFAULT_VIEWS_PATH;
 
 	private JerseyFreemarkerConfig jerseyFreemarkerConfig;
 
-	private Configuration config;
+	private Configuration configuration;
 	private ServletContext servletContext;
+
+    private Thread emailThread;
 
 	public EmailService() {
 	}
@@ -88,53 +91,30 @@ public class EmailService implements
 	 *            Alternative Freemarker Template Name (Non-HTML)
 	 */
 	public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
-		if (config.isEmailEnable()) {
-			logger.debug("Email : Send new email...");
+		if (configuration.isEmailEnable()) {
+			logger.debug("Email : Add new email to queue...");
 
+			DropbitzEmail dropbitzEmail = new DropbitzEmail();
+			dropbitzEmail.setSubject(subject);
 			try {
-				HtmlEmail email = getNewEmail();
-
-				email.setSubject(subject);
-				email.setHtmlMsg(resolve(model, viewName));
-				if (viewNameAlt != null) {
-					email.setTextMsg(resolve(model, viewNameAlt));
-				}
-				email.send();
-				logger.debug("Email : Success");
-			} catch (EmailException | IOException | TemplateException e) {
-				logger.error("Email : Can not send message", e);
-			}
+			    dropbitzEmail.setEmailFrom(configuration.getEmailFrom());
+			    dropbitzEmail.setEmailTo(configuration.getEmailTo());
+                dropbitzEmail.setHtmlMsg(resolve(model, viewName));
+                if (viewNameAlt != null) {
+                    dropbitzEmail.setTextMsg(resolve(model, viewNameAlt));
+                }
+                
+                emailQueue.offer(dropbitzEmail);
+                
+                logger.error("Email added to queue");
+            } catch (IOException | TemplateException e1) {
+                logger.error("Can not add email to queue");
+            }			
 		} else {
-			logger.debug("Email is disabled");
+		    logger.debug("Email is disabled. Email not added to queue");
 		}
 	}
-
-	/**
-	 * Build new email from configuration file
-	 * 
-	 * @return HtmlEmail
-	 * @throws EmailException
-	 */
-	private HtmlEmail getNewEmail() throws EmailException {
-		logger.trace("Email : Build new email...");
-
-		HtmlEmail email = null;
-
-		email = new HtmlEmail();
-		email.setHostName(config.getEmailHost());
-		email.setSmtpPort(config.getEmailPort());
-		if ((config.getEmailUsername() != null && !config.getEmailUsername().isEmpty()) || (config.getEmailPassword() != null && !config.getEmailPassword().isEmpty())) {
-			email.setAuthenticator(new DefaultAuthenticator(config.getEmailUsername(), config.getEmailPassword()));
-		}
-		email.setSSLOnConnect(config.isSsl());
-		email.setFrom(config.getEmailFrom());
-		email.addTo(config.getEmailTo());
-
-		logger.trace(MessageFormat.format("Email : From [{0}] to [{1}]", config.getEmailFrom(), String.join(",", config.getEmailTo())));
-
-		return email;
-	}
-
+	 
 	/**
 	 * Resolve template
 	 * 
@@ -166,10 +146,12 @@ public class EmailService implements
 	@Override
 	public void start(final ServiceManager serviceManager) throws ServiceException {
 
-       this.config = serviceManager.getService(ConfigurationService.class).getConfiguration();
+       this.configuration = serviceManager.getService(ConfigurationService.class).getConfiguration();
 	        
-		if (config.isEmailEnable()) {
+		if (configuration.isEmailEnable()) {
 		    this.servletContext = serviceManager.getServletContext();
+		    
+		    emailQueue = new LinkedBlockingQueue<DropbitzEmail>();
 		    
 			// Init Freemarker
 			try {
@@ -177,11 +159,23 @@ public class EmailService implements
             } catch (TemplateModelException e) {
                 throw new ServiceException(e);
             }
+			
+			//Start EmailRunnable
+			emailThread = new Thread(new EmailRunnable(configuration, emailQueue));			
+			emailThread.start();
 		}
 	}
 
 	@Override
-	public void stop() {
-
+	public void stop() throws ServiceException {
+	    if (emailThread != null && emailThread.isAlive()) {
+	        //Stop EmailRunnable
+	        emailThread.interrupt();
+	        try {
+                emailThread.join();
+            } catch (InterruptedException e) {
+                throw new ServiceException(e);
+            }
+	    }
 	}
 }

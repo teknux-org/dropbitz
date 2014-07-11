@@ -9,6 +9,7 @@ import javax.servlet.UnavailableException;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.service.ServiceManager;
 
 
@@ -41,7 +42,11 @@ public class DropBitzServlet extends ServletContainer {
 	@Override
 	public void destroy() {
 		Objects.requireNonNull(serviceManager);
-		serviceManager.stop(); // stop the service
+		try {
+            serviceManager.stop(); // stop the service
+        } catch (ServiceException e) {
+            logger.error("Error while stopping application services", e);
+        }
 		getServletContext().removeAttribute(CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
 		logger.trace("Service Manager stopped.");
 

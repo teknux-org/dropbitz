@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ServiceException;
+import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 
@@ -51,7 +52,7 @@ public class ServiceManager {
 		}
 	}
 
-	public void stop() {
+	public void stop() throws ServiceException {
 		synchronized (services) {
 			logger.trace("Stopping {} Services...", services.size());
 			for (final IService service : services.values()) {

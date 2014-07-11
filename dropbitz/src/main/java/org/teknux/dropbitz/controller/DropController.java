@@ -35,8 +35,8 @@ import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.service.ConfigurationService;
-import org.teknux.dropbitz.service.EmailService;
 import org.teknux.dropbitz.service.I18nService;
+import org.teknux.dropbitz.service.email.EmailService;
 
 @Path(Route.DROP)
 public class DropController extends AbstractController {

@@ -7,5 +7,5 @@ public interface IService {
 
 	void start(final ServiceManager serviceManager) throws ServiceException;
 
-	void stop();
+	void stop() throws ServiceException;
 }
