@@ -24,6 +24,18 @@ div.table .file-row:nth-child(odd) {
     background: #f9f9f9;
 }
 
+.file-row p {
+    margin: 0;
+}
+
+.file-row .progress {
+    margin: 0;
+}
+
+.file-row .progress {
+    margin: 0;
+}
+
 /* The total progress gets shown by event listeners */
 #total-progress {
     opacity: 0;
