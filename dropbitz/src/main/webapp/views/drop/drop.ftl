@@ -20,26 +20,25 @@
                 <label>${i18n(i18nKey.DROP_ZONE_LABEL)}</label>
                 <div class="controls">
                     <div class="well text-center">
-                        <span class="glyphicon glyphicon-cloud-upload" style="font-size:64px;"></span>
+                        <span class="glyphicon glyphicon-cloud-upload drop-icon"></span>
                     </div>
                 </div>
             </div>
 
             <!-- UPLOAD GLOBAL CONTROL -->
             <div id="actions" class="row">
-              <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
+              <div class="col-lg-2">
                 <div class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>${i18n(i18nKey.DROP_ZONE_ADD)}</span>
                 </div>
               </div>
 
-              <div class="col-lg-5">
+              <div class="col-lg-10">
                 <!-- The global file processing state -->
                 <div class="fileupload-process">
                   <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                    <div class="progress-bar" style="width:0%;" data-dz-uploadprogress></div>
                   </div>
                 </div>
               </div>
@@ -53,20 +52,22 @@
                         <p class="name" data-dz-name></p>
                     </div>
                     <div>
-                        <p class="size" data-dz-size></p>
+                        <p class="size text-center" data-dz-size></p>
                         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                          <div class="progress-bar" style="width:0%;" data-dz-uploadprogress></div>
                         </div>
                     </div>
                     <div>
-                      <button data-dz-remove class="btn btn-warning cancel">
-                          <i class="glyphicon glyphicon-ban-circle"></i>
-                          <span>${i18n(i18nKey.DROP_BUTTON_CANCEL)}</span>
-                      </button>
-                      <button data-dz-remove class="btn btn-danger delete">
-                        <i class="glyphicon glyphicon-trash"></i>
-                        <span>${i18n(i18nKey.DROP_BUTTON_HIDE)}</span>
-                      </button>
+                        <span class="pull-right">
+                          <button data-dz-remove class="btn btn-warning cancel">
+                              <i class="glyphicon glyphicon-ban-circle"></i>
+                              <span>${i18n(i18nKey.DROP_BUTTON_CANCEL)}</span>
+                          </button>
+                          <button data-dz-remove class="btn btn-danger delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>${i18n(i18nKey.DROP_BUTTON_HIDE)}</span>
+                          </button>
+                        </span>
                     </div>
                   </div>
                 </div>

@@ -6,14 +6,6 @@
 	margin: 10px;
 }
 
-#drop-errormessage {
-	width: 340px;
-	text-align: center;
-	margin: 0 auto;
-}
-
-/* DROP PAGE */
-
 /* Mimic table appearance */
 div.table {
     display: table;
@@ -40,7 +32,7 @@ div.table .file-row:nth-child(odd) {
 
 /* Hide the progress bar when finished */
 #previews .file-row.dz-success .progress {
-    opacity: 0;
+    /*opacity: 0;*/
     transition: opacity 0.3s linear;
 }
 
@@ -56,7 +48,6 @@ div.table .file-row:nth-child(odd) {
 }
 
 /* Hide the start and cancel buttons and show the delete button */
-#previews .file-row.dz-success .start,
 #previews .file-row.dz-success .cancel {
     display: none;
 }
@@ -67,5 +58,5 @@ div.table .file-row:nth-child(odd) {
 }
 
 .drop-icon {
-
+    font-size:64px;
 }

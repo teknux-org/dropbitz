@@ -12,6 +12,10 @@ a:focus {
     color: #07C0B9;
 }
 
+.progress-bar {
+    background-color: #07C0B9;
+}
+
 .nav > li > a:hover,
 .nav > li > a:focus {
     color: #07C0B9;
@@ -111,10 +115,6 @@ html, body {
 
 .hidden {
 	display: none;
-}
-
-#header {
-	margin-top: 7%;
 }
 
 /*****************/
