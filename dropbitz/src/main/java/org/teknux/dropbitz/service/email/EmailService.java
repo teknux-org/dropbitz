@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,6 +21,7 @@ import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.IModel;
+import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.IServiceManager;
 
@@ -61,12 +63,12 @@ public class EmailService implements IEmailService {
 	}
 	
 	public void setEmailSender(IEmailSender emailSender) {
-        this.emailSender = emailSender;;
+        this.emailSender = emailSender;
     }
 
 	@Override
 	public void sendEmail(String subject, String viewName) {
-		sendEmail(subject, viewName, null);
+		sendEmail(subject, viewName, new Model());
 	}
 
 	@Override
@@ -92,8 +94,8 @@ public class EmailService implements IEmailService {
 				emailQueue.offer(dropbitzEmail);
 
 				logger.error("Email added to queue");
-			} catch (IOException | TemplateException e1) {
-				logger.error("Can not add email to queue");
+			} catch (IOException | TemplateException e) {
+				logger.error("Can not add email to queue", e);
 			}
 		} else {
 			logger.debug("Email is disabled. Email not added to queue");
@@ -118,7 +120,7 @@ public class EmailService implements IEmailService {
 		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
 
-		model.setServletContext(servletContext);
+		Objects.requireNonNull(model).setServletContext(servletContext);
 
 		Map<String, IModel> map = new HashMap<String, IModel>();
 		map.put(MODEL_NAME_ATTRIBUTE, model);
