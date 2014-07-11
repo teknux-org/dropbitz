@@ -83,7 +83,7 @@
 
     <script src="${url("/static/js/drop.js")}" type="text/javascript"></script>
     <script type="text/javascript">
-    	initDropzone("${url(route.AUTH)}");
+    	initDropzone("${url(route.AUTH)}","${i18n(i18nKey.GLOBAL_SESSION_TIMEOUT)}","${i18n(i18nKey.GLOBAL_SIGNIN)}");
     </script>
     <noscript>
         <link href="${url("/static/css/fallback.css")}" rel="stylesheet" type="text/css" />

@@ -1,4 +1,4 @@
-function initDropzone(authUrl) {
+function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
 	// Get the template HTML and remove it from the document
 	var previewNode = document.querySelector("#template");
 	previewNode.id = "";
@@ -19,7 +19,7 @@ function initDropzone(authUrl) {
 	
 	    error: function(file, errorMessage, xhr) {
 	        if (typeof xhr !== 'undefined' && xhr.status == 403) {
-	        	message("error", "Session timeout. Please authenticate. <a href='" + authUrl + "'>sign in</a>", "danger", true);
+	        	message("error", sessionTimeoutMessage + " <a href='" + authUrl + "'>" + signinMessage + "</a>", "danger", true);
 	        }
 	
 	        file.previewElement.querySelector(".cancel").remove();
