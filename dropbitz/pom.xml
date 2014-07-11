@@ -20,12 +20,32 @@
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-source-plugin</artifactId> 
-				<version>${maven-source.version}</version> <executions> <execution> <id>attach-sources</id> 
-				<goals> <goal>jar</goal> </goals> </execution> </executions> </plugin> <plugin> 
-				<groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
-				<version>${maven-javadoc.version}</version> <executions> <execution> <id>attach-javadocs</id> 
-				<goals> <goal>jar</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc.version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<!-- Embedded all dependencies -->
 			<plugin>
@@ -80,6 +100,14 @@
 	</build>
 
 	<dependencies>
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Jetty -->
 		<dependency>
 			<groupId>org.teknux</groupId>
@@ -119,15 +147,7 @@
 		<dependency>
 			<groupId>org.mapdb</groupId>
 			<artifactId>mapdb</artifactId>
-			<version>1.0.4</version>
-		</dependency>
-
-		<!-- Tests -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
+			<version>${mapdb.version}</version>
 		</dependency>
 
 		<!-- Jersey -->
@@ -166,13 +186,18 @@
 		<dependency>
 			<groupId>org.skife.config</groupId>
 			<artifactId>config-magic</artifactId>
-			<version>0.17</version>
+			<version>${config-magic.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
-			<version>1.3.2</version>
+			<version>${commons-email.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -190,19 +215,19 @@
 		<maven-compiler.version>2.3.2</maven-compiler.version>
 		<maven-source.version>2.2.1</maven-source.version>
 		<maven-javadoc.version>2.9.1</maven-javadoc.version>
-
 		<maven-shade.version>2.2</maven-shade.version>
 
-		<jersey.version>2.9.1</jersey.version>
-
+		<junit.version>4.11</junit.version>
 		<jetty-bootstrap.version>1.0.2</jetty-bootstrap.version>
-
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<janino.version>2.6.1</janino.version>
 		<db4o.version>8.0-SNAPSHOT</db4o.version>
-
-		<junit.version>4.11</junit.version>
+		<mapdb.version>1.0.4</mapdb.version>
+		<jersey.version>2.9.1</jersey.version>
+		<config-magic.version>0.17</config-magic.version>
+		<commons-email.version>1.3.2</commons-email.version>
+		<guava.version>14.0.1</guava.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
