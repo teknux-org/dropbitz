@@ -51,7 +51,7 @@ public class StorageService implements
 		try {
 			final File dbFile = new File(storageFile);
 			backupStorage(dbFile);
-			logger.trace("Opening storage file");
+			logger.trace("Opening storage file [{}]", storageFile);
 			database = DBMaker.newFileDB(dbFile).cacheDisable().closeOnJvmShutdown().transactionDisable().make();
 			logger.trace("Optimizing storage file");
 			database.compact();
