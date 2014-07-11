@@ -20,8 +20,8 @@ import org.teknux.dropbitz.config.JerseyFreemarkerConfig;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.IModel;
-import org.teknux.dropbitz.service.ConfigurationService;
-import org.teknux.dropbitz.service.ServiceManager;
+import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.service.IServiceManager;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -129,9 +129,9 @@ public class EmailService implements IEmailService {
 	}
 
 	@Override
-	public void start(final ServiceManager serviceManager) throws ServiceException {
+	public void start(final IServiceManager serviceManager) throws ServiceException {
 
-		this.configuration = serviceManager.getService(ConfigurationService.class).getConfiguration();
+		this.configuration = serviceManager.getService(IConfigurationService.class).getConfiguration();
 
 		if (configuration.isEmailEnable()) {
 			this.servletContext = serviceManager.getServletContext();

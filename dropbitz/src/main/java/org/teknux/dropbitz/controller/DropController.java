@@ -34,8 +34,8 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
-import org.teknux.dropbitz.service.ConfigurationService;
 import org.teknux.dropbitz.service.I18nService;
+import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.email.IEmailService;
 
 @Path(Route.DROP)
@@ -80,7 +80,7 @@ public class DropController extends AbstractController {
     		if (formDataContentDisposition.getFileName().isEmpty()) {
     			return getResponse(fallback, Status.BAD_REQUEST, fileName, i18n(I18nKey.DROP_FILE_MISSING));
     		}   	
-    		Configuration config = getServiceManager().getService(ConfigurationService.class).getConfiguration();
+    		Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
@@ -116,7 +116,7 @@ public class DropController extends AbstractController {
 	}
 	
 	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {
-	    Configuration config = getServiceManager().getService(ConfigurationService.class).getConfiguration();
+	    Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
 	    
 	    Locale locale = null;
 	    if (config.getEmailLang() != null) {

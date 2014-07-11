@@ -47,7 +47,7 @@ public class StorageService implements
 	}
 
 	@Override
-	public void start(final ServiceManager serviceManager) throws ServiceException {
+	public void start(final IServiceManager serviceManager) throws ServiceException {
 		try {
 			final File dbFile = new File(storageFile);
 			backupStorage(dbFile);

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.I18nServiceException;
 
 
-public class I18nService implements IService {
+public class I18nService implements II18nService {
     
     private static Logger logger = LoggerFactory.getLogger(I18nService.class);
     
@@ -35,7 +35,7 @@ public class I18nService implements IService {
     }
 
     @Override
-    public void start(final ServiceManager serviceManager) {
+    public void start(final IServiceManager serviceManager) {
         Locale.setDefault(DEFAULT_LOCALE);
     }
 

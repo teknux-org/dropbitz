@@ -5,7 +5,7 @@ import org.teknux.dropbitz.exception.ServiceException;
 
 public interface IService {
 
-	void start(final ServiceManager serviceManager) throws ServiceException;
+	void start(final IServiceManager serviceManager) throws ServiceException;
 
 	void stop() throws ServiceException;
 }

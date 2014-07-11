@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.teknux.dropbitz.model.view.IModel;
-import org.teknux.dropbitz.service.I18nService;
+import org.teknux.dropbitz.service.II18nService;
 import org.teknux.dropbitz.service.ServiceManager;
 
 import freemarker.template.TemplateModelException;
@@ -50,9 +50,9 @@ public class I18nHelper extends AbstractHelper {
         }
                 
         if (messageFormatAttributes.size() == 0) {
-            return serviceManager.getService(I18nService.class).get(key, locale);
+            return serviceManager.getService(II18nService.class).get(key, locale);
         } else {
-            return MessageFormat.format(serviceManager.getService(I18nService.class).get(key, locale), messageFormatAttributes.toArray(new Object[messageFormatAttributes.size()]));
+            return MessageFormat.format(serviceManager.getService(II18nService.class).get(key, locale), messageFormatAttributes.toArray(new Object[messageFormatAttributes.size()]));
         }
     }
 }

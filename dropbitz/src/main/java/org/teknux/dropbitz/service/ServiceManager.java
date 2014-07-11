@@ -17,7 +17,7 @@ import org.teknux.dropbitz.util.DropBitzServlet;
 /**
  * Central access point for services
  */
-public class ServiceManager {
+public class ServiceManager implements IServiceManager {
 
 	private static Logger logger = LoggerFactory.getLogger(ServiceManager.class);
 
@@ -31,10 +31,10 @@ public class ServiceManager {
 	public ServiceManager(ServletContext context) {
 		this.servletContext = context;
 
-		services.put(ConfigurationService.class, new ConfigurationService());
+		services.put(IConfigurationService.class, new ConfigurationService());
 		services.put(StorageService.class, new StorageService());
 		services.put(IEmailService.class, new EmailService());
-		services.put(I18nService.class, new I18nService());
+		services.put(II18nService.class, new I18nService());
 	}
 
 	public ServletContext getServletContext() {
@@ -70,6 +70,7 @@ public class ServiceManager {
 		return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
 	}
 
+	@Override
 	public <T> T getService(final Class<T> serviceClass) {
 		synchronized (services) {
 			final IService wantedService = services.get(serviceClass);

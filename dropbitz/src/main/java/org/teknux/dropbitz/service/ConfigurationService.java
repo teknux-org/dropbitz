@@ -5,7 +5,7 @@ import org.teknux.dropbitz.config.Configuration;
 
 
 public class ConfigurationService implements
-    IService {
+    IConfigurationService {
 
 	private Configuration configuration;
 
@@ -13,7 +13,7 @@ public class ConfigurationService implements
 	}
 
 	@Override
-	public void start(final ServiceManager serviceManager) {
+	public void start(final IServiceManager serviceManager) {
 		configuration = Application.getConfiguration();
 	}
 

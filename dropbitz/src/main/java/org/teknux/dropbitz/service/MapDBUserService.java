@@ -66,7 +66,7 @@ public class MapDBUserService implements
 	}
 
 	@Override
-	public void start(ServiceManager serviceManager) throws ServiceException {
+	public void start(IServiceManager serviceManager) throws ServiceException {
 		final StorageService storage = serviceManager.getService(StorageService.class);
 		Objects.requireNonNull(storage);
 		userMap = storage.getStorageMap(Storage.USERS);
