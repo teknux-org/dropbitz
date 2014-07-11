@@ -26,15 +26,16 @@
             </div>
 
             <!-- UPLOAD GLOBAL CONTROL -->
-            <div id="actions" class="row">
-              <div class="col-lg-2">
+            <div id="actions">
+              <div>
                 <div class="btn btn-primary fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>${i18n(i18nKey.DROP_ZONE_ADD)}</span>
                 </div>
               </div>
+              <hr/>
 
-              <div class="col-lg-10">
+              <div>
                 <!-- The global file processing state -->
                 <div class="fileupload-process">
                   <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -45,19 +46,21 @@
             </div>
 
             <!-- UPLOAD PROGRESS -->
-                <div class="table table-striped files" id="previews">
+                <div style="padding-top:10px" class="table table-striped files" id="previews">
 
                   <div id="template" class="file-row">
-                    <div>
+                    <div style="vertical-align:middle">
                         <p class="name" data-dz-name></p>
                     </div>
-                    <div>
+                    <div style="vertical-align:middle;white-space:nowrap;">
                         <p class="size text-center" data-dz-size></p>
+                    </div>
+                    <div style="width:10%; vertical-align:middle" >
                         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                           <div class="progress-bar" style="width:0%;" data-dz-uploadprogress></div>
                         </div>
                     </div>
-                    <div>
+                    <div style="width:10%">
                         <span class="pull-right">
                           <button data-dz-remove class="btn btn-warning cancel">
                               <i class="glyphicon glyphicon-ban-circle"></i>

@@ -46,9 +46,9 @@ public class EmailRunnable implements Runnable{
     }
         
     private void sendEmail(DropbitzEmail dropbitzEmail) {
-        logger.error("Process email...");
+        logger.debug("Process email...");
         EmailSender emailSender = new EmailSender(configuration);
         emailSender.sendEmail(dropbitzEmail);
-        logger.error("Email processed");
+        logger.debug("Email processed");
     }
 }
