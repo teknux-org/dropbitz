@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,10 +23,12 @@ import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.contant.I18nKey;
+import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.exception.I18nServiceException;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
@@ -35,10 +38,10 @@ import org.teknux.dropbitz.service.ConfigurationService;
 import org.teknux.dropbitz.service.EmailService;
 import org.teknux.dropbitz.service.I18nService;
 
-@Path("/upload")
-public class UploadController extends AbstractController {
+@Path(Route.DROP)
+public class DropController extends AbstractController {
 
-	private final Logger logger = LoggerFactory.getLogger(UploadController.class);
+	private final Logger logger = LoggerFactory.getLogger(DropController.class);
 	
 	private final static String DROPZONE_ERROR_ATTRIBUTE = "error";
 	
@@ -46,6 +49,12 @@ public class UploadController extends AbstractController {
 	private static final String CHARSET_ISO_8859_1 = "iso-8859-1";
 	private static final String DATE_FORMAT = "yyyyMMddHHmmss";
 		
+    @GET
+    @Authenticated
+    public Viewable index() {
+        return viewable(View.DROP);
+    }
+	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})

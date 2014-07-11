@@ -12,6 +12,7 @@ import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.controller.MainController;
 
 /**
@@ -48,7 +49,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         	}
         	
         	//Redirect to auth page
-    	    httpServletResponse.sendRedirect(servletContext.getContextPath() + "/auth");
+    	    httpServletResponse.sendRedirect(servletContext.getContextPath() + Route.AUTH);
         }
     }
 }

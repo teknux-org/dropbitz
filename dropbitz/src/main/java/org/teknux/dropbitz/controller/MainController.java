@@ -1,6 +1,5 @@
 package org.teknux.dropbitz.controller;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.ws.rs.FormParam;
@@ -10,33 +9,33 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.glassfish.jersey.server.mvc.Viewable;
 import org.teknux.dropbitz.contant.I18nKey;
+import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
-@Path("/")
+@Path(Route.INDEX)
 public class MainController extends AbstractController {
 	
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
 	
 	@GET
 	@Authenticated
-	public Viewable index() {
-		return viewable(View.DROP);
+	public Response index() throws URISyntaxException {
+		return Response.seeOther(uri(Route.DROP)).build();
 	}
 
     @GET
-    @Path("logout")
+    @Path(Route.LOGOUT)
     public Response logout() throws URISyntaxException {
         AuthenticationHelper.logout(getHttpServletRequest());
-        return Response.seeOther(new URI(getServletContext().getContextPath() + "/auth")).build();
+        return Response.seeOther(uri(Route.AUTH)).build();
     }
 	
 	@GET
-	@Path("auth")
+	@Path(Route.AUTH)
     public Response auth() {
 	    Status status = Status.OK;
 	    
@@ -52,13 +51,13 @@ public class MainController extends AbstractController {
     }
 	
 	@POST
-	@Path("authenticate")
+	@Path(Route.AUTH)
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
 		if (! AuthenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
 			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
 		}
 
-		return Response.seeOther(new URI(getServletContext().getContextPath())).build();
+		return Response.seeOther(uri(Route.INDEX)).build();
     }
 }

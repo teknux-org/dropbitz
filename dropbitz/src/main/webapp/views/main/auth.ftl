@@ -8,7 +8,7 @@
 			<h4>${i18n(i18nKey.AUTH_INFO)}</h4>
 		</div>
 
-		<form class="col-lg-12" method="post" action="${url("/authenticate")}">
+		<form class="col-lg-12" method="post" action="${url(route.AUTH)}">
 			<div id="auth-form-group" class="input-group">
 				<input class="form-control input-lg" type="password" name="secureId" placeholder="${i18n(i18nKey.AUTH_VALUE)}" />
 				<span class="input-group-btn">

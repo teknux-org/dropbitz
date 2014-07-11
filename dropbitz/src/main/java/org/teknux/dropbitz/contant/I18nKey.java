@@ -3,7 +3,7 @@ package org.teknux.dropbitz.contant;
 public interface I18nKey {
     String HEADER_BUTTON_UPLOAD = "header.button.upload";
     String HEADER_BUTTON_ADMIN = "header.button.admin";
-    public String HEADER_BUTTON_LOGOUT = "header.button.logout";
+    String HEADER_BUTTON_LOGOUT = "header.button.logout";
     String FOOTER_POWEREDBY = "footer.poweredby";
     String FALLBACK_BACK = "fallback.back";
     String AUTH_INFO = "auth.info";

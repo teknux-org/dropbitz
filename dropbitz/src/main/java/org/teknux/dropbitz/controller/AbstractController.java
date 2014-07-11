@@ -1,5 +1,7 @@
 package org.teknux.dropbitz.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -104,5 +106,13 @@ public class AbstractController {
             locale = getHttpServletRequest().getLocale();
         }
         return getServiceManager().getService(I18nService.class).get(key, locale);
+    }
+    
+    protected String url(String route) {
+        return getServletContext().getContextPath() + route;
+    }
+    
+    protected URI uri(String route) throws URISyntaxException {
+        return new URI(url(route));
     }
 }

@@ -7,7 +7,7 @@
 
     <div class="container">
 
-        <form  id="drop-file-area" method="post" action="${url("/upload")}" enctype="multipart/form-data">
+        <form  id="drop-file-area" method="post" action="${url(route.DROP)}" enctype="multipart/form-data">
 
             <div class="control-group">
                 <label>${i18n(i18nKey.DROP_NAME_LABEL)}</label>
@@ -83,7 +83,7 @@
 
     <script src="${url("/static/js/drop.js")}" type="text/javascript"></script>
     <script type="text/javascript">
-    	initDropzone("${url()}");
+    	initDropzone("${url(route.AUTH)}");
     </script>
     <noscript>
         <link href="${url("/static/css/fallback.css")}" rel="stylesheet" type="text/css" />

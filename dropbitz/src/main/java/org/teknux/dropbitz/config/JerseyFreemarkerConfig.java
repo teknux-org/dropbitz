@@ -11,6 +11,7 @@ import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.jvnet.hk2.annotations.Optional;
 import org.teknux.dropbitz.contant.I18nKey;
+import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.freemarker.helper.I18nHelper;
 import org.teknux.dropbitz.freemarker.helper.UrlHelper;
 import org.teknux.dropbitz.freemarker.helper.UserHelper;
@@ -53,5 +54,6 @@ public class JerseyFreemarkerConfig extends Configuration {
 		setSharedVariable("i18n", new I18nHelper());
         setSharedVariable("i18nKey", BeansWrapper.getDefaultInstance().getStaticModels().get(I18nKey.class.getName()));
 		setSharedVariable("url", new UrlHelper());
+		setSharedVariable("route", BeansWrapper.getDefaultInstance().getStaticModels().get(Route.class.getName()));
 	}
 }
