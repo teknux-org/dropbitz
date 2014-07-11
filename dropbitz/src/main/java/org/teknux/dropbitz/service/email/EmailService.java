@@ -24,6 +24,9 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModelException;
 
 
+/**
+ * Service queuing emails and sending them asynchronously.
+ */
 public class EmailService implements
 		IEmailService {
 

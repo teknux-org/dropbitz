@@ -1,6 +1,7 @@
 package org.teknux.dropbitz.model;
 
-public interface IUser {
+public interface IUser extends
+		IDable<String> {
 
 	public static enum Role {
 		SuperAdmin, Operator, User;

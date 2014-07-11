@@ -1,34 +1,28 @@
 package org.teknux.dropbitz.service;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
+import org.teknux.dropbitz.service.StorageService.Storage;
 
 
 /**
- * In memory user storage/service. This class does not keep any persistent information between application restarts.
+ * In testing..
  */
 public class MapDBUserService implements
 		IUserService {
 
-	private Map<String, IUser> userMap = new HashMap<>();
+	private Map<String, IUser> userMap;
 
-	private final DB db;
-
-	public MapDBUserService() {
-		db = DBMaker.newTempFileDB().cacheDisable().closeOnJvmShutdown().transactionDisable().make();
-	}
-
-	@Override
-	public void close() throws Exception {
-		db.commit();
-		db.close();
+	/**
+	 * For testing only
+	 */
+	public MapDBUserService(StorageService storage) {
+		userMap = storage.getStorageMap(Storage.USERS);
 	}
 
 	@Override
@@ -69,6 +63,27 @@ public class MapDBUserService implements
 	@Override
 	public Collection<IUser> getUsers() {
 		return userMap.values();
+	}
+
+	@Override
+	public void start(ServiceManager serviceManager) throws ServiceException {
+		final StorageService storage = serviceManager.getService(StorageService.class);
+		Objects.requireNonNull(storage);
+		userMap = storage.getStorageMap(Storage.USERS);
+	}
+
+	@Override
+	public void stop() throws ServiceException {
+		try {
+			close();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		// TODO we should use transactions make sure to and commit everything here.
 	}
 
 }

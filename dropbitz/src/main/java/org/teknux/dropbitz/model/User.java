@@ -77,4 +77,14 @@ public class User extends Timestampable implements
 		return new Role[] { Role.User };
 	}
 
+	@Override
+	public String getId() {
+		return getEmail();
+	}
+
+	@Override
+	public void setId(String id) {
+		setEmail(id);
+	}
+
 }

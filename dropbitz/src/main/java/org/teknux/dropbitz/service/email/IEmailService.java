@@ -4,6 +4,9 @@ import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.IService;
 
 
+/**
+ * Service sending emails
+ */
 public interface IEmailService extends
 		IService {
 

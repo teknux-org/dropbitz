@@ -12,8 +12,8 @@ import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.exception.StorageException;
 import org.teknux.dropbitz.model.IUser;
 import org.teknux.dropbitz.model.User;
-import org.teknux.dropbitz.service.DatabaseUserService;
 import org.teknux.dropbitz.service.IUserService;
+import org.teknux.dropbitz.service.MapDBUserService;
 import org.teknux.dropbitz.service.StorageService;
 
 
@@ -182,7 +182,7 @@ public class UserServiceTest {
 	public void before() throws ServiceException {
 		storageService = new StorageService(testFolder.getRoot().getPath() + "/" + UUID.randomUUID() + ".db");
 		storageService.start(null);
-		userService = new DatabaseUserService(storageService);
+		userService = new MapDBUserService(storageService);
 	}
 
 	@After

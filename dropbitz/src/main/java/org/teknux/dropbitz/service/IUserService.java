@@ -10,6 +10,7 @@ import org.teknux.dropbitz.model.IUser;
  * Manages all aspects of user management
  */
 public interface IUserService extends
+		IService,
 		AutoCloseable {
 
 	/**
