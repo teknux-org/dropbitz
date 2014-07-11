@@ -36,7 +36,7 @@ import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.service.ConfigurationService;
 import org.teknux.dropbitz.service.I18nService;
-import org.teknux.dropbitz.service.email.EmailService;
+import org.teknux.dropbitz.service.email.IEmailService;
 
 @Path(Route.DROP)
 public class DropController extends AbstractController {
@@ -137,6 +137,6 @@ public class DropController extends AbstractController {
 		dropEmailModel.setSuccess(success);
 		dropEmailModel.setLocale(locale);
 		
-		getServiceManager().getService(EmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
+		getServiceManager().getService(IEmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
 	}
 }

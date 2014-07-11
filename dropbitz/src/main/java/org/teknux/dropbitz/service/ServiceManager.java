@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.service.email.EmailService;
+import org.teknux.dropbitz.service.email.IEmailService;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 
@@ -32,7 +33,7 @@ public class ServiceManager {
 
 		services.put(ConfigurationService.class, new ConfigurationService());
 		services.put(StorageService.class, new StorageService());
-		services.put(EmailService.class, new EmailService());
+		services.put(IEmailService.class, new EmailService());
 		services.put(I18nService.class, new I18nService());
 	}
 

@@ -17,7 +17,6 @@ import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.ConfigurationService;
-import org.teknux.dropbitz.service.IService;
 import org.teknux.dropbitz.service.ServiceManager;
 
 import freemarker.template.Template;
@@ -26,12 +25,12 @@ import freemarker.template.TemplateModelException;
 
 
 public class EmailService implements
-        IService {
-    
-    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
-    
-    private LinkedBlockingQueue<DropbitzEmail> emailQueue;
-    
+		IEmailService {
+
+	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+	private LinkedBlockingQueue<DropbitzEmail> emailQueue;
+
 	private static final String MODEL_NAME_ATTRIBUTE = "model";
 	private static final String VIEW_EXTENSION = ".ftl";
 	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
@@ -43,7 +42,7 @@ public class EmailService implements
 	private Configuration configuration;
 	private ServletContext servletContext;
 
-    private Thread emailThread;
+	private Thread emailThread;
 
 	public EmailService() {
 	}
@@ -52,44 +51,17 @@ public class EmailService implements
 		this.viewsPath = viewsPath;
 	}
 
-	/**
-	 * Send email
-	 * 
-	 * @param subject
-	 *            Email Subject
-	 * @param viewName
-	 *            Freemarker Template Name
-	 */
+	@Override
 	public void sendEmail(String subject, String viewName) {
 		sendEmail(subject, viewName, null);
 	}
 
-	/**
-	 * Send email
-	 * 
-	 * @param subject
-	 *            Email Subject
-	 * @param viewName
-	 *            Freemarker Template Name
-	 * @param model
-	 *            Object model for Freemarker template
-	 */
+	@Override
 	public void sendEmail(String subject, String viewName, IModel model) {
 		sendEmail(subject, viewName, model, null);
 	}
 
-	/**
-	 * Send email
-	 * 
-	 * @param subject
-	 *            Email Subject
-	 * @param viewName
-	 *            Freemarker Template Name
-	 * @param model
-	 *            Object model for Freemarker template
-	 * @param viewNameAlt
-	 *            Alternative Freemarker Template Name (Non-HTML)
-	 */
+	@Override
 	public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
 		if (configuration.isEmailEnable()) {
 			logger.debug("Email : Add new email to queue...");
@@ -97,24 +69,24 @@ public class EmailService implements
 			DropbitzEmail dropbitzEmail = new DropbitzEmail();
 			dropbitzEmail.setSubject(subject);
 			try {
-			    dropbitzEmail.setEmailFrom(configuration.getEmailFrom());
-			    dropbitzEmail.setEmailTo(configuration.getEmailTo());
-                dropbitzEmail.setHtmlMsg(resolve(model, viewName));
-                if (viewNameAlt != null) {
-                    dropbitzEmail.setTextMsg(resolve(model, viewNameAlt));
-                }
-                
-                emailQueue.offer(dropbitzEmail);
-                
-                logger.error("Email added to queue");
-            } catch (IOException | TemplateException e1) {
-                logger.error("Can not add email to queue");
-            }			
+				dropbitzEmail.setEmailFrom(configuration.getEmailFrom());
+				dropbitzEmail.setEmailTo(configuration.getEmailTo());
+				dropbitzEmail.setHtmlMsg(resolve(model, viewName));
+				if (viewNameAlt != null) {
+					dropbitzEmail.setTextMsg(resolve(model, viewNameAlt));
+				}
+
+				emailQueue.offer(dropbitzEmail);
+
+				logger.error("Email added to queue");
+			} catch (IOException | TemplateException e1) {
+				logger.error("Can not add email to queue");
+			}
 		} else {
-		    logger.debug("Email is disabled. Email not added to queue");
+			logger.debug("Email is disabled. Email not added to queue");
 		}
 	}
-	 
+
 	/**
 	 * Resolve template
 	 * 
@@ -129,15 +101,15 @@ public class EmailService implements
 	 *             on template syntax error
 	 */
 	private String resolve(IModel model, String viewName) throws IOException, TemplateException {
-	    
+
 		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
-		
-        model.setServletContext(servletContext);
-        
-        Map<String,IModel> map = new HashMap<String,IModel>();
-        map.put(MODEL_NAME_ATTRIBUTE, model);
-        
+
+		model.setServletContext(servletContext);
+
+		Map<String, IModel> map = new HashMap<String, IModel>();
+		map.put(MODEL_NAME_ATTRIBUTE, model);
+
 		template.process(map, writer);
 
 		return writer.toString();
@@ -146,36 +118,36 @@ public class EmailService implements
 	@Override
 	public void start(final ServiceManager serviceManager) throws ServiceException {
 
-       this.configuration = serviceManager.getService(ConfigurationService.class).getConfiguration();
-	        
+		this.configuration = serviceManager.getService(ConfigurationService.class).getConfiguration();
+
 		if (configuration.isEmailEnable()) {
-		    this.servletContext = serviceManager.getServletContext();
-		    
-		    emailQueue = new LinkedBlockingQueue<DropbitzEmail>();
-		    
+			this.servletContext = serviceManager.getServletContext();
+
+			emailQueue = new LinkedBlockingQueue<DropbitzEmail>();
+
 			// Init Freemarker
 			try {
-                jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
-            } catch (TemplateModelException e) {
-                throw new ServiceException(e);
-            }
-			
+				jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
+			} catch (TemplateModelException e) {
+				throw new ServiceException(e);
+			}
+
 			//Start EmailRunnable
-			emailThread = new Thread(new EmailRunnable(configuration, emailQueue));			
+			emailThread = new Thread(new EmailRunnable(configuration, emailQueue));
 			emailThread.start();
 		}
 	}
 
 	@Override
 	public void stop() throws ServiceException {
-	    if (emailThread != null && emailThread.isAlive()) {
-	        //Stop EmailRunnable
-	        emailThread.interrupt();
-	        try {
-                emailThread.join();
-            } catch (InterruptedException e) {
-                throw new ServiceException(e);
-            }
-	    }
+		if (emailThread != null && emailThread.isAlive()) {
+			//Stop EmailRunnable
+			emailThread.interrupt();
+			try {
+				emailThread.join();
+			} catch (InterruptedException e) {
+				throw new ServiceException(e);
+			}
+		}
 	}
 }
