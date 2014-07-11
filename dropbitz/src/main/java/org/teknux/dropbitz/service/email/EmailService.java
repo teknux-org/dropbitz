@@ -5,7 +5,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 
@@ -27,32 +31,38 @@ import freemarker.template.TemplateModelException;
 /**
  * Service queuing emails and sending them asynchronously.
  */
-public class EmailService implements
-		IEmailService {
+public class EmailService implements IEmailService {
 
 	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-	private LinkedBlockingQueue<DropbitzEmail> emailQueue;
-
+	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
+	private static final int TIMEOUT_ON_STOP = 1; //minutes
+	
 	private static final String MODEL_NAME_ATTRIBUTE = "model";
 	private static final String VIEW_EXTENSION = ".ftl";
-	private static final String DEFAULT_VIEWS_PATH = "/webapp/views/email";
 
 	private String viewsPath = DEFAULT_VIEWS_PATH;
+	private IEmailSender emailSender;
+	
+	private BlockingQueue<DropbitzEmail> emailQueue;
 
 	private JerseyFreemarkerConfig jerseyFreemarkerConfig;
 
 	private Configuration configuration;
 	private ServletContext servletContext;
 
-	private Thread emailThread;
+	private ExecutorService emailExecutorService;
 
 	public EmailService() {
 	}
 
-	public void setDefaultViewsPath(String viewsPath) {
+	public void setViewsPath(String viewsPath) {
 		this.viewsPath = viewsPath;
 	}
+	
+	public void setEmailSender(IEmailSender emailSender) {
+        this.emailSender = emailSender;;
+    }
 
 	@Override
 	public void sendEmail(String subject, String viewName) {
@@ -128,29 +138,35 @@ public class EmailService implements
 
 			emailQueue = new LinkedBlockingQueue<DropbitzEmail>();
 
-			// Init Freemarker
+			//Init Freemarker
 			try {
 				jerseyFreemarkerConfig = new JerseyFreemarkerConfig(servletContext);
 			} catch (TemplateModelException e) {
 				throw new ServiceException(e);
 			}
 
+            //Set Default EmailSender if not setted
+            if (emailSender == null) {
+                emailSender = new EmailSender(configuration);
+            }
+
 			//Start EmailRunnable
-			emailThread = new Thread(new EmailRunnable(configuration, emailQueue));
-			emailThread.start();
+			emailExecutorService = Executors.newSingleThreadExecutor();
+			emailExecutorService.execute(new EmailRunnable(emailQueue, emailSender));
 		}
 	}
 
 	@Override
 	public void stop() throws ServiceException {
-		if (emailThread != null && emailThread.isAlive()) {
-			//Stop EmailRunnable
-			emailThread.interrupt();
-			try {
-				emailThread.join();
-			} catch (InterruptedException e) {
-				throw new ServiceException(e);
-			}
-		}
-	}
+	    //Stop EmailRunnable    
+	    if (emailExecutorService != null) {
+	        emailExecutorService.shutdownNow();
+	        
+	        try {
+	            emailExecutorService.awaitTermination(TIMEOUT_ON_STOP, TimeUnit.MINUTES);
+	        } catch (InterruptedException e) {
+	            throw new ServiceException(e);
+	        }
+        }
+    }
 }

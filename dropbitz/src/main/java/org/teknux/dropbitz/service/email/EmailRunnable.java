@@ -1,23 +1,24 @@
 package org.teknux.dropbitz.service.email;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.model.DropbitzEmail;
 
 public class EmailRunnable implements Runnable{
     
     private final Logger logger = LoggerFactory.getLogger(EmailRunnable.class);
 
-    private final Configuration configuration;
-    private final LinkedBlockingQueue<DropbitzEmail> emailQueue;
+    private final BlockingQueue<DropbitzEmail> emailQueue;
+    private final IEmailSender emailSender;
     
-    public EmailRunnable(final Configuration configuration, final LinkedBlockingQueue<DropbitzEmail> emailQueue) {
-        this.configuration = Objects.requireNonNull(configuration, "EmailCallable require configuration");
-        this.emailQueue = Objects.requireNonNull(emailQueue, "EmailCallable require emailQueue");
+    public EmailRunnable(final BlockingQueue<DropbitzEmail> emailQueue, IEmailSender emailSender) {
+        this.emailQueue = Objects.requireNonNull(emailQueue, "EmailRunnable require emailQueue");
+        this.emailSender = Objects.requireNonNull(emailSender, "EmailRunnable require emailSender");
     }
     
     @Override
@@ -33,21 +34,22 @@ public class EmailRunnable implements Runnable{
             if (emailQueue.size() == 0) {
                 logger.debug("Stop EmailRunnable (No email to send, queue is empty)...");
             } else {
-                logger.debug("Send emails before stop EmailRunnable...");
-                DropbitzEmail dropbitzEmail = null;
-                while ((dropbitzEmail = emailQueue.poll()) != null) {
+                List<DropbitzEmail> dropbitzEmails = new ArrayList<DropbitzEmail>();
+                emailQueue.drainTo(dropbitzEmails);
+                logger.debug("Send {} emails before stop EmailRunnable...", dropbitzEmails.size());
+                for (DropbitzEmail dropbitzEmail : dropbitzEmails) {
                     sendEmail(dropbitzEmail);
                 }
                 logger.debug("All emails are sent");
             }
             
             logger.debug("EmailRunnable stopped");
+            Thread.currentThread().interrupt();
         }
     }
         
     private void sendEmail(DropbitzEmail dropbitzEmail) {
         logger.debug("Process email...");
-        EmailSender emailSender = new EmailSender(configuration);
         emailSender.sendEmail(dropbitzEmail);
         logger.debug("Email processed");
     }

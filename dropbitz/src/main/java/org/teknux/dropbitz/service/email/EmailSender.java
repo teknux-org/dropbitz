@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.model.DropbitzEmail;
 
-public class EmailSender {
+public class EmailSender implements IEmailSender {
     
     private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
