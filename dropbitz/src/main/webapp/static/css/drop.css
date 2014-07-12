@@ -1,3 +1,9 @@
+@media (max-width: 450px) {
+    .btn span {
+        display: none;
+    }
+}
+
 .fallback {
 	color: #eee;
 }
@@ -16,12 +22,32 @@ div.table .file-row {
 
 div.table .file-row > div {
     display: table-cell;
-    vertical-align: top;
+    vertical-align: middle;
     border-top: 1px solid #ddd;
     padding: 8px;
 }
 div.table .file-row:nth-child(odd) {
     background: #f9f9f9;
+}
+
+.file-status-cell {
+    width: 1%;
+}
+
+.file-status-icon {
+    font-size: 24px;
+}
+
+.file-status-ok {
+    color: #07C0B9;
+}
+
+.file-status-ko {
+    color: #a94442;
+}
+
+.hidden {
+    display: none;
 }
 
 .file-row p {
@@ -32,8 +58,16 @@ div.table .file-row:nth-child(odd) {
     margin: 0;
 }
 
-.file-row .progress {
-    margin: 0;
+.file-size {
+    white-space: nowrap;
+}
+
+.file-progress {
+    width: 10%;
+}
+
+.file-controls {
+    width: 10%;
 }
 
 /* The total progress gets shown by event listeners */
