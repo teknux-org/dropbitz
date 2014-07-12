@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 
 public class EmailRunnable implements Runnable{
@@ -28,7 +29,11 @@ public class EmailRunnable implements Runnable{
             while(true) {
                 logger.debug("Wait new email...");
                 DropbitzEmail dropbitzEmail = emailQueue.take();
-                sendEmail(dropbitzEmail);
+                try {
+                    sendEmail(dropbitzEmail);
+                } catch (EmailServiceException e) {
+                    logger.error("Email runnable can not send mail", e);
+                }
             }
         } catch (InterruptedException e) {           
             if (emailQueue.size() == 0) {
@@ -38,7 +43,11 @@ public class EmailRunnable implements Runnable{
                 emailQueue.drainTo(dropbitzEmails);
                 logger.debug("Send {} emails before stop EmailRunnable...", dropbitzEmails.size());
                 for (DropbitzEmail dropbitzEmail : dropbitzEmails) {
-                    sendEmail(dropbitzEmail);
+                    try {
+                        sendEmail(dropbitzEmail);
+                    } catch (EmailServiceException e2) {
+                        logger.error("Email runnable can not send mail", e2);
+                    }
                 }
                 logger.debug("All emails are sent");
             }
@@ -48,7 +57,7 @@ public class EmailRunnable implements Runnable{
         }
     }
         
-    private void sendEmail(DropbitzEmail dropbitzEmail) {
+    private void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
         logger.debug("Process email...");
         emailSender.sendEmail(dropbitzEmail);
         logger.debug("Email processed");

@@ -14,17 +14,22 @@ public class I18nService implements II18nService {
     private static Logger logger = LoggerFactory.getLogger(I18nService.class);
     
     private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    private static final String DEFAULT_RERESOURCE_BASE_NAME = "i18n.dropbitz";
     
-    private static String RESOURCE_BASE_NAME = "i18n.dropbitz";
+    private String resourceBaseName = DEFAULT_RERESOURCE_BASE_NAME;
 
     public I18nService() {
+    }
+    
+    public void setResourceBaseName(String resourceBaseName) {
+        this.resourceBaseName = resourceBaseName;
     }
         
     public String get(String key, Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
         }
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BASE_NAME, locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(resourceBaseName, locale);
                 
         if (resourceBundle.containsKey(key)) {
             return resourceBundle.getString(key);

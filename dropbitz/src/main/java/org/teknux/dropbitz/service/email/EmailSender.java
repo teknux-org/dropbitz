@@ -9,6 +9,7 @@ import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 
 public class EmailSender implements IEmailSender {
@@ -21,7 +22,7 @@ public class EmailSender implements IEmailSender {
         this.config = Objects.requireNonNull(configuration, "Email Sender require configuration");
     }
     
-    public void sendEmail(DropbitzEmail dropbitzEmail) {
+    public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
         logger.debug("Send email...");
         
         HtmlEmail email = new HtmlEmail();
@@ -46,7 +47,7 @@ public class EmailSender implements IEmailSender {
             
             logger.trace(MessageFormat.format("Email sent from [{0}] to [{1}]", dropbitzEmail.getEmailFrom(), String.join(",", dropbitzEmail.getEmailTo())));
         } catch (EmailException e) {
-            logger.error("Email not sent", e);
+            throw new EmailServiceException("Email not sent", e);
         }
     }
 }
