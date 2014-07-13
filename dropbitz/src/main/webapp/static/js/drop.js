@@ -1,5 +1,3 @@
-var test;
-
 function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
 	// Get the template HTML and remove it from the document
 	var previewNode = document.querySelector("#template");
@@ -26,6 +24,7 @@ function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
 	
 	        file.previewElement.querySelector(".cancel").remove();
 	        file.previewElement.querySelector(".progress").remove();
+	        $(file.previewElement).find("#file-status-ko").removeClass("hidden");
 	
 	        return this.defaultOptions.error(file, errorMessage);
 	    }
@@ -37,18 +36,17 @@ function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
 	});
 	
 	myDropzone.on("sending", function(file) {
-	    // Show the total progress bar when upload starts
 	    document.querySelector("#total-progress").style.opacity = "1";
 	    $("#total-progress").addClass("active");
 	});
 	
 	// Hide the total progress bar when nothing's uploading anymore
 	myDropzone.on("queuecomplete", function(progress) {
-	    //document.querySelector("#total-progress").style.opacity = "0";
 	    $("#total-progress").removeClass("active");
 	});
 
 	myDropzone.on("success", function(file) {
 	    $(file.previewElement).find(".progress").removeClass("active");
+	    $(file.previewElement).find("#file-status-ok").removeClass("hidden");
     });
 }

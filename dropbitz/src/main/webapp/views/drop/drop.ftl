@@ -49,18 +49,22 @@
                 <div style="padding-top:10px" class="table table-striped files" id="previews">
 
                   <div id="template" class="file-row">
-                    <div style="vertical-align:middle">
+                    <div class="file-status-cell">
+                        <i id="file-status-ok" class="file-status-icon file-status-ok glyphicon glyphicon-ok-circle hidden"></i>
+                        <i id="file-status-ko" class="file-status-icon file-status-ko glyphicon glyphicon-remove-circle hidden"></i>
+                    </div>
+                    <div class="file-name">
                         <p class="name" data-dz-name></p>
                     </div>
-                    <div style="vertical-align:middle;white-space:nowrap;">
+                    <div class="file-size">
                         <p class="size text-center" data-dz-size></p>
                     </div>
-                    <div style="width:10%; vertical-align:middle" >
+                    <div class="file-progress">
                         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                           <div class="progress-bar" style="width:0%;" data-dz-uploadprogress></div>
                         </div>
                     </div>
-                    <div style="width:10%">
+                    <div class="file-controls">
                         <span class="pull-right">
                           <button data-dz-remove class="btn btn-warning cancel">
                               <i class="glyphicon glyphicon-ban-circle"></i>
