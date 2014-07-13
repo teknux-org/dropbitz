@@ -4,5 +4,5 @@ import javax.servlet.ServletContext;
 
 public interface IServiceManager {
     ServletContext getServletContext();
-    <T> T getService(final Class<T> serviceClass);
+    <T extends IService> T getService(final Class<T> serviceClass);
 }

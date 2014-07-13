@@ -117,7 +117,7 @@ public class EmailService implements IEmailService {
 	 */
 	private String resolve(IModel model, String viewName) throws IOException, TemplateException {
 
-		Template template = jerseyFreemarkerConfig.getTemplate(viewsPath + viewName + VIEW_EXTENSION);
+		Template template = jerseyFreemarkerConfig.getTemplate(Objects.requireNonNull(viewsPath, "viewsPath can not be null") + Objects.requireNonNull(viewName, "viewName can not be null") + VIEW_EXTENSION);
 		Writer writer = new StringWriter();
 
 		Objects.requireNonNull(model).setServletContext(servletContext);

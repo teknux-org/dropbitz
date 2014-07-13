@@ -1,6 +1,6 @@
 package org.teknux.dropbitz.exception;
 
-public class I18nServiceException extends DropBitzException {
+public class I18nServiceException extends ServiceException {
 
 	private static final long serialVersionUID = 1L;
 

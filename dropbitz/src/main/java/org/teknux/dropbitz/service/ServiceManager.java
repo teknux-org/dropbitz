@@ -72,7 +72,7 @@ public class ServiceManager implements IServiceManager {
 	}
 
 	@Override
-	public <T> T getService(final Class<T> serviceClass) {
+	public <T extends IService> T getService(final Class<T> serviceClass) {
 		synchronized (services) {
 			final IService wantedService = services.get(serviceClass);
 			if (wantedService == null || !serviceClass.isAssignableFrom(wantedService.getClass())) {

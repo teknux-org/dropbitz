@@ -89,9 +89,35 @@ public class EmailServiceTest {
 
         Assert.assertTrue(dropbitzEmails.isEmpty());
     }
+    
+    @Test
+    public void test02BadSend() throws ServiceException {
+        dropbitzEmails = new HashSet<DropbitzEmail>();
+        EmailService emailService = getEmailService(true, null, null);
+
+        try {
+            emailService.sendEmail("subject", null, new Model());
+            Assert.fail("Should throw NPE");
+        } catch (NullPointerException e){
+        }
+        try {
+            emailService.sendEmail("subject", "/simple", null);
+            Assert.fail("Should throw NPE");
+        } catch (NullPointerException e){
+        }
+        try {
+            emailService.setViewsPath(null);
+            emailService.sendEmail("subject", "/simple", new Model());
+            Assert.fail("Should throw NPE");
+        } catch (NullPointerException e){
+        }
+        emailService.stop();
+
+        Assert.assertTrue(dropbitzEmails.isEmpty());
+    }
 
     @Test
-    public void test02Simple() throws ServiceException {
+    public void test03Simple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
@@ -106,11 +132,11 @@ public class EmailServiceTest {
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
 
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
     }
 
     @Test
-    public void test03Model() throws ServiceException {
+    public void test04Model() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
@@ -125,11 +151,11 @@ public class EmailServiceTest {
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
     }
 
     @Test
-    public void test04Alt() throws ServiceException {
+    public void test05Alt() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
@@ -145,11 +171,11 @@ public class EmailServiceTest {
         expected.setTextMsg("testModel");
         expecteds.add(expected);
 
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
     }
     
     @Test
-    public void test05Multiple() throws ServiceException {
+    public void test06Multiple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
@@ -171,11 +197,11 @@ public class EmailServiceTest {
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
     }
     
     @Test
-    public void test06OneAtTime() throws ServiceException, InterruptedException {
+    public void test07OneAtTime() throws ServiceException, InterruptedException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
@@ -193,7 +219,7 @@ public class EmailServiceTest {
         expected.setEmailTo(new String[] { "to@localhost.lan" });
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
         
         unlockMailSender();
 
@@ -206,6 +232,6 @@ public class EmailServiceTest {
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
-        Assert.assertEquals(dropbitzEmails, expecteds);
+        Assert.assertEquals(expecteds, dropbitzEmails);
     }
 }

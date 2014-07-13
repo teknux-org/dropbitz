@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.service.IService;
 import org.teknux.dropbitz.service.IServiceManager;
 
 public class FakeEmailServiceManager implements IServiceManager {
@@ -28,7 +29,7 @@ public class FakeEmailServiceManager implements IServiceManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getService(Class<T> serviceClass) {
+    public <T extends IService> T getService(Class<T> serviceClass) {
         if (serviceClass == IConfigurationService.class) {
             return (T) new IConfigurationService() {
                 
