@@ -86,7 +86,7 @@ public class Application {
 	 *             on error
 	 */
 	protected Configuration loadConfiguration() throws ConfigurationException {
-		return ConfigurationFactory.getConfiguration();
+		return ConfigurationFactory.getConfiguration(Configuration.class);
 	}
 
 	/**

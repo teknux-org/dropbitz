@@ -16,52 +16,111 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ConfigurationException;
 
-public class ConfigurationFactory {
+public class ConfigurationFactory<T> {
 
 	private static Logger logger = LoggerFactory
 			.getLogger(ConfigurationFactory.class);
 
 	private static final String CHARSET_UTF8 = "UTF-8";
-	private static final String CONFIG_FILENAME = "config.properties";
-	private static final String CONFIG_FILENAME_DIST = "config.properties-dist";
 	private static final String RESOURCE_SEPARATOR = "/";
+		
+	private static final String DEFAULT_CONFIG_FILE_BASEPATH = getJarDir();
+	private static final String DEFAULT_CONFIG_RESOURCE_BASEPATH = RESOURCE_SEPARATOR;
+	private static final String DEFAULT_CONFIG_FILENAME = "config.properties";
+	private static final String DEFAULT_CONFIG_DIST_FILENAME = "config.properties-dist";
 	
-	private static final String CONFIG_FILE = getJarDir() + File.separator + CONFIG_FILENAME;
-	private static final String CONFIG_RESOURCE = RESOURCE_SEPARATOR + CONFIG_FILENAME;
-	private static final String CONFIG_DIST_RESOURCE = RESOURCE_SEPARATOR + CONFIG_FILENAME_DIST;
+	private Class<T> clazz;
 	
+	private String configFileBasePath;
+	private String configResourceBasePath;
+	private String configFileName;
+	private String configDistFileName;
 
-	private ConfigurationFactory() {
 
+	public String getConfigFileBasePath() {
+        return configFileBasePath;
+    }
+
+    public void setConfigFileBasePath(String configFileBasePath) {
+        this.configFileBasePath = configFileBasePath;
+    }
+
+    public String getConfigResourceBasePath() {
+        return configResourceBasePath;
+    }
+
+    public void setConfigResourceBasePath(String configResourceBasePath) {
+        this.configResourceBasePath = configResourceBasePath;
+    }
+
+    public String getConfigFileName() {
+        return configFileName;
+    }
+
+    public void setConfigFileName(String configFileName) {
+        this.configFileName = configFileName;
+    }
+
+    public String getConfigDistFileName() {
+        return configDistFileName;
+    }
+
+    public void setConfigDistFileName(String configDistFileName) {
+        this.configDistFileName = configDistFileName;
+    }
+
+    private String getConfigFilePath() {
+        return (configFileBasePath.equals(File.separator)?configFileBasePath:configFileBasePath + File.separator) + configFileName;
+    }
+    
+    private String getConfigResourcePath() {
+        return (configResourceBasePath.equals(RESOURCE_SEPARATOR)?configResourceBasePath:configResourceBasePath + RESOURCE_SEPARATOR) + configFileName;
+    }
+    
+    private String getConfigDistResourcePath() {
+        return (configResourceBasePath.equals(RESOURCE_SEPARATOR)?configResourceBasePath:configResourceBasePath + RESOURCE_SEPARATOR) + configDistFileName;
+    }
+       
+    /**
+     * Get configuration from jar directory, from resource or create new configuration file
+     * 
+     * @return ConfigurationFile
+     * @throws ConfigurationException On failed
+     */
+    public static <T> T getConfiguration(Class<T> clazz) throws ConfigurationException {
+        return new ConfigurationFactory<T>(clazz).buildConfiguration();
+    }
+    
+    public ConfigurationFactory(Class<T> clazz) {
+        this.clazz = clazz;
+        
+        configFileBasePath = DEFAULT_CONFIG_FILE_BASEPATH;
+        configResourceBasePath = DEFAULT_CONFIG_RESOURCE_BASEPATH;
+        configFileName = DEFAULT_CONFIG_FILENAME;
+        configDistFileName = DEFAULT_CONFIG_DIST_FILENAME;
 	}
 
-	/**
-	 * Get configuration from jar directory, from resource or create new configuration file
-	 * 
-	 * @return ConfigurationFile
-	 * @throws ConfigurationException On failed
-	 */
-	public static Configuration getConfiguration() throws ConfigurationException {
+	public T buildConfiguration() throws ConfigurationException {
 		logger.debug("Get configuration...");
 
 		InputStream inputStream = null;
 		
-		File file = new File(CONFIG_FILE);
+		File file = new File(getConfigFilePath());
 
 		logger.trace("Check if config file exists in jar directory [{}]...", file.getPath());
 		if (file.exists()) { //Check if file exists in jar directory
 			inputStream = getStreamFromFile(file);
 			logger.debug("Use config file in jar directory");
 		} else { //Check if config file exits in resource
-			logger.trace("Check if config file exists in resource [{}]...", CONFIG_RESOURCE);
+			logger.trace("Check if config file exists in resource [{}]...", getConfigResourcePath());
 				
-			inputStream = getStreamFromResource(CONFIG_RESOURCE);
+			inputStream = getStreamFromResource(getConfigResourcePath());
 			if (inputStream != null) {
 				logger.warn("Use resource config");				
 			} else { //If not, Create file in jar directory
 				logger.warn("File does not exits. Create config file exists in jar directory [{}]...", file.getPath());
 				try {
-                    inputStream = createConfigurationFile(CONFIG_DIST_RESOURCE, file);
+                    inputStream = createConfigurationFile(getConfigDistResourcePath(), file);
                 } catch (IOException e) {
                     throw new ConfigurationException(MessageFormat.format("Can not create config file in jar directory [{0}]", file.getPath()), e);
                 }
@@ -70,7 +129,7 @@ public class ConfigurationFactory {
 		
 		//Build configuration
 		try {
-            return buildConfiguration(inputStream);
+            return buildConfigurationFromStream(inputStream);
         } catch (IOException e) {
             throw new ConfigurationException(MessageFormat.format("Bad config file [{0}]", file.getPath()), e);
         }
@@ -83,7 +142,7 @@ public class ConfigurationFactory {
 	 * @return InputStream
 	 * @throws ConfigurationException
 	 */
-	private static InputStream getStreamFromFile(File file) throws ConfigurationException {
+	private InputStream getStreamFromFile(File file) throws ConfigurationException {
         if (! file.canRead()) { //Check if file is readable in jar directory
             throw new ConfigurationException(MessageFormat.format("Config file is not readable in jar directory [{0}]", file.getPath()));
         } else { //Open config file in jar directory
@@ -101,7 +160,7 @@ public class ConfigurationFactory {
 	 * @param resource
 	 * @return InputStream
 	 */
-	private static InputStream getStreamFromResource(String resource) {
+	private InputStream getStreamFromResource(String resource) {
 	    return ConfigurationFactory.class.getResourceAsStream(resource);
 	}
 
@@ -113,7 +172,7 @@ public class ConfigurationFactory {
 	 * @return InputStream
 	 * @throws IOException 
 	 */
-	private static InputStream createConfigurationFile(String distResource, File file) throws IOException {
+	private InputStream createConfigurationFile(String distResource, File file) throws IOException {
 	    InputStream inputStream = null;
         FileUtils.copyURLToFile(ConfigurationFactory.class.getResource(distResource), file);
         inputStream = new FileInputStream(file);
@@ -128,7 +187,7 @@ public class ConfigurationFactory {
 	 * @return Configuration
 	 * @throws IOException
 	 */
-    private static Configuration buildConfiguration(InputStream inputStream) throws IOException {
+    private T buildConfigurationFromStream(InputStream inputStream) throws IOException {
         Properties properties = new Properties();
         try {
             properties.load(inputStream);
@@ -143,7 +202,7 @@ public class ConfigurationFactory {
         }
         
         ConfigurationObjectFactory factory = new ConfigurationObjectFactory(properties);
-        return factory.build(Configuration.class);
+        return factory.build(clazz);
     }
 	   
 	/**
@@ -151,7 +210,7 @@ public class ConfigurationFactory {
 	 * 
 	 * @return
 	 */
-	private static String getJarDir() {
+	public static String getJarDir() {
 		return decodeUrl(new File(ConfigurationFactory.class
 				.getProtectionDomain().getCodeSource().getLocation().getPath())
 				.getParent());
