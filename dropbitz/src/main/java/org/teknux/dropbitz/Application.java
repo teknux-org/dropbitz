@@ -1,5 +1,6 @@
 package org.teknux.dropbitz;
 
+import java.net.URL;
 import java.text.MessageFormat;
 
 import org.slf4j.Logger;
@@ -14,12 +15,24 @@ import org.teknux.jettybootstrap.JettyBootstrapException;
 import org.teknux.jettybootstrap.configuration.JettyConfiguration;
 import org.teknux.jettybootstrap.configuration.JettyConnector;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.util.ContextInitializer;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 public class Application {
 
-	private static int EXIT_CODE_CONFIG_ERROR = 1;
-	private static int EXIT_CODE_CONFIG_VALIDATION_ERROR = 2;
-	private static int EXIT_CODE_JETTY_STARTUP_ERROR = 3;
+    private static final String LOGBACK_LEVEL_STDOUT_KEY = "logback.level.stdout";
+    private static final String LOGBACK_LEVEL_FILE_KEY = "logback.level.file";
+    private static final String LOGBACK_STDOUT_PATTERN_KEY = "logback.stdout.pattern";
+    private static final String LOGBACK_LEVEL_DEBUG_VALUE = "TRACE";
+    private static final String LOGBACK_STDOUT_PATTERN_DEBUG_VALUE = "FULL";
+    
+	private static final int EXIT_CODE_CONFIG_ERROR = 1;
+	private static final int EXIT_CODE_CONFIG_VALIDATION_ERROR = 2;
+	private static final int EXIT_CODE_JETTY_STARTUP_ERROR = 3;
+	private static final int EXIT_CODE_LOGGER_ERROR = 4;
 
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -32,9 +45,6 @@ public class Application {
 	}
 
 	public Application(Configuration configuration, boolean join) {
-		// make JDK logging redirect to LogBack
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
 		try {
 			if (configuration == null) {
 				logger.debug("Loading application configuration...");
@@ -43,13 +53,20 @@ public class Application {
 				logger.debug("Using provided application configuration...");
 				Application.configuration = configuration;
 			}
+			
+			logger.debug("Init logger...");
+			initLogger(Application.configuration.isDebug());
+			
 			logger.debug("Validating application configuration...");
 			checkConfiguration(Application.configuration);
 
 			logger.debug("Starting Application...");
 			startApplication(join);
 
-		} catch (ConfigurationValidationException e) {
+		} catch (JoranException e) {
+		    logger.error("Logger error", e);
+            System.exit(EXIT_CODE_LOGGER_ERROR);
+        } catch (ConfigurationValidationException e) {
 			logger.error("Configuration validation error", e);
 			System.exit(EXIT_CODE_CONFIG_VALIDATION_ERROR);
 		} catch (ConfigurationException | IllegalArgumentException e) {
@@ -72,6 +89,39 @@ public class Application {
 		return ConfigurationFactory.getConfiguration();
 	}
 
+	/**
+	 * Logger Initialization
+	 * Reload logger if debug flag is setted
+	 * 
+	 * @param debug
+	 * @throws JoranException
+	 */
+    private void initLogger(boolean debug) throws JoranException {
+        // make JDK logging redirect to LogBack
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+        
+        if (debug) { //If debug flag, reload debugger with good properties
+            logger.info("Debug : Reload Logger Configuration...");
+    
+            System.setProperty(LOGBACK_LEVEL_STDOUT_KEY, LOGBACK_LEVEL_DEBUG_VALUE);
+            System.setProperty(LOGBACK_LEVEL_FILE_KEY, LOGBACK_LEVEL_DEBUG_VALUE);
+            System.setProperty(LOGBACK_STDOUT_PATTERN_KEY, LOGBACK_STDOUT_PATTERN_DEBUG_VALUE);
+    
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    
+            ContextInitializer contextInitializer = new ContextInitializer(loggerContext);
+            URL url = contextInitializer.findURLOfDefaultConfigurationFile(true);
+    
+            JoranConfigurator joranConfigurator = new JoranConfigurator();
+            joranConfigurator.setContext(loggerContext);
+            loggerContext.reset();
+            joranConfigurator.doConfigure(url);
+    
+            StatusPrinter.printInCaseOfErrorsOrWarnings(loggerContext);
+        }
+    }
+	
 	/**
 	 * Check configuration
 	 * 
@@ -114,6 +164,7 @@ public class Application {
 	}
 
 	public boolean isStarted() {
+//	    return jettyBootstrap.isServerStarted(); //In JettyBoostrap Version 1.0.3 only
 		return jettyBootstrap != null;
 	}
 

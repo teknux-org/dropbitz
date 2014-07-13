@@ -2,7 +2,7 @@
 
 <configuration>
     <property name="logback.pattern.light" value="[%d{HH:mm:ss}] [%-5p] %msg %ex%n" />
-    <property name="logback.pattern.full" value="[%d{yy-MM-dd HH:mm:ss.SSS}] [%-5p] (%-25c{0} %3L\\) %msg %ex%n" />
+    <property name="logback.pattern.full" value="[%d{yy-MM-dd HH:mm:ss.SSS}] [%-5p] (%-25c{0} %3L\\) %msg %ex{full}%n" />
     
     <property name="logback.path" value="${logback.path:-logs}" />
     

@@ -8,6 +8,10 @@ import org.skife.config.DefaultNull;
 
 public interface Configuration {
 
+    @Config("debug")
+    @Default("false")
+    boolean isDebug();
+    
     @Config("basePath")
     @Default("/")
     String getBasePath();

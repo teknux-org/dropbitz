@@ -55,6 +55,11 @@ public class FakeEmailServiceManager implements IServiceManager {
         return new Configuration() {
 
             @Override
+            public boolean isDebug() {
+                return false;
+            }
+            
+            @Override
             public String getBasePath() {
                 return null;
             }
