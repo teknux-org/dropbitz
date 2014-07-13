@@ -22,7 +22,7 @@ import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.II18nService;
 import org.teknux.dropbitz.service.ServiceManager;
 
-public class AbstractController {
+abstract public class AbstractController {
 
     private List<Message> messages = null;
 
@@ -45,7 +45,7 @@ public class AbstractController {
     }
 
     protected ServiceManager getServiceManager() {
-        return ServiceManager.get(getServletContext());
+        return Objects.requireNonNull(ServiceManager.get(getServletContext()));
     }
 
     protected Viewable viewable(View view) {
@@ -53,7 +53,7 @@ public class AbstractController {
     }
 
     protected Viewable viewable(View view, IModel model) {
-        return new Viewable(Objects.requireNonNull(view).getTemplateName(), initModel(model));
+        return new Viewable(Objects.requireNonNull(view).getTemplateName(), initModel(Objects.requireNonNull(model, "model can not be null")));
     }
 
     private IModel initModel(IModel model) {
@@ -89,8 +89,8 @@ public class AbstractController {
         } else {
             m.setId(UUID.randomUUID().toString());
         }
-        m.setMessage(message);
-        m.setType(type);
+        m.setMessage(Objects.requireNonNull(message, "message can not be null"));
+        m.setType(Objects.requireNonNull(type, "type can not be null"));
         if (closable != null) {
             m.setClosable(closable);
         }
