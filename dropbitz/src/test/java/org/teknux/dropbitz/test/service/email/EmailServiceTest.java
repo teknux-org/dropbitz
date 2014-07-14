@@ -13,9 +13,15 @@ import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.Model;
+import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.service.email.EmailTemplateResolver;
 import org.teknux.dropbitz.service.email.IEmailSender;
+import org.teknux.dropbitz.test.fake.FakeConfiguration;
+import org.teknux.dropbitz.test.fake.FakeConfigurationService;
+import org.teknux.dropbitz.test.fake.FakeModel;
+import org.teknux.dropbitz.test.fake.FakeServiceManager;
+import org.teknux.dropbitz.test.fake.FakeServletContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmailServiceTest {
@@ -28,15 +34,6 @@ public class EmailServiceTest {
     
     private final Object lockMailSender = new Object();
     private boolean lockMailSenderValue = false;
-
-    private IEmailSender emailSender = new IEmailSender() {
-
-        @Override
-        public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
-            dropbitzEmails.add(dropbitzEmail);
-            waitIfMailSenderLocked();
-        }
-    };
     
     private void waitIfMailSenderLocked() throws EmailServiceException {
         synchronized (lockMailSender) {
@@ -69,8 +66,22 @@ public class EmailServiceTest {
         logger.info("[TEST] Mail sender unlocked !");
     }
 
+    private IEmailSender emailSender = new IEmailSender() {
+
+        @Override
+        public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
+            dropbitzEmails.add(dropbitzEmail);
+            waitIfMailSenderLocked();
+        }
+    };
+    
     private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {
-        FakeEmailServiceManager serviceManager = new FakeEmailServiceManager(enable, from, to);
+        FakeConfiguration configuration = new FakeConfiguration();
+        configuration.setEmailEnable(enable);
+        configuration.setEmailFrom(from);
+        configuration.setEmailTo(to);
+        FakeServiceManager serviceManager = new FakeServiceManager();
+        serviceManager.addService(IConfigurationService.class, new FakeConfigurationService(configuration));
 
         EmailService emailService = new EmailService();
         

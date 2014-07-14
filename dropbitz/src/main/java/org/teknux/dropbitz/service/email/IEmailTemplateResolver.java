@@ -5,5 +5,5 @@ import org.teknux.dropbitz.model.view.IModel;
 
 public interface IEmailTemplateResolver {
     
-    String resolve(IModel model, String viewName) throws EmailServiceException;
+    String resolve(String viewName, IModel model) throws EmailServiceException;
 }

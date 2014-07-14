@@ -24,13 +24,13 @@ import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 
-public class JerseyFreemarkerConfig extends Configuration {
-    public JerseyFreemarkerConfig() throws TemplateModelException {
+public class FreemarkerConfig extends Configuration {
+    public FreemarkerConfig() throws TemplateModelException {
         this(null);
     }
     
 	@Inject
-	public JerseyFreemarkerConfig(final ServletContext servletContext) throws TemplateModelException {
+	public FreemarkerConfig(final ServletContext servletContext) throws TemplateModelException {
 		super();
 
 		//Copy of original configuration (org.glassfish.jersey.server.mvc.freemarker.FreemarkerViewProcessor)
@@ -40,7 +40,7 @@ public class JerseyFreemarkerConfig extends Configuration {
 		if (servletContext != null) {
 			loaders.add(new WebappTemplateLoader(servletContext));
 		}
-		loaders.add(new ClassTemplateLoader(JerseyFreemarkerConfig.class, "/"));
+		loaders.add(new ClassTemplateLoader(FreemarkerConfig.class, "/"));
 		try {
 			loaders.add(new FileTemplateLoader(new File("/")));
 		} catch (IOException e) {
