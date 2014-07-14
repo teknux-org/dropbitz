@@ -51,9 +51,7 @@ public class EmailTemplateResolver implements IEmailTemplateResolver {
      * @param viewName
      *            Freemarker Template Name
      * @return String
-     * @throws IOException
-     *             on load error
-     * @throws TemplateException
+     * @throws EmailServiceException
      *             on template syntax error
      */
     @Override

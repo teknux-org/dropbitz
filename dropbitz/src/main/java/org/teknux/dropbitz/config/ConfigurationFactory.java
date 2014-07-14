@@ -84,7 +84,9 @@ public class ConfigurationFactory<T> {
     /**
      * Get configuration from jar directory, from resource or create new configuration file
      * 
-     * @return ConfigurationFile
+     * @param clazz Configuration Class
+     * @param <T> Configuration Type
+     * @return Configuration
      * @throws ConfigurationException On failed
      */
     public static <T> T getConfiguration(Class<T> clazz) throws ConfigurationException {
@@ -208,7 +210,7 @@ public class ConfigurationFactory<T> {
 	/**
 	 * Get Jar location
 	 * 
-	 * @return
+	 * @return Jar directory
 	 */
 	public static String getJarDir() {
 		return decodeUrl(new File(ConfigurationFactory.class
