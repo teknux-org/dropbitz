@@ -7,11 +7,7 @@ import org.teknux.dropbitz.service.IServiceManager;
 
 public class FakeConfigurationService implements IConfigurationService {
 
-    private Configuration configuration;
-    
-    public FakeConfigurationService() {
-        this.configuration = new FakeConfiguration();
-    }
+    private Configuration configuration = new FakeConfiguration();
     
     @Override
     public void start(IServiceManager serviceManager) throws ServiceException {
