@@ -1,10 +1,11 @@
-package org.teknux.dropbitz.test.service.email;
+package org.teknux.dropbitz.test.fake;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,14 +22,20 @@ import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 
-public class FakeServletContext implements ServletContext{
+public class FakeServletContext implements ServletContext {
 
+    private String contextPath;
+    private Map<String, Object> attributes = new HashMap<String, Object>();   
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+    
     @Override
     public String getContextPath() {
-        // TODO Auto-generated method stub
-        return null;
+        return contextPath;
     }
-
+    
     @Override
     public ServletContext getContext(String uripath) {
         // TODO Auto-generated method stub
@@ -163,8 +170,7 @@ public class FakeServletContext implements ServletContext{
 
     @Override
     public Object getAttribute(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return attributes.get(name);
     }
 
     @Override
@@ -175,8 +181,7 @@ public class FakeServletContext implements ServletContext{
 
     @Override
     public void setAttribute(String name, Object object) {
-        // TODO Auto-generated method stub
-        
+        attributes.put(name, object);
     }
 
     @Override

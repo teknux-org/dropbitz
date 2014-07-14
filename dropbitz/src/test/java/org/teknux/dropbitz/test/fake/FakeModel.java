@@ -1,15 +1,11 @@
-package org.teknux.dropbitz.test.service.email;
+package org.teknux.dropbitz.test.fake;
 
 import org.teknux.dropbitz.model.view.Model;
 
 public class FakeModel extends Model{
 
     private String varTest;
-
-    public FakeModel() {
-
-    }
-
+   
     public FakeModel(String varTest) {
         this.varTest = varTest;
     }

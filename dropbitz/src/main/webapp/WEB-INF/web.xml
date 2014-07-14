@@ -25,7 +25,7 @@
 		</init-param>
         <init-param>
             <param-name>jersey.config.server.mvc.factory.freemarker</param-name>
-            <param-value>org.teknux.dropbitz.config.JerseyFreemarkerConfig</param-value>
+            <param-value>org.teknux.dropbitz.config.FreemarkerConfig</param-value>
         </init-param>
 	</filter>
 

@@ -67,9 +67,9 @@ public class EmailService implements IEmailService {
 			try {
 				dropbitzEmail.setEmailFrom(configuration.getEmailFrom());
 				dropbitzEmail.setEmailTo(configuration.getEmailTo());
-				dropbitzEmail.setHtmlMsg(emailTemplateResolver.resolve(model, viewName));
+				dropbitzEmail.setHtmlMsg(emailTemplateResolver.resolve(viewName, model));
 				if (viewNameAlt != null) {
-					dropbitzEmail.setTextMsg(emailTemplateResolver.resolve(model, viewNameAlt));
+					dropbitzEmail.setTextMsg(emailTemplateResolver.resolve(viewNameAlt, model));
 				}
 
 				emailQueue.offer(dropbitzEmail);
