@@ -21,7 +21,6 @@ import org.teknux.dropbitz.test.fake.FakeConfiguration;
 import org.teknux.dropbitz.test.fake.FakeConfigurationService;
 import org.teknux.dropbitz.test.fake.FakeModel;
 import org.teknux.dropbitz.test.fake.FakeServiceManager;
-import org.teknux.dropbitz.test.fake.FakeServletContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmailServiceTest {
@@ -86,7 +85,7 @@ public class EmailServiceTest {
 
         EmailService emailService = new EmailService();
         
-        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(new FakeServletContext());
+        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(serviceManager.getServletContext());
         emailTemplateResolver.setViewsPath(viewPath);
         
         emailService.setEmailTemplateResolver(emailTemplateResolver);
