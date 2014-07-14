@@ -11,6 +11,12 @@ import freemarker.template.TemplateModelException;
 
 public class UserHelper extends AbstractHelper {
 
+    private AuthenticationHelper authenticationHelper;
+
+    public UserHelper() {
+        authenticationHelper = new AuthenticationHelper();
+    }
+
     @Override
     public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException {
         if (arguments.size() != 0) {
@@ -24,6 +30,6 @@ public class UserHelper extends AbstractHelper {
             throw new TemplateModelException("Can not get HttpServletRequest");
         }
 
-        return AuthenticationHelper.isSecured(httpServletRequest);
+        return authenticationHelper.isSecured(httpServletRequest);
     }
 }

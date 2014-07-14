@@ -20,7 +20,12 @@ import org.teknux.dropbitz.provider.AuthenticationHelper;
 public class MainController extends AbstractController {
 	
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
-	
+	private AuthenticationHelper authenticationHelper;
+
+    public MainController() {
+        authenticationHelper = new AuthenticationHelper();
+    }
+
 	@GET
 	@Authenticated
 	public Response index() throws URISyntaxException {
@@ -30,7 +35,7 @@ public class MainController extends AbstractController {
     @GET
     @Path(Route.LOGOUT)
     public Response logout() throws URISyntaxException {
-        AuthenticationHelper.logout(getHttpServletRequest());
+        authenticationHelper.logout(getHttpServletRequest());
         return Response.seeOther(uri(Route.AUTH)).build();
     }
 	
@@ -54,7 +59,7 @@ public class MainController extends AbstractController {
 	@Path(Route.AUTH)
     public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
 	
-		if (! AuthenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
+		if (! authenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
 			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
 		}
 

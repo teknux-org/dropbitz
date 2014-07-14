@@ -24,7 +24,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 	
-	private static final String FORBIDDEN_ERROR_MESSAGE = "You don't have authorisation. Thank you to authenticate";
+	public static final String FORBIDDEN_ERROR_MESSAGE = "You don't have authorisation. Thank you to authenticate";
 		
 	@Inject
 	private ServletContext servletContext;
@@ -33,14 +33,24 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private HttpServletRequest httpServletRequest;
     
     @Context  
-    private HttpServletResponse httpServletResponse;  
+    private HttpServletResponse httpServletResponse;
+
+    private AuthenticationHelper authenticationHelper;
+
+    public AuthenticationFilter(AuthenticationHelper helper) {
+        authenticationHelper = helper;
+    }
+
+    public AuthenticationFilter() {
+        this(new AuthenticationHelper());
+    }
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
     	logger.trace("Request on URI [{}]...", containerRequestContext.getUriInfo().getPath());
-    	
+
     	//Check if authenticated
-        if (!AuthenticationHelper.isSecured(httpServletRequest)) {
+        if (!authenticationHelper.isSecured(httpServletRequest)) {
         	logger.debug("Not authenticate, redirect to auth view...");
         	
         	//If page is different to root page, set error message

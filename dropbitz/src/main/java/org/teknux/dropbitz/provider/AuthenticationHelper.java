@@ -20,14 +20,14 @@ public class AuthenticationHelper {
 
 	public static final String SESSION_ATTRIBUTE_IS_SECURED = "IS_SECURED";
 
-	public static boolean isSecured(HttpServletRequest request) {
+	public boolean isSecured(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Boolean isSecured = (Boolean) session.getAttribute(SESSION_ATTRIBUTE_IS_SECURED);
 		final String securityID = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
 		return (isSecured != null && isSecured) || securityID.isEmpty();
 	}
 
-	public static boolean authenticate(HttpServletRequest request, String secureId) {
+	public boolean authenticate(HttpServletRequest request, String secureId) {
 		logger.trace("Try to authenticate...");
 
 		final String securityID = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
@@ -42,7 +42,7 @@ public class AuthenticationHelper {
 		return isAuthorized;
 	}
 
-    public static void logout(HttpServletRequest request) {
+    public void logout(HttpServletRequest request) {
         request.getSession().removeAttribute(SESSION_ATTRIBUTE_IS_SECURED);
         logger.trace("Logout success");
     }
