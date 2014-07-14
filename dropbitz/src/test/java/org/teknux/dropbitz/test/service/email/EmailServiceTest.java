@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
@@ -24,8 +22,6 @@ import org.teknux.dropbitz.test.fake.FakeServiceManager;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmailServiceTest {
-
-    private final Logger logger = LoggerFactory.getLogger(EmailServiceTest.class);
     
     private Set<DropbitzEmail> dropbitzEmails;
 
@@ -37,32 +33,26 @@ public class EmailServiceTest {
     private void waitIfMailSenderLocked() throws EmailServiceException {
         synchronized (lockMailSender) {
             if (lockMailSenderValue) {
-                logger.info("[TEST] Wait Mail sender lock...");
                 try {
                     lockMailSender.wait();
                 } catch (InterruptedException e) {
                     throw new EmailServiceException("[TEST] Can not wait mail sender lock ", e);
-                }
-                logger.info("[TEST] Mail sender lock released");                
+                }               
             }
         }
     }
     
     private void lockMailSender() {
-        logger.info("[TEST] Lock mail sender...");
         synchronized (lockMailSender) {
             lockMailSenderValue = true;
         }
-        logger.info("[TEST] Mail sender locked !");
     }
     
     private void unlockMailSender() {
-        logger.info("[TEST] Unlock mail sender...");
         synchronized (lockMailSender) {
             lockMailSender.notify();
             lockMailSenderValue = false;
         }
-        logger.info("[TEST] Mail sender unlocked !");
     }
 
     private IEmailSender emailSender = new IEmailSender() {

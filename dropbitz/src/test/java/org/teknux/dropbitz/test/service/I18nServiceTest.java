@@ -13,7 +13,7 @@ import org.teknux.dropbitz.service.I18nService;
 public class I18nServiceTest {
     
     @Test
-    public void test03BadConfiguration() throws I18nServiceException  {
+    public void test01BadConfiguration() throws I18nServiceException  {
         I18nService i18nService = new I18nService();
         try {
             i18nService.setDefaultLocale(null);
@@ -32,7 +32,7 @@ public class I18nServiceTest {
     }
     
     @Test
-    public void test04KeyExistsDefaultEn() throws I18nServiceException  {
+    public void test02KeyExistsDefaultEn() throws I18nServiceException  {
         I18nService i18nService = new I18nService();
         i18nService.setDefaultLocale(Locale.ENGLISH);
         i18nService.start(null);
