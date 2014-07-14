@@ -14,6 +14,7 @@ import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.email.EmailService;
+import org.teknux.dropbitz.service.email.EmailTemplateResolver;
 import org.teknux.dropbitz.service.email.IEmailSender;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -68,11 +69,15 @@ public class EmailServiceTest {
         logger.info("[TEST] Mail sender unlocked !");
     }
 
-    private EmailService getEmailService(boolean enable, String from, String to[]) throws ServiceException {
+    private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {
         FakeEmailServiceManager serviceManager = new FakeEmailServiceManager(enable, from, to);
 
         EmailService emailService = new EmailService();
-        emailService.setViewsPath(VIEWS_PATH);
+        
+        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(new FakeServletContext());
+        emailTemplateResolver.setViewsPath(viewPath);
+        
+        emailService.setEmailTemplateResolver(emailTemplateResolver);
         emailService.setEmailSender(emailSender);
         emailService.start(serviceManager);
 
@@ -82,7 +87,7 @@ public class EmailServiceTest {
     @Test
     public void test01Disabled() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(false, null, null);
+        EmailService emailService = getEmailService(VIEWS_PATH, false, null, null);
 
         emailService.sendEmail(null, null, null);
         emailService.stop();
@@ -93,7 +98,7 @@ public class EmailServiceTest {
     @Test
     public void test02BadSend() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, null, null);
+        EmailService emailService = getEmailService(VIEWS_PATH, true, null, null);
 
         try {
             emailService.sendEmail("subject", null, new Model());
@@ -105,8 +110,8 @@ public class EmailServiceTest {
             Assert.fail("Should throw NPE");
         } catch (NullPointerException e){
         }
+        emailService = getEmailService(null, true, null, null);
         try {
-            emailService.setViewsPath(null);
             emailService.sendEmail("subject", "/simple", new Model());
             Assert.fail("Should throw NPE");
         } catch (NullPointerException e){
@@ -119,7 +124,7 @@ public class EmailServiceTest {
     @Test
     public void test03Simple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
         emailService.sendEmail("subject", "/simple", new Model());
         emailService.stop();
@@ -138,7 +143,7 @@ public class EmailServiceTest {
     @Test
     public void test04Model() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
         emailService.sendEmail("subject", "/model", new FakeModel("testModel"));
         emailService.stop();
@@ -157,7 +162,7 @@ public class EmailServiceTest {
     @Test
     public void test05Alt() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
         emailService.sendEmail("subject", "/simple", new FakeModel("testModel"), "/model");
         emailService.stop();
@@ -177,7 +182,7 @@ public class EmailServiceTest {
     @Test
     public void test06Multiple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
         emailService.sendEmail("subject", "/simple");
         emailService.sendEmail("subject2", "/model", new FakeModel("testModel"));
@@ -203,7 +208,7 @@ public class EmailServiceTest {
     @Test
     public void test07OneAtTime() throws ServiceException, InterruptedException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
 
         lockMailSender();
         

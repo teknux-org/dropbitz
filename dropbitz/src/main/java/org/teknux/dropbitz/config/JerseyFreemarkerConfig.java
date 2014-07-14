@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
-import org.jvnet.hk2.annotations.Optional;
 import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.freemarker.helper.I18nHelper;
@@ -26,8 +25,12 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 
 public class JerseyFreemarkerConfig extends Configuration {
+    public JerseyFreemarkerConfig() throws TemplateModelException {
+        this(null);
+    }
+    
 	@Inject
-	public JerseyFreemarkerConfig(@Optional final ServletContext servletContext) throws TemplateModelException {
+	public JerseyFreemarkerConfig(final ServletContext servletContext) throws TemplateModelException {
 		super();
 
 		//Copy of original configuration (org.glassfish.jersey.server.mvc.freemarker.FreemarkerViewProcessor)
