@@ -34,9 +34,9 @@ import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
-import org.teknux.dropbitz.service.I18nService;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.email.IEmailService;
+import org.teknux.dropbitz.util.I18nUtil;
 
 @Path(Route.DROP)
 public class DropController extends AbstractController {
@@ -121,7 +121,7 @@ public class DropController extends AbstractController {
 	    Locale locale = null;
 	    if (config.getEmailLang() != null) {
             try {
-                locale = I18nService.getLocaleFromString(config.getEmailLang());
+                locale = I18nUtil.getLocaleFromString(config.getEmailLang());
             } catch (I18nServiceException e) {
                 logger.warn("Bad email lang configuration property : [{}]", config.getEmailLang(), e);
             }

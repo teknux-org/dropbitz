@@ -66,9 +66,9 @@ public class ServiceManager implements IServiceManager {
 		}
 	}
 
-	public static ServiceManager get(ServletContext context) {
+	public static IServiceManager get(ServletContext context) {
 		Objects.requireNonNull(context);
-		return (ServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
+		return (IServiceManager) context.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER);
 	}
 
 	@Override

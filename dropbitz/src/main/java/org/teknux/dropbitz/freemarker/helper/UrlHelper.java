@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import org.teknux.dropbitz.model.view.IModel;
+import org.teknux.dropbitz.util.UrlUtil;
 
 import freemarker.template.TemplateModelException;
 
@@ -27,6 +28,6 @@ public class UrlHelper extends AbstractHelper {
         }
         ServletContext servletContext = iModel.getServletContext();
         
-        return servletContext.getContextPath() + path;
+        return UrlUtil.getAbsoluteUrl(servletContext, path);
     }
 }

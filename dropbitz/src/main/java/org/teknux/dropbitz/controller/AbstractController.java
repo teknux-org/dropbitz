@@ -20,7 +20,9 @@ import org.teknux.dropbitz.model.Message;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.II18nService;
+import org.teknux.dropbitz.service.IServiceManager;
 import org.teknux.dropbitz.service.ServiceManager;
+import org.teknux.dropbitz.util.UrlUtil;
 
 abstract public class AbstractController {
 
@@ -44,7 +46,7 @@ abstract public class AbstractController {
         return Objects.requireNonNull(httpServletRequest).getSession();
     }
 
-    protected ServiceManager getServiceManager() {
+    protected IServiceManager getServiceManager() {
         return Objects.requireNonNull(ServiceManager.get(getServletContext()));
     }
 
@@ -109,7 +111,7 @@ abstract public class AbstractController {
     }
     
     protected String url(String route) {
-        return getServletContext().getContextPath() + route;
+        return UrlUtil.getAbsoluteUrl(getServletContext(), route);
     }
     
     protected URI uri(String route) throws URISyntaxException {

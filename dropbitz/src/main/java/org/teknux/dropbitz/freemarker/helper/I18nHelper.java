@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.II18nService;
+import org.teknux.dropbitz.service.IServiceManager;
 import org.teknux.dropbitz.service.ServiceManager;
 
 import freemarker.template.TemplateModelException;
@@ -35,7 +36,7 @@ public class I18nHelper extends AbstractHelper {
             throw new TemplateModelException("Can not get ServletContext");
         }
 
-        ServiceManager serviceManager = ServiceManager.get(iModel.getServletContext());
+        IServiceManager serviceManager = ServiceManager.get(iModel.getServletContext());
         if (serviceManager == null) {
             throw new TemplateModelException("Can not get ServiceManager");
         }

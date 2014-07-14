@@ -11,7 +11,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 import org.teknux.dropbitz.config.ConfigurationFactory;
 import org.teknux.dropbitz.exception.ConfigurationException;
-import org.teknux.dropbitz.exception.I18nServiceException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ConfigurationFactoryTest {
@@ -20,7 +19,7 @@ public class ConfigurationFactoryTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
     @Test
-    public void test01ConfigFile() throws I18nServiceException, ConfigurationException {
+    public void test01ConfigFile() throws ConfigurationException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
         configurationFactory.setConfigFileBasePath(ConfigurationFactory.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
         configurationFactory.setConfigResourceBasePath("/config"); //Nothing here
@@ -34,7 +33,7 @@ public class ConfigurationFactoryTest {
     }
     
     @Test
-    public void test02ConfigResource() throws I18nServiceException, ConfigurationException, IOException {
+    public void test02ConfigResource() throws ConfigurationException, IOException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
         configurationFactory.setConfigFileBasePath(temporaryFolder.newFolder().getPath()); //Nothing here
         configurationFactory.setConfigResourceBasePath("/config/resource");
@@ -48,7 +47,7 @@ public class ConfigurationFactoryTest {
     }
     
     @Test
-    public void test03ConfigBoth() throws I18nServiceException, ConfigurationException {
+    public void test03ConfigBoth() throws ConfigurationException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
         configurationFactory.setConfigFileBasePath(ConfigurationFactory.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
         configurationFactory.setConfigResourceBasePath("/config/resource");
@@ -62,7 +61,7 @@ public class ConfigurationFactoryTest {
     }
     
     @Test
-    public void test04CreateConfig() throws I18nServiceException, ConfigurationException, IOException {
+    public void test04CreateConfig() throws ConfigurationException, IOException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
         configurationFactory.setConfigFileBasePath(temporaryFolder.newFolder().getPath());
         configurationFactory.setConfigResourceBasePath("/config/resourcedist");
