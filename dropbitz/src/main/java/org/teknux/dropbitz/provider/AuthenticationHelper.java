@@ -32,7 +32,7 @@ public class AuthenticationHelper {
 
 		final String securityID = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
 		final boolean isAuthorized = Objects.equals(securityID, secureId);
-		request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_SECURED, isAuthorized ? Boolean.TRUE : Boolean.FALSE);
+		request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_SECURED, isAuthorized);
 
 		if (isAuthorized) {
 			logger.debug("Authentication success");

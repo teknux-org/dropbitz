@@ -12,20 +12,19 @@ import org.teknux.dropbitz.service.I18nService;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class I18nServiceTest {
     
+    private static final String RESOURCE_BASE_NAME = "i18n.dropbitz";
+    
     @Test
     public void test01BadConfiguration() throws I18nServiceException  {
         I18nService i18nService = new I18nService();
         try {
-            i18nService.setDefaultLocale(null);
+            i18nService.start(null, RESOURCE_BASE_NAME);
             Assert.fail("Should throw NPE");
         } catch (NullPointerException e) {
         }
         
-        i18nService = new I18nService();
-        i18nService.setResourceBaseName(null);
-        i18nService.start(null);
         try {
-            i18nService.get("key1", null);
+            i18nService.start(Locale.ENGLISH, null);
             Assert.fail("Should throw NPE");
         } catch (NullPointerException e) {
         }
@@ -34,8 +33,7 @@ public class I18nServiceTest {
     @Test
     public void test02KeyExistsDefaultEn() throws I18nServiceException  {
         I18nService i18nService = new I18nService();
-        i18nService.setDefaultLocale(Locale.ENGLISH);
-        i18nService.start(null);
+        i18nService.start(Locale.ENGLISH, RESOURCE_BASE_NAME);
 
         Assert.assertEquals("value1", i18nService.get("key1", null));
         Assert.assertEquals("value2", i18nService.get("key2", null));
@@ -47,7 +45,8 @@ public class I18nServiceTest {
         Assert.assertEquals("value3fr", i18nService.get("key3", Locale.FRENCH));
         Assert.assertEquals("key4", i18nService.get("key4", Locale.FRENCH));
         
-        i18nService.setDefaultLocale(Locale.FRENCH);
+        i18nService.stop();
+        i18nService.start(Locale.FRENCH, RESOURCE_BASE_NAME);
         Assert.assertEquals("value1fr", i18nService.get("key1", null));
         Assert.assertEquals("value2", i18nService.get("key2", null));
         Assert.assertEquals("value3fr", i18nService.get("key3", null));

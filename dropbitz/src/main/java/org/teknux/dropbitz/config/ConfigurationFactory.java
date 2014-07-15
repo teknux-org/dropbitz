@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -15,16 +13,16 @@ import org.skife.config.ConfigurationObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ConfigurationException;
+import org.teknux.dropbitz.util.PathUtil;
 
 public class ConfigurationFactory<T> {
 
 	private static Logger logger = LoggerFactory
 			.getLogger(ConfigurationFactory.class);
 
-	private static final String CHARSET_UTF8 = "UTF-8";
 	private static final String RESOURCE_SEPARATOR = "/";
 		
-	private static final String DEFAULT_CONFIG_FILE_BASEPATH = getJarDir();
+	private static final String DEFAULT_CONFIG_FILE_BASEPATH = PathUtil.getJarDir();
 	private static final String DEFAULT_CONFIG_RESOURCE_BASEPATH = RESOURCE_SEPARATOR;
 	private static final String DEFAULT_CONFIG_FILENAME = "config.properties";
 	private static final String DEFAULT_CONFIG_DIST_FILENAME = "config.properties-dist";
@@ -206,33 +204,4 @@ public class ConfigurationFactory<T> {
         ConfigurationObjectFactory factory = new ConfigurationObjectFactory(properties);
         return factory.build(clazz);
     }
-	   
-	/**
-	 * Get Jar location
-	 * 
-	 * @return Jar directory
-	 */
-	public static String getJarDir() {
-		return decodeUrl(new File(ConfigurationFactory.class
-				.getProtectionDomain().getCodeSource().getLocation().getPath())
-				.getParent());
-	}
-
-	/**
-	 * Decode Url
-	 * 
-	 * @param url
-	 * @return
-	 */
-	private static String decodeUrl(String url) {
-		if (url == null) {
-			return null;
-		}
-
-		try {
-			return URLDecoder.decode(url, CHARSET_UTF8);
-		} catch (UnsupportedEncodingException e) {
-			return url;
-		}
-	}
 }

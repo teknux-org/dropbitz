@@ -1,5 +1,7 @@
 package org.teknux.dropbitz.service;
 
+import java.util.Objects;
+
 import org.teknux.dropbitz.Application;
 import org.teknux.dropbitz.config.Configuration;
 
@@ -12,9 +14,13 @@ public class ConfigurationService implements
 	public ConfigurationService() {
 	}
 
+	public void start(final Configuration configuration) {
+	    this.configuration = Objects.requireNonNull(configuration, "Configuration can not be null");
+	}
+	
 	@Override
 	public void start(final IServiceManager serviceManager) {
-		configuration = Application.getConfiguration();
+		start(Application.getConfiguration());
 	}
 
 	@Override

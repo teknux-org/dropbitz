@@ -11,14 +11,12 @@ import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
 import org.teknux.dropbitz.model.view.Model;
-import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.service.email.EmailTemplateResolver;
 import org.teknux.dropbitz.service.email.IEmailSender;
 import org.teknux.dropbitz.test.fake.FakeConfiguration;
-import org.teknux.dropbitz.test.fake.FakeConfigurationService;
 import org.teknux.dropbitz.test.fake.FakeModel;
-import org.teknux.dropbitz.test.fake.FakeServiceManager;
+import org.teknux.dropbitz.test.fake.FakeServletContext;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmailServiceTest {
@@ -54,33 +52,28 @@ public class EmailServiceTest {
             lockMailSenderValue = false;
         }
     }
-
-    private IEmailSender emailSender = new IEmailSender() {
-
-        @Override
-        public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
-            dropbitzEmails.add(dropbitzEmail);
-            waitIfMailSenderLocked();
-        }
-    };
     
-    private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {
-        FakeServiceManager serviceManager = new FakeServiceManager();
-        serviceManager.addService(IConfigurationService.class, new FakeConfigurationService());
-        
-        FakeConfiguration configuration = (FakeConfiguration) serviceManager.getService(IConfigurationService.class).getConfiguration();
+    private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {        
+        FakeConfiguration configuration = new FakeConfiguration();
         configuration.setEmailEnable(enable);
         configuration.setEmailFrom(from);
         configuration.setEmailTo(to);
 
         EmailService emailService = new EmailService();
         
-        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(serviceManager.getServletContext());
+        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(new FakeServletContext());
         emailTemplateResolver.setViewsPath(viewPath);
         
-        emailService.setEmailTemplateResolver(emailTemplateResolver);
-        emailService.setEmailSender(emailSender);
-        emailService.start(serviceManager);
+        IEmailSender emailSender = new IEmailSender() {
+
+            @Override
+            public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
+                dropbitzEmails.add(dropbitzEmail);
+                waitIfMailSenderLocked();
+            }
+        };
+        
+        emailService.start(configuration, emailTemplateResolver, emailSender);
 
         return emailService;
     }

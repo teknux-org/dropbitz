@@ -11,6 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
 import org.teknux.dropbitz.config.ConfigurationFactory;
 import org.teknux.dropbitz.exception.ConfigurationException;
+import org.teknux.dropbitz.util.PathUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ConfigurationFactoryTest {
@@ -21,7 +22,7 @@ public class ConfigurationFactoryTest {
     @Test
     public void test01ConfigFile() throws ConfigurationException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
-        configurationFactory.setConfigFileBasePath(ConfigurationFactory.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
+        configurationFactory.setConfigFileBasePath(PathUtil.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
         configurationFactory.setConfigResourceBasePath("/config"); //Nothing here
         
         Configuration configuration = configurationFactory.buildConfiguration();
@@ -49,7 +50,7 @@ public class ConfigurationFactoryTest {
     @Test
     public void test03ConfigBoth() throws ConfigurationException {
         ConfigurationFactory<Configuration> configurationFactory = new ConfigurationFactory<Configuration>(Configuration.class);
-        configurationFactory.setConfigFileBasePath(ConfigurationFactory.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
+        configurationFactory.setConfigFileBasePath(PathUtil.getJarDir() + File.separator + "test-classes" + File.separator + "config" + File.separator + "file");
         configurationFactory.setConfigResourceBasePath("/config/resource");
         
         Configuration configuration = configurationFactory.buildConfiguration();

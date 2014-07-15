@@ -32,6 +32,8 @@ import freemarker.template.TemplateModelException;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Freemarker {
 
+    private static final String RESOURCE_BASE_NAME = "i18n.dropbitz";
+    
     private static final String MODEL_NAME_ATTRIBUTE = "model";
     private final static String VIEWS_PATH = "/views";
     private static final String VIEW_EXTENSION = ".ftl";
@@ -94,17 +96,18 @@ public class Freemarker {
     @Test
     public void test04I18nHelper() throws I18nServiceException, IOException, TemplateException  {
         I18nService i18nService = new I18nService();
-        i18nService.start(null);
+        i18nService.start(Locale.ENGLISH, RESOURCE_BASE_NAME);
         
         FakeServiceManager serviceManager = new FakeServiceManager();
         serviceManager.addService(II18nService.class, i18nService);        
         
         servletContext.setAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER, serviceManager);
 
-        i18nService.setDefaultLocale(Locale.ENGLISH);
         Assert.assertEquals("value1", resolve("/i18nHelper", null));
         
-        i18nService.setDefaultLocale(Locale.FRENCH);
+        i18nService.stop();
+        i18nService.start(Locale.FRENCH, RESOURCE_BASE_NAME);
+        
         Assert.assertEquals("value1fr", resolve("/i18nHelper", null));
     }
 }
