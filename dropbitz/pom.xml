@@ -91,6 +91,7 @@
 				</excludes>
 			</resource>
 			<resource>
+<!-- We need to use filtering only for application.properties, otherwise charset of i18n property files will be change by maven-->
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
 				<includes>
