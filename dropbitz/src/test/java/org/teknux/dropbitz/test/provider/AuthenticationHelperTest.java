@@ -1,10 +1,17 @@
 package org.teknux.dropbitz.test.provider;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.teknux.dropbitz.config.Configuration;
@@ -13,23 +20,12 @@ import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.IServiceManager;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import static org.mockito.Mockito.*;
-
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationHelperTest {
 
     private HttpSession session = mock(HttpSession.class);
 
-    @Mock
     private HttpServletRequest request = mock(HttpServletRequest.class);
-
-    @Mock
-    private HttpServletResponse response = mock(HttpServletResponse.class);
 
     @Before
     public void initMocks() {

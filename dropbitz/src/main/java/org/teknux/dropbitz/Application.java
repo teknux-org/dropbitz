@@ -164,8 +164,7 @@ public class Application {
 	}
 
 	public boolean isStarted() {
-//	    return jettyBootstrap.isServerStarted(); //In JettyBoostrap Version 1.0.3 only
-		return jettyBootstrap != null;
+	    return jettyBootstrap.isServerStarted();
 	}
 
 	public void stop() {

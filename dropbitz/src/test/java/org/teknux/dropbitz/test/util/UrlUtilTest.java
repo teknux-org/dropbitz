@@ -10,7 +10,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.teknux.dropbitz.util.UrlUtil;
 
@@ -18,7 +17,6 @@ import org.teknux.dropbitz.util.UrlUtil;
 @RunWith(MockitoJUnitRunner.class)
 public class UrlUtilTest {
 
-    @Mock
     private ServletContext servletContext  = mock(ServletContext.class);
 
     @Test(expected = NullPointerException.class) 
