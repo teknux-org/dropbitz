@@ -3,10 +3,13 @@ package org.teknux.dropbitz.test.util;
 import java.util.Locale;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.teknux.dropbitz.exception.I18nServiceException;
 import org.teknux.dropbitz.util.I18nUtil;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class I18nUtilTest {
     @Test
     public void test01BadLocaleFromString() throws I18nServiceException {

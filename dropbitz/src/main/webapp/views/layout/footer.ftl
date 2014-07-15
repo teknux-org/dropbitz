@@ -1,5 +1,6 @@
 <footer class="text-center">
     <span>
-		${i18n(i18nKey.FOOTER_POWEREDBY)} <a class="brand-font" href="https://github.com/teknux-org/dropbitz">DropBitz</a>
+    	<#assign applicationProperties = statics["org.teknux.dropbitz.util.ApplicationProperties"]>  
+		${i18n(i18nKey.FOOTER_POWEREDBY)} <a class="brand-font" href="https://github.com/teknux-org/dropbitz">DropBitz</a> - version ${applicationProperties.getInstance().getProperty(applicationProperties.APPLICATION_VERSION_KEY)}
     </span>
 </footer>
