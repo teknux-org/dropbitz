@@ -50,7 +50,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     	logger.trace("Request on URI [{}]...", containerRequestContext.getUriInfo().getPath());
 
     	//Check if authenticated
-        if (!authenticationHelper.isSecured(httpServletRequest)) {
+        if (!authenticationHelper.isAuthorized(httpServletRequest)) {
         	logger.debug("Not authenticate, redirect to auth view...");
         	
         	//If page is different to root page, set error message

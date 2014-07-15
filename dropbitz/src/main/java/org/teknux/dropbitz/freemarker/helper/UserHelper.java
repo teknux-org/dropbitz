@@ -30,6 +30,6 @@ public class UserHelper extends AbstractHelper {
             throw new TemplateModelException("Can not get HttpServletRequest");
         }
 
-        return authenticationHelper.isSecured(httpServletRequest);
+        return authenticationHelper.isLogged(httpServletRequest);
     }
 }
