@@ -1,5 +1,8 @@
 package org.teknux.dropbitz.test.freemarker;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -8,11 +11,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.servlet.ServletContext;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.teknux.dropbitz.config.FreemarkerConfig;
 import org.teknux.dropbitz.exception.I18nServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
@@ -20,9 +28,7 @@ import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.I18nService;
 import org.teknux.dropbitz.service.II18nService;
-import org.teknux.dropbitz.test.fake.FakeModel;
-import org.teknux.dropbitz.test.fake.FakeServiceManager;
-import org.teknux.dropbitz.test.fake.FakeServletContext;
+import org.teknux.dropbitz.service.IServiceManager;
 import org.teknux.dropbitz.util.DropBitzServlet;
 
 import freemarker.template.Template;
@@ -30,7 +36,8 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModelException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class Freemarker {
+@RunWith(MockitoJUnitRunner.class)
+public class FreemarkerTest {
 
     private static final String RESOURCE_BASE_NAME = "i18n.dropbitz";
     
@@ -38,13 +45,13 @@ public class Freemarker {
     private final static String VIEWS_PATH = "/views";
     private static final String VIEW_EXTENSION = ".ftl";
 
-    private FakeServletContext servletContext;
+    @Mock
+    private ServletContext servletContext = mock(ServletContext.class);
+        
     private FreemarkerConfig jerseyFreemarkerConfig;
 
     @Before
     public void initJerseyFreemarker() throws ServiceException {
-        servletContext = new FakeServletContext();
-
         // Init Freemarker
         try {
             jerseyFreemarkerConfig = new FreemarkerConfig();
@@ -84,11 +91,11 @@ public class Freemarker {
 
     @Test
     public void test03UrlHelper() throws IOException, TemplateException {
-        servletContext.setContextPath("");
+        when(servletContext.getContextPath()).thenReturn("");
         Assert.assertEquals("/", resolve("/urlHelperRoute", null));
         Assert.assertEquals("/url", resolve("/urlHelper", new FakeModel("url")));
 
-        servletContext.setContextPath("/root");
+        when(servletContext.getContextPath()).thenReturn("/root");
         Assert.assertEquals("/root", resolve("/urlHelperRoute", null));
         Assert.assertEquals("/root/url", resolve("/urlHelper", new FakeModel("url")));
     }
@@ -98,10 +105,10 @@ public class Freemarker {
         I18nService i18nService = new I18nService();
         i18nService.start(Locale.ENGLISH, RESOURCE_BASE_NAME);
         
-        FakeServiceManager serviceManager = new FakeServiceManager();
-        serviceManager.addService(II18nService.class, i18nService);        
+        IServiceManager serviceManager = mock(IServiceManager.class);
         
-        servletContext.setAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER, serviceManager);
+        when(serviceManager.getService(II18nService.class)).thenReturn(i18nService);
+        when(servletContext.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER)).thenReturn(serviceManager);
 
         Assert.assertEquals("value1", resolve("/i18nHelper", null));
         

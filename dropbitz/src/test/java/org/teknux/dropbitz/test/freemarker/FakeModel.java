@@ -1,4 +1,4 @@
-package org.teknux.dropbitz.test.fake;
+package org.teknux.dropbitz.test.freemarker;
 
 import org.teknux.dropbitz.model.view.Model;
 

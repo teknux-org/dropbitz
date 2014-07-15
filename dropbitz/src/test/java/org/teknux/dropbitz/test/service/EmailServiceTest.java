@@ -1,12 +1,20 @@
-package org.teknux.dropbitz.test.service.email;
+package org.teknux.dropbitz.test.service;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
@@ -14,11 +22,10 @@ import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.service.email.EmailTemplateResolver;
 import org.teknux.dropbitz.service.email.IEmailSender;
-import org.teknux.dropbitz.test.fake.FakeConfiguration;
-import org.teknux.dropbitz.test.fake.FakeModel;
-import org.teknux.dropbitz.test.fake.FakeServletContext;
+import org.teknux.dropbitz.test.freemarker.FakeModel;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(MockitoJUnitRunner.class)
 public class EmailServiceTest {
     
     private Set<DropbitzEmail> dropbitzEmails;
@@ -54,16 +61,10 @@ public class EmailServiceTest {
     }
     
     private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {        
-        FakeConfiguration configuration = new FakeConfiguration();
-        configuration.setEmailEnable(enable);
-        configuration.setEmailFrom(from);
-        configuration.setEmailTo(to);
-
-        EmailService emailService = new EmailService();
-        
-        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(new FakeServletContext());
+        ServletContext servletContext= mock(ServletContext.class);
+       
+        EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(servletContext);
         emailTemplateResolver.setViewsPath(viewPath);
-        
         IEmailSender emailSender = new IEmailSender() {
 
             @Override
@@ -73,6 +74,12 @@ public class EmailServiceTest {
             }
         };
         
+        Configuration configuration = mock(Configuration.class);
+        when(configuration.isEmailEnable()).thenReturn(enable);
+        when(configuration.getEmailFrom()).thenReturn(from);
+        when(configuration.getEmailTo()).thenReturn(to);
+
+        EmailService emailService = new EmailService();
         emailService.start(configuration, emailTemplateResolver, emailSender);
 
         return emailService;
