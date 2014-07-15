@@ -60,7 +60,7 @@ public class AuthenticationFilterTest {
 
         when(containerContext.getUriInfo()).thenReturn(uriInfo);
         when(request.getSession()).thenReturn(session);
-        when(authenticationHelper.isSecured(request)).thenReturn(isSecured);
+        when(authenticationHelper.isAuthorized(request)).thenReturn(isSecured);
     }
 
     @Test

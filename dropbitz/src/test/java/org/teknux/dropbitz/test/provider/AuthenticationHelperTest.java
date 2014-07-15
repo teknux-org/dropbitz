@@ -74,14 +74,30 @@ public class AuthenticationHelperTest {
         verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED, Boolean.TRUE);
     }
 
-    public void testIsSecured() {
+    public void testIsAuthorized() {
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
 
         setup(false, "123");
-        Assert.assertFalse(authenticationHelper.isSecured(request));
+        Assert.assertFalse(authenticationHelper.isAuthorized(request));
 
         setup(true, "123");
-        Assert.assertTrue(authenticationHelper.isSecured(request));
+        Assert.assertTrue(authenticationHelper.isAuthorized(request));
+    }
+
+    public void testIsLogged() {
+        AuthenticationHelper authenticationHelper = new AuthenticationHelper();
+
+        setup(false, "123");
+        Assert.assertFalse(authenticationHelper.isLogged(request));
+
+        setup(true, "123");
+        Assert.assertTrue(authenticationHelper.isLogged(request));
+
+        setup(false, "");
+        Assert.assertFalse(authenticationHelper.isLogged(request));
+
+        setup(true, "");
+        Assert.assertTrue(authenticationHelper.isLogged(request));
     }
 
     @Test
