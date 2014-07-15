@@ -15,7 +15,6 @@
         <#if user()>
 
             <li><a href="${url(route.DROP)}"><i class="glyphicon glyphicon-cloud-upload"></i> ${i18n(i18nKey.HEADER_BUTTON_UPLOAD)}</a></li>
-            <li><a href="${url(route.ADMIN)}"><i class="glyphicon glyphicon-cog"></i> ${i18n(i18nKey.HEADER_BUTTON_ADMIN)}</a></li>
             <li><a href="${url(route.LOGOUT)}"><i class="glyphicon glyphicon-lock"></i> ${i18n(i18nKey.HEADER_BUTTON_LOGOUT)}</a></li>
 
         </#if>

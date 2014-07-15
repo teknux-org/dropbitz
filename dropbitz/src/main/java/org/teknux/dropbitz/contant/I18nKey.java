@@ -4,7 +4,6 @@ public interface I18nKey {
     String GLOBAL_SESSION_TIMEOUT = "global.session.timeout";
     String GLOBAL_SIGNIN = "global.signin";
     String HEADER_BUTTON_UPLOAD = "header.button.upload";
-    String HEADER_BUTTON_ADMIN = "header.button.admin";
     String HEADER_BUTTON_LOGOUT = "header.button.logout";
     String FOOTER_POWEREDBY = "footer.poweredby";
     String FALLBACK_BACK = "fallback.back";

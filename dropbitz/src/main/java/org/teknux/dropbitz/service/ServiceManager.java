@@ -32,7 +32,6 @@ public class ServiceManager implements IServiceManager {
 		this.servletContext = context;
 
 		services.put(IConfigurationService.class, new ConfigurationService());
-		services.put(StorageService.class, new StorageService());
 		services.put(IEmailService.class, new EmailService());
 		services.put(II18nService.class, new I18nService());
 	}
