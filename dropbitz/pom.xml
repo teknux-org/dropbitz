@@ -85,8 +85,17 @@
 
 		<resources>
 			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>application.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
+				<includes>
+					<include>application.properties</include>
+				</includes>
 			</resource>
 			<resource>
 				<directory>src/main/webapp</directory>
