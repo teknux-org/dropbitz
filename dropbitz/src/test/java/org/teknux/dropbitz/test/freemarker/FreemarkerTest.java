@@ -1,8 +1,31 @@
 package org.teknux.dropbitz.test.freemarker;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.config.FreemarkerConfig;
+import org.teknux.dropbitz.exception.I18nServiceException;
+import org.teknux.dropbitz.exception.ServiceException;
+import org.teknux.dropbitz.model.view.IModel;
+import org.teknux.dropbitz.model.view.Model;
+import org.teknux.dropbitz.provider.AuthenticationHelper;
+import org.teknux.dropbitz.service.I18nService;
+import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.service.II18nService;
+import org.teknux.dropbitz.service.IServiceManager;
+import org.teknux.dropbitz.util.DropBitzServlet;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -11,29 +34,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.servlet.ServletContext;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.teknux.dropbitz.config.FreemarkerConfig;
-import org.teknux.dropbitz.exception.I18nServiceException;
-import org.teknux.dropbitz.exception.ServiceException;
-import org.teknux.dropbitz.model.view.IModel;
-import org.teknux.dropbitz.model.view.Model;
-import org.teknux.dropbitz.service.I18nService;
-import org.teknux.dropbitz.service.II18nService;
-import org.teknux.dropbitz.service.IServiceManager;
-import org.teknux.dropbitz.util.DropBitzServlet;
-
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModelException;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(MockitoJUnitRunner.class)
@@ -45,8 +47,8 @@ public class FreemarkerTest {
     private final static String VIEWS_PATH = "/views";
     private static final String VIEW_EXTENSION = ".ftl";
 
-    @Mock
     private ServletContext servletContext = mock(ServletContext.class);
+    private HttpServletRequest servletRequest = mock(HttpServletRequest.class);
         
     private FreemarkerConfig jerseyFreemarkerConfig;
 
@@ -70,6 +72,7 @@ public class FreemarkerTest {
         Writer writer = new StringWriter();
 
         model.setServletContext(servletContext);
+        model.setHttpServletRequest(servletRequest);
 
         Map<String, IModel> map = new HashMap<String, IModel>();
         map.put(MODEL_NAME_ATTRIBUTE, model);
@@ -116,5 +119,42 @@ public class FreemarkerTest {
         i18nService.start(Locale.FRENCH, RESOURCE_BASE_NAME);
         
         Assert.assertEquals("value1fr", resolve("/i18nHelper", null));
+    }
+
+    @Test
+    public void test05UserHelper() throws IOException, TemplateException {
+        //setup
+        IConfigurationService configurationService = mock(IConfigurationService.class);
+        Configuration configuration = mock(Configuration.class);
+        when(configurationService.getConfiguration()).thenReturn(configuration);
+        IServiceManager serviceManager = mock(IServiceManager.class);
+        when(serviceManager.getService(IConfigurationService.class)).thenReturn(configurationService);
+        when(servletContext.getAttribute(DropBitzServlet.CONTEXT_ATTRIBUTE_SERVICE_MANAGER)).thenReturn(serviceManager);
+
+        HttpSession session = mock(HttpSession.class);
+        when(servletRequest.getSession()).thenReturn(session);
+        when(servletRequest.getServletContext()).thenReturn(servletContext);
+
+        final String view = "/authHelper";
+
+        //test 1
+        when(configuration.getSecureId()).thenReturn("");
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED)).thenReturn(Boolean.FALSE);
+        Assert.assertEquals("false|true", resolve(view, null));
+
+        //test 2
+        when(configuration.getSecureId()).thenReturn("");
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED)).thenReturn(Boolean.TRUE);
+        Assert.assertEquals("true|true", resolve(view, null));
+
+        //test 3
+        when(configuration.getSecureId()).thenReturn("123");
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED)).thenReturn(Boolean.FALSE);
+        Assert.assertEquals("false|false", resolve(view, null));
+
+        //test 4
+        when(configuration.getSecureId()).thenReturn("123");
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED)).thenReturn(Boolean.TRUE);
+        Assert.assertEquals("true|true", resolve(view, null));
     }
 }

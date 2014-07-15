@@ -13,7 +13,7 @@ import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.freemarker.helper.I18nHelper;
 import org.teknux.dropbitz.freemarker.helper.UrlHelper;
-import org.teknux.dropbitz.freemarker.helper.UserHelper;
+import org.teknux.dropbitz.freemarker.helper.AuthHelper;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
@@ -53,7 +53,7 @@ public class FreemarkerConfig extends Configuration {
 
 		//Add shared variables
 		setSharedVariable("statics", BeansWrapper.getDefaultInstance().getStaticModels());
-		setSharedVariable("user", new UserHelper());
+		setSharedVariable("auth", new AuthHelper());
 		setSharedVariable("i18n", new I18nHelper());
         setSharedVariable("i18nKey", BeansWrapper.getDefaultInstance().getStaticModels().get(I18nKey.class.getName()));
 		setSharedVariable("url", new UrlHelper());

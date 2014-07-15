@@ -12,9 +12,14 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
 
-        <#if user()>
+        <#if auth().isAuthorized()>
 
             <li><a href="${url(route.DROP)}"><i class="glyphicon glyphicon-cloud-upload"></i> ${i18n(i18nKey.HEADER_BUTTON_UPLOAD)}</a></li>
+
+        </#if>
+
+        <#if auth().isLogged()>
+
             <li><a href="${url(route.LOGOUT)}"><i class="glyphicon glyphicon-lock"></i> ${i18n(i18nKey.HEADER_BUTTON_LOGOUT)}</a></li>
 
         </#if>

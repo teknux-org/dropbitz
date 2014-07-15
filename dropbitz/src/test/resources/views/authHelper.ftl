@@ -1,0 +1,1 @@
+${auth().isLogged()?c}|${auth().isAuthorized()?c}
