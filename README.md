@@ -27,7 +27,7 @@ Any Web Browser
 ### License
 DropBitz is under dual license model:
   * The Community Edition is under GPL v3
-  * The Enterprise Edition is under a comercial non open source license
+  * The Enterprise Edition is under a commercial non open source license
 
 The Community Edition is free to use and distribue and offers a limited set of features compared to the Enterprise Edition.
 
