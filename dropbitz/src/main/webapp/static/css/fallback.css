@@ -7,3 +7,12 @@
 #dropzone, #actions, #previews {
     display: none;
 }
+
+.fallback input {
+    margin: 0px;
+    margin-top: 10px;
+}
+
+.fallback-file-input {
+    color: black;
+}

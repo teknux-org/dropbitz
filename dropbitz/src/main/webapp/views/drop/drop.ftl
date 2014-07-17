@@ -95,7 +95,7 @@
             <!-- FALLBACK FORM -->
             <div class="fallback">
                 <input name="fallback" type="hidden" value="true" />
-                <input name="file" type="file" />
+                <input class="fallback-file-input" name="file" type="file" />
                 <input class="btn btn-primary" type="submit" value="Upload" />
             </div>
         </form>
