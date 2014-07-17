@@ -37,6 +37,18 @@ public interface IEmailService extends
 	 *            Freemarker Template Name
 	 */
 	public void sendEmail(String subject, String viewName);
+	
+	/**
+     * Sends an HTML email providing a template name, without model for the template.
+     * 
+     * @param subject
+     *            Email Subject
+     * @param viewName
+     *            Freemarker Template Name
+     * @param emailTo
+     *            Email recipients
+     */
+    public void sendEmail(String subject, String viewName, String[] emailTo);
 
 	/**
 	 * Sends an HTML email providing a template name and the model for the template.
@@ -49,6 +61,20 @@ public interface IEmailService extends
 	 *            Object model for Freemarker template
 	 */
 	public void sendEmail(String subject, String viewName, IModel model);
+	
+	/**
+     * Sends an HTML email providing a template name and the model for the template.
+     * 
+     * @param subject
+     *            Email Subject
+     * @param viewName
+     *            Freemarker Template Name
+     * @param model
+     *            Object model for Freemarker template
+     * @param emailTo
+     *            Email recipients
+     */
+    public void sendEmail(String subject, String viewName, IModel model, String[] emailTo);
 
 	/**
 	 * Sends an HTML email providing a template name, the model for the template and an alternative fallback non-HTML
@@ -64,5 +90,22 @@ public interface IEmailService extends
 	 *            Alternative Freemarker Template Name (Non-HTML)
 	 */
 	public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt);
+	
+	/**
+     * Sends an HTML email providing a template name, the model for the template and an alternative fallback non-HTML
+     * template.
+     * 
+     * @param subject
+     *            Email Subject
+     * @param viewName
+     *            Freemarker Template Name
+     * @param model
+     *            Object model for Freemarker template
+     * @param viewNameAlt
+     *            Alternative Freemarker Template Name (Non-HTML)
+     * @param emailTo
+     *            Email recipients
+     */
+    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, String[] emailTo);
 
 }

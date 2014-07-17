@@ -36,6 +36,7 @@ import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.exception.EmailServiceException;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.model.DropbitzEmail;
+import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.model.view.Model;
 import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.service.email.EmailTemplateResolver;
@@ -108,7 +109,7 @@ public class EmailServiceTest {
         dropbitzEmails = new HashSet<DropbitzEmail>();
         EmailService emailService = getEmailService(VIEWS_PATH, false, null, null);
 
-        emailService.sendEmail(null, null, null);
+        emailService.sendEmail(null, null);
         emailService.stop();
 
         Assert.assertTrue(dropbitzEmails.isEmpty());
@@ -125,7 +126,7 @@ public class EmailServiceTest {
         } catch (NullPointerException e){
         }
         try {
-            emailService.sendEmail("subject", "/simple", null);
+            emailService.sendEmail("subject", "/simple", (IModel)null);
             Assert.fail("Should throw NPE");
         } catch (NullPointerException e){
         }
@@ -254,6 +255,25 @@ public class EmailServiceTest {
         expected.setEmailFrom("from@localhost.lan");
         expected.setEmailTo(new String[] { "to@localhost.lan" });
         expected.setHtmlMsg("testModel");
+        expecteds.add(expected);
+
+        Assert.assertEquals(expecteds, dropbitzEmails);
+    }
+    
+    @Test
+    public void test08EmailTo() throws ServiceException {
+        dropbitzEmails = new HashSet<DropbitzEmail>();
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+
+        emailService.sendEmail("subject", "/simple", new Model(), new String[]{"customto@localhost.lan"});
+        emailService.stop();
+
+        Set<DropbitzEmail> expecteds = new HashSet<DropbitzEmail>();
+        DropbitzEmail expected = new DropbitzEmail();
+        expected.setSubject("subject");
+        expected.setEmailFrom("from@localhost.lan");
+        expected.setEmailTo(new String[] { "customto@localhost.lan" });
+        expected.setHtmlMsg("simple");
         expecteds.add(expected);
 
         Assert.assertEquals(expecteds, dropbitzEmails);

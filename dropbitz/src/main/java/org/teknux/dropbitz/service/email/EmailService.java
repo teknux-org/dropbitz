@@ -58,16 +58,31 @@ public class EmailService implements IEmailService {
 
     @Override
     public void sendEmail(String subject, String viewName) {
-        sendEmail(subject, viewName, new Model());
+        sendEmail(subject, viewName, (String[])null);
+    }
+    
+    @Override
+    public void sendEmail(String subject, String viewName, String[] emailTo) {
+        sendEmail(subject, viewName, new Model(), emailTo);
     }
 
     @Override
     public void sendEmail(String subject, String viewName, IModel model) {
-        sendEmail(subject, viewName, model, null);
+        sendEmail(subject, viewName, model, (String)null);
+    }
+    
+    @Override
+    public void sendEmail(String subject, String viewName, IModel model, String[] emailTo) {
+        sendEmail(subject, viewName, model, null, emailTo);
+    }
+    
+    @Override
+    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
+        sendEmail(subject, viewName, model, viewNameAlt, null);
     }
 
     @Override
-    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt) {
+    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, String[] emailTo) {
         if (configuration.isEmailEnable()) {
             logger.debug("Email : Add new email to queue...");
 
@@ -75,7 +90,7 @@ public class EmailService implements IEmailService {
             dropbitzEmail.setSubject(subject);
             try {
                 dropbitzEmail.setEmailFrom(configuration.getEmailFrom());
-                dropbitzEmail.setEmailTo(configuration.getEmailTo());
+                dropbitzEmail.setEmailTo(emailTo == null?configuration.getEmailTo():emailTo);
                 dropbitzEmail.setHtmlMsg(emailTemplateResolver.resolve(viewName, model));
                 if (viewNameAlt != null) {
                     dropbitzEmail.setTextMsg(emailTemplateResolver.resolve(viewNameAlt, model));

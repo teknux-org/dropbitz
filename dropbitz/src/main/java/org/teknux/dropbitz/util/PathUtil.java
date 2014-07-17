@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import org.teknux.dropbitz.config.ConfigurationFactory;
-
 public class PathUtil {
     private static final String CHARSET_UTF8 = "UTF-8";
     
@@ -33,11 +31,19 @@ public class PathUtil {
      * @return Jar directory
      */
     public static String getJarDir() {
-        return decodeUrl(new File(ConfigurationFactory.class
-                .getProtectionDomain().getCodeSource().getLocation().getPath())
-                .getParent());
+        return getJarDir(PathUtil.class);
     }
-
+    
+    /**
+     * Get Jar location
+     * 
+     * @param clazz
+     * @return
+     */
+    public static String getJarDir(Class<?> clazz) {
+        return decodeUrl(new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent());
+    }
+    
     /**
      * Decode Url
      * 
