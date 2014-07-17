@@ -47,6 +47,7 @@ public interface I18nKey {
     String DROP_EMAIL_SUBJECT_ERROR = "drop.email.subject.error";
     String DROP_EMAIL_INFO = "drop.email.info";
     String DROP_EMAIL_NAME = "drop.email.name";
+    String DROP_EMAIL_EMAIL = "drop.email.email";
     String DROP_EMAIL_FILENAME_ORIGIN = "drop.email.filename.origin";
     String DROP_EMAIL_FILENAME_FINAL = "drop.email.filename.final";
     String DROP_EMAIL_STATUS = "drop.email.status";

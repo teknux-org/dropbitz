@@ -161,6 +161,9 @@ public class DropController extends AbstractController {
 	    
 		DropEmailModel dropEmailModel = new DropEmailModel();
 		dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
+		if (! email.isEmpty()) {
+		    dropEmailModel.setEmail(email);
+		}
 		dropEmailModel.setFileName(fileName);
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);

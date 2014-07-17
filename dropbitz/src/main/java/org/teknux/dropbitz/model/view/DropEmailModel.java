@@ -20,6 +20,7 @@ package org.teknux.dropbitz.model.view;
 
 public class DropEmailModel extends Model{
 	public String name;
+	public String email;
 	public String fileName;
 	public String finalFileName;
 	public boolean success;
@@ -31,6 +32,14 @@ public class DropEmailModel extends Model{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 	public String getFileName() {
 		return fileName;
