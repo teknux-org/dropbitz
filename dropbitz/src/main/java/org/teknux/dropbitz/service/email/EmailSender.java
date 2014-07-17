@@ -21,7 +21,6 @@ package org.teknux.dropbitz.service.email;
 import java.text.MessageFormat;
 import java.util.Objects;
 
-import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
@@ -41,23 +40,35 @@ public class EmailSender implements IEmailSender {
     }
     
     public void sendEmail(DropbitzEmail dropbitzEmail) throws EmailServiceException {
+        sendEmail(dropbitzEmail, new HtmlEmail());
+    }
+    
+    public void sendEmail(DropbitzEmail dropbitzEmail, HtmlEmail email) throws EmailServiceException {
         logger.debug("Send email...");
         
-        HtmlEmail email = new HtmlEmail();
+        if (dropbitzEmail == null) {
+            throw new EmailServiceException("DropbitzEmail can not be null");
+        }
+        if (email == null) {
+            throw new EmailServiceException("HtmlEmail can not be null");
+        }
         
         //Global Configuration
-        email.setHostName(config.getEmailHost());
+        email.setHostName(Objects.requireNonNull(config.getEmailHost(), "Email Host is required"));
         email.setSmtpPort(config.getEmailPort());
         if ((config.getEmailUsername() != null && !config.getEmailUsername().isEmpty()) || (config.getEmailPassword() != null && !config.getEmailPassword().isEmpty())) {
-            email.setAuthenticator(new DefaultAuthenticator(config.getEmailUsername(), config.getEmailPassword()));
+            email.setAuthentication(config.getEmailUsername(), config.getEmailPassword());
         }
-        email.setSSLOnConnect(config.isSsl());
+        email.setSSLOnConnect(config.isEmailSsl());
         
         email.setSubject(dropbitzEmail.getSubject());
         try {
-            email.setFrom(dropbitzEmail.getEmailFrom());
+            email.setFrom(Objects.requireNonNull(dropbitzEmail.getEmailFrom(), "Email From is required"));
+            if (dropbitzEmail.getEmailTo() == null || dropbitzEmail.getEmailTo().length == 0) {
+                throw new EmailServiceException("Email To is required");
+            }
             email.addTo(dropbitzEmail.getEmailTo());
-            email.setHtmlMsg(dropbitzEmail.getHtmlMsg());
+            email.setHtmlMsg(Objects.requireNonNull(dropbitzEmail.getHtmlMsg(), "HtmlMsg is required"));
             if (dropbitzEmail.getTextMsg() != null) {
                 email.setTextMsg(dropbitzEmail.getTextMsg());
             }

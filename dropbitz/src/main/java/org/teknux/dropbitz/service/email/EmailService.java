@@ -97,8 +97,6 @@ public class EmailService implements IEmailService {
                 }
 
                 emailQueue.offer(dropbitzEmail);
-
-                logger.trace("Email added to queue");
             } catch (EmailServiceException e) {
                 logger.error("Can not add email to queue", e);
             }

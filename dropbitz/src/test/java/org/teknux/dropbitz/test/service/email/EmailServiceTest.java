@@ -16,7 +16,7 @@
  * along with dropbitz Community Source Code.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.teknux.dropbitz.test.service;
+package org.teknux.dropbitz.test.service.email;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

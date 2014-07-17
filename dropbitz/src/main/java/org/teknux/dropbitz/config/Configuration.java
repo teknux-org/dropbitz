@@ -67,7 +67,7 @@ public interface Configuration {
 	
 	@Config("email.ssl")
 	@Default("false")
-	boolean getEmailSsl();
+	boolean isEmailSsl();
 	
 	@Config("email.username")
 	@DefaultNull
