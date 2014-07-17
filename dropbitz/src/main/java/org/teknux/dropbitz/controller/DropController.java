@@ -26,7 +26,10 @@ import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -91,8 +94,8 @@ public class DropController extends AbstractController {
 			fileName = formDataContentDisposition.getFileName();
 		};
 
-        logger.info("Checking email");
-        if(email != null && !email.isEmpty()) {
+        logger.trace("Checking email");
+        if (! email.isEmpty()) {
             //validate email
             if (!EmailValidator.getInstance().isValid(email)) {
                 return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n(I18nKey.DROP_FILE_EMAIL_ERROR));
@@ -163,11 +166,12 @@ public class DropController extends AbstractController {
 		dropEmailModel.setSuccess(success);
 		dropEmailModel.setLocale(locale);
 
-        List<String> emailsTo = Arrays.asList(config.getEmailTo());
-        if (email != null) {
-            emailsTo.add(email);
-        }
-
-		getServiceManager().getService(IEmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", emailsTo.toArray(new String[emailsTo.size()]));
+		IEmailService emailService = getServiceManager().getService(IEmailService.class);
+		
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
+		
+		if (! email.isEmpty()) {
+		    emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", Arrays.asList(email));
+		}
 	}
 }

@@ -19,6 +19,7 @@
 package org.teknux.dropbitz.config;
 
 import java.io.File;
+import java.util.List;
 
 import org.skife.config.Config;
 import org.skife.config.Default;
@@ -83,7 +84,7 @@ public interface Configuration {
 	
 	@Config("email.to")
 	@DefaultNull
-	String[] getEmailTo();
+	List<String> getEmailTo();
 	
 	@Config("email.lang")
     @DefaultNull

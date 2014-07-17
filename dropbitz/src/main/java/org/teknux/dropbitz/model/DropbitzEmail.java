@@ -18,11 +18,11 @@
 
 package org.teknux.dropbitz.model;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class DropbitzEmail {
     private String emailFrom;
-    private String emailTo[];
+    private List<String> emailTo;
     private String subject;
     private String textMsg;
     private String htmlMsg;
@@ -33,10 +33,10 @@ public class DropbitzEmail {
     public void setEmailFrom(String emailFrom) {
         this.emailFrom = emailFrom;
     }
-    public String[] getEmailTo() {
+    public List<String> getEmailTo() {
         return emailTo;
     }
-    public void setEmailTo(String[] emailTo) {
+    public void setEmailTo(List<String> emailTo) {
         this.emailTo = emailTo;
     }
     public String getSubject() {
@@ -62,7 +62,7 @@ public class DropbitzEmail {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((emailFrom == null) ? 0 : emailFrom.hashCode());
-        result = prime * result + Arrays.hashCode(emailTo);
+        result = prime * result + ((emailTo == null) ? 0 : emailTo.hashCode());
         result = prime * result + ((htmlMsg == null) ? 0 : htmlMsg.hashCode());
         result = prime * result + ((subject == null) ? 0 : subject.hashCode());
         result = prime * result + ((textMsg == null) ? 0 : textMsg.hashCode());
@@ -82,7 +82,10 @@ public class DropbitzEmail {
                 return false;
         } else if (!emailFrom.equals(other.emailFrom))
             return false;
-        if (!Arrays.equals(emailTo, other.emailTo))
+        if (emailTo == null) {
+            if (other.emailTo != null)
+                return false;
+        } else if (!emailTo.equals(other.emailTo))
             return false;
         if (htmlMsg == null) {
             if (other.htmlMsg != null)

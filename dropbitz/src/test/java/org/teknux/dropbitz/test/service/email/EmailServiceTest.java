@@ -21,7 +21,9 @@ package org.teknux.dropbitz.test.service.email;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -79,7 +81,7 @@ public class EmailServiceTest {
         }
     }
     
-    private EmailService getEmailService(String viewPath, boolean enable, String from, String to[]) throws ServiceException {        
+    private EmailService getEmailService(String viewPath, boolean enable, String from, List<String> to) throws ServiceException {        
         ServletContext servletContext= mock(ServletContext.class);
        
         EmailTemplateResolver emailTemplateResolver = new EmailTemplateResolver(servletContext);
@@ -144,7 +146,7 @@ public class EmailServiceTest {
     @Test
     public void test03Simple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
         emailService.sendEmail("subject", "/simple", new Model());
         emailService.stop();
@@ -153,7 +155,7 @@ public class EmailServiceTest {
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
 
@@ -163,7 +165,7 @@ public class EmailServiceTest {
     @Test
     public void test04Model() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
         emailService.sendEmail("subject", "/model", new FakeModel("testModel"));
         emailService.stop();
@@ -172,7 +174,7 @@ public class EmailServiceTest {
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
@@ -182,7 +184,7 @@ public class EmailServiceTest {
     @Test
     public void test05Alt() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
         emailService.sendEmail("subject", "/simple", new FakeModel("testModel"), "/model");
         emailService.stop();
@@ -191,7 +193,7 @@ public class EmailServiceTest {
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("simple");
         expected.setTextMsg("testModel");
         expecteds.add(expected);
@@ -202,7 +204,7 @@ public class EmailServiceTest {
     @Test
     public void test06Multiple() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
         emailService.sendEmail("subject", "/simple");
         emailService.sendEmail("subject2", "/model", new FakeModel("testModel"));
@@ -212,13 +214,13 @@ public class EmailServiceTest {
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
         expected = new DropbitzEmail();
         expected.setSubject("subject2");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
@@ -228,7 +230,7 @@ public class EmailServiceTest {
     @Test
     public void test07OneAtTime() throws ServiceException, InterruptedException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
         lockMailSender();
         
@@ -241,7 +243,7 @@ public class EmailServiceTest {
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
         Assert.assertEquals(expecteds, dropbitzEmails);
@@ -253,7 +255,7 @@ public class EmailServiceTest {
         expected = new DropbitzEmail();
         expected.setSubject("subject2");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "to@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("to@localhost.lan"));
         expected.setHtmlMsg("testModel");
         expecteds.add(expected);
 
@@ -263,16 +265,16 @@ public class EmailServiceTest {
     @Test
     public void test08EmailTo() throws ServiceException {
         dropbitzEmails = new HashSet<DropbitzEmail>();
-        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", new String[] { "to@localhost.lan" });
+        EmailService emailService = getEmailService(VIEWS_PATH, true, "from@localhost.lan", Arrays.asList("to@localhost.lan"));
 
-        emailService.sendEmail("subject", "/simple", new Model(), new String[]{"customto@localhost.lan"});
+        emailService.sendEmail("subject", "/simple", new Model(), Arrays.asList("customto@localhost.lan"));
         emailService.stop();
 
         Set<DropbitzEmail> expecteds = new HashSet<DropbitzEmail>();
         DropbitzEmail expected = new DropbitzEmail();
         expected.setSubject("subject");
         expected.setEmailFrom("from@localhost.lan");
-        expected.setEmailTo(new String[] { "customto@localhost.lan" });
+        expected.setEmailTo(Arrays.asList("customto@localhost.lan"));
         expected.setHtmlMsg("simple");
         expecteds.add(expected);
 

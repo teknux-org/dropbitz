@@ -18,6 +18,8 @@
 
 package org.teknux.dropbitz.service.email;
 
+import java.util.List;
+
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.service.IService;
 
@@ -48,7 +50,7 @@ public interface IEmailService extends
      * @param emailTo
      *            Email recipients
      */
-    public void sendEmail(String subject, String viewName, String[] emailTo);
+    public void sendEmail(String subject, String viewName, List<String> emailTo);
 
 	/**
 	 * Sends an HTML email providing a template name and the model for the template.
@@ -74,7 +76,7 @@ public interface IEmailService extends
      * @param emailTo
      *            Email recipients
      */
-    public void sendEmail(String subject, String viewName, IModel model, String[] emailTo);
+    public void sendEmail(String subject, String viewName, IModel model, List<String> emailTo);
 
 	/**
 	 * Sends an HTML email providing a template name, the model for the template and an alternative fallback non-HTML
@@ -106,6 +108,6 @@ public interface IEmailService extends
      * @param emailTo
      *            Email recipients
      */
-    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, String[] emailTo);
+    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, List<String> emailTo);
 
 }

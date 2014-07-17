@@ -18,6 +18,7 @@
 
 package org.teknux.dropbitz.service.email;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -58,11 +59,11 @@ public class EmailService implements IEmailService {
 
     @Override
     public void sendEmail(String subject, String viewName) {
-        sendEmail(subject, viewName, (String[])null);
+        sendEmail(subject, viewName, (List<String>)null);
     }
     
     @Override
-    public void sendEmail(String subject, String viewName, String[] emailTo) {
+    public void sendEmail(String subject, String viewName, List<String> emailTo) {
         sendEmail(subject, viewName, new Model(), emailTo);
     }
 
@@ -72,7 +73,7 @@ public class EmailService implements IEmailService {
     }
     
     @Override
-    public void sendEmail(String subject, String viewName, IModel model, String[] emailTo) {
+    public void sendEmail(String subject, String viewName, IModel model, List<String> emailTo) {
         sendEmail(subject, viewName, model, null, emailTo);
     }
     
@@ -82,7 +83,7 @@ public class EmailService implements IEmailService {
     }
 
     @Override
-    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, String[] emailTo) {
+    public void sendEmail(String subject, String viewName, IModel model, String viewNameAlt, List<String> emailTo) {
         if (configuration.isEmailEnable()) {
             logger.debug("Email : Add new email to queue...");
 

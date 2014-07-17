@@ -5,6 +5,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.junit.Before;
@@ -34,7 +37,7 @@ public class EmailSenderTest {
         verify(htmlEmail).setSmtpPort(configuration.getEmailPort());
         verify(htmlEmail).setSSLOnConnect(configuration.isEmailSsl());
         verify(htmlEmail).setFrom(dropbitzEmail.getEmailFrom());
-        verify(htmlEmail).addTo(dropbitzEmail.getEmailTo());
+        verify(htmlEmail).addTo(dropbitzEmail.getEmailTo().toArray(new String[dropbitzEmail.getEmailTo().size()]));
         if ((configuration.getEmailUsername() != null && !configuration.getEmailUsername().isEmpty()) || (configuration.getEmailPassword() != null && !configuration.getEmailPassword().isEmpty())) {
             verify(htmlEmail).setAuthentication(configuration.getEmailUsername(), configuration.getEmailPassword());
         } else {
@@ -51,7 +54,7 @@ public class EmailSenderTest {
         
         dropbitzEmail = new DropbitzEmail();
         dropbitzEmail.setEmailFrom("bigup@localhost.lan");
-        dropbitzEmail.setEmailTo(new String[]{"oeil@localhost.lan"});
+        dropbitzEmail.setEmailTo(Arrays.asList("oeil@localhost.lan"));
         dropbitzEmail.setHtmlMsg("Hello world");
         
         when(configuration.getEmailHost()).thenReturn("smtp.localhost.lan");
@@ -84,7 +87,7 @@ public class EmailSenderTest {
     
     @Test(expected=EmailServiceException.class)
     public void test04BadTo2() throws ServiceException, EmailException {
-        dropbitzEmail.setEmailTo(new String[]{});
+        dropbitzEmail.setEmailTo(new ArrayList<String>());
         
         send();
     }

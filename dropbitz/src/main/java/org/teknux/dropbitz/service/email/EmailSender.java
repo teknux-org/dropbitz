@@ -64,10 +64,10 @@ public class EmailSender implements IEmailSender {
         email.setSubject(dropbitzEmail.getSubject());
         try {
             email.setFrom(Objects.requireNonNull(dropbitzEmail.getEmailFrom(), "Email From is required"));
-            if (dropbitzEmail.getEmailTo() == null || dropbitzEmail.getEmailTo().length == 0) {
+            if (dropbitzEmail.getEmailTo() == null || dropbitzEmail.getEmailTo().size() == 0) {
                 throw new EmailServiceException("Email To is required");
             }
-            email.addTo(dropbitzEmail.getEmailTo());
+            email.addTo(dropbitzEmail.getEmailTo().toArray(new String[dropbitzEmail.getEmailTo().size()]));
             email.setHtmlMsg(Objects.requireNonNull(dropbitzEmail.getHtmlMsg(), "HtmlMsg is required"));
             if (dropbitzEmail.getTextMsg() != null) {
                 email.setTextMsg(dropbitzEmail.getTextMsg());
