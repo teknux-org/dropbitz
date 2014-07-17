@@ -26,9 +26,7 @@ import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -114,12 +112,12 @@ public class DropController extends AbstractController {
         } catch (IOException e) {
         	logger.error("Can not copy file", e);
         
-            sendEmail(false, name, fileName, null);
+            sendEmail(false, name, fileName, null, email);
         	
         	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n(I18nKey.DROP_FILE_ERROR));
         }
         
-        sendEmail(true, name, fileName, destFileName);
+        sendEmail(true, name, fileName, destFileName, email);
         
         return getResponse(fallback, Status.OK, fileName, null);
     }
@@ -143,7 +141,7 @@ public class DropController extends AbstractController {
 		}
 	}
 	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName) {
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName, String email) {
 	    Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
 	    
 	    Locale locale = null;
@@ -164,7 +162,12 @@ public class DropController extends AbstractController {
 		dropEmailModel.setFinalFileName(finalFileName);
 		dropEmailModel.setSuccess(success);
 		dropEmailModel.setLocale(locale);
-		
-		getServiceManager().getService(IEmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
+
+        List<String> emailsTo = Arrays.asList(config.getEmailTo());
+        if (email != null) {
+            emailsTo.add(email);
+        }
+
+		getServiceManager().getService(IEmailService.class).sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", emailsTo.toArray(new String[emailsTo.size()]));
 	}
 }
