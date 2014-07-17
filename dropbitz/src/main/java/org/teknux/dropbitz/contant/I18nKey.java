@@ -31,12 +31,15 @@ public interface I18nKey {
     String AUTH_SECUREID_ERROR = "auth.secureid.error";
     String DROP_NAME_LABEL = "drop.name.label";
     String DROP_NAME_VALUE = "drop.name.value";
+    String DROP_EMAIL_LABEL = "drop.email.label";
+    String DROP_EMAIL_VALUE = "drop.email.value";
     String DROP_ZONE_LABEL = "drop.zone.label";
     String DROP_ZONE_ADD = "drop.zone.add";
     String DROP_BUTTON_CANCEL = "drop.button.cancel";
     String DROP_BUTTON_HIDE = "drop.button.hide";
     String DROP_FILE_MISSING = "drop.file.missing";
     String DROP_FILE_ERROR = "drop.file.error";
+    String DROP_FILE_EMAIL_ERROR = "drop.file.email.error";
     String DROP_FALLBACK_MESSAGE_OK = "drop.fallback.message.ok";
     String DROP_FALLBACK_MESSAGE_ERROR = "drop.fallback.message.error";
     String DROP_EMAIL_NAME_UNKNOWN = "drop.email.name.unknown";

@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.mvc.Viewable;
@@ -81,15 +82,24 @@ public class DropController extends AbstractController {
             @FormDataParam("file") final InputStream inputStream,
             @FormDataParam("file") final FormDataContentDisposition formDataContentDisposition,
             @FormDataParam("name") final String name,
-            @FormDataParam("fallback") final Boolean fallback) {  	
-    	
-    	String fileName = null;
+            @FormDataParam("email") final String email,
+            @FormDataParam("fallback") final Boolean fallback) {
+
+        String fileName = null;
 		try {
 			fileName = new String(formDataContentDisposition.getFileName().getBytes(CHARSET_ISO_8859_1), CHARSET_UTF8);
 		} catch (UnsupportedEncodingException e) {
 			logger.warn("Can not translate file name charset", e);
 			fileName = formDataContentDisposition.getFileName();
 		};
+
+        logger.info("Checking email");
+        if(email != null && !email.isEmpty()) {
+            //validate email
+            if (!EmailValidator.getInstance().isValid(email)) {
+                return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n(I18nKey.DROP_FILE_EMAIL_ERROR));
+            }
+        }
 		
 		String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT));
 		String destFileName = date + (name.isEmpty()?"":"-" + name) + "-" + fileName;
@@ -124,7 +134,7 @@ public class DropController extends AbstractController {
 			
 			return Response.status(status.getStatusCode()).entity(viewable(View.FALLBACK)).build();	
 		} else {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			if (errorMessage != null) {
 				map.put(DROPZONE_ERROR_ATTRIBUTE, errorMessage);
 			}

@@ -4,6 +4,7 @@
 	<link href="${url("/static/lib/dropzone/dropzone.css")}" rel="stylesheet" type="text/css"/>
 	<link href="${url("/static/css/drop.css")}" rel="stylesheet" type="text/css"/>
 	<script src="${url("/static/lib/dropzone/dropzone.js")}" type="text/javascript"></script>
+	<script src="${url("/static/lib/commons-validator/commons-validator-1.4.0-compress.js")}" type="text/javascript"></script>
 
     <div class="container">
 
@@ -13,6 +14,18 @@
                 <label>${i18n(i18nKey.DROP_NAME_LABEL)}</label>
                 <div class="controls">
                     <input name="name" type="text" class="form-control" placeholder="${i18n(i18nKey.DROP_NAME_VALUE)}">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>${i18n(i18nKey.DROP_EMAIL_LABEL)}</label>
+                <div class=control>
+                    <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-addon">@</div>
+                          <input name="email" id="email" class="form-control" type="email" placeholder="${i18n(i18nKey.DROP_EMAIL_VALUE)}">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -91,7 +104,12 @@
 
     <script src="${url("/static/js/drop.js")}" type="text/javascript"></script>
     <script type="text/javascript">
-    	initDropzone("${url(route.AUTH)}","${i18n(i18nKey.GLOBAL_SESSION_TIMEOUT)}","${i18n(i18nKey.GLOBAL_SIGNIN)}");
+    	initDropzone(
+    	    "${url(route.AUTH)}",
+    	    "${i18n(i18nKey.GLOBAL_SESSION_TIMEOUT)}",
+    	    "${i18n(i18nKey.GLOBAL_SIGNIN)}",
+    	    "${i18n(i18nKey.DROP_FILE_EMAIL_ERROR)}"
+    	);
     </script>
     <noscript>
         <link href="${url("/static/css/fallback.css")}" rel="stylesheet" type="text/css" />

@@ -1,4 +1,4 @@
-function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
+function initDropzone(authUrl, sessionTimeoutMessage, signinMessage, invalidEmailMessage) {
 	// Get the template HTML and remove it from the document
 	var previewNode = document.querySelector("#template");
 	previewNode.id = "";
@@ -27,6 +27,17 @@ function initDropzone(authUrl, sessionTimeoutMessage, signinMessage) {
 	        $(file.previewElement).find("#file-status-ko").removeClass("hidden");
 	
 	        return this.defaultOptions.error(file, errorMessage);
+	    },
+
+	    accept: function(file, done) {
+	        //check the email syntax is valid
+            var email = $("#email").val();
+            if(jcv_checkEmail(email)) {
+                done();
+            } else {
+                message("error", invalidEmailMessage, "danger", true);
+                done(invalidEmailMessage);
+            }
 	    }
 	});
 	
