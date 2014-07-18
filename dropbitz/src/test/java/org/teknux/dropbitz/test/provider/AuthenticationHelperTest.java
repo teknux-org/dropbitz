@@ -52,7 +52,7 @@ public class AuthenticationHelperTest {
 
     private void setup(Boolean isSecured, String secureId) {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED)).thenReturn(isSecured);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(isSecured);
 
         ServletContext servletContext = mock(ServletContext.class);
         when(request.getServletContext()).thenReturn(servletContext);
@@ -73,45 +73,45 @@ public class AuthenticationHelperTest {
 
         setup(true, "123");
         Assert.assertTrue(authenticationHelper.authenticate(request, "123"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
 
         setup(true, "123");
         Assert.assertFalse(authenticationHelper.authenticate(request, "321"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED, Boolean.FALSE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.FALSE);
 
         setup(true, "");
         Assert.assertTrue(authenticationHelper.authenticate(request, "123"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
 
         setup(true, "");
         Assert.assertTrue(authenticationHelper.authenticate(request, "321"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
     }
 
     public void testIsAuthorized() {
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
 
         setup(false, "123");
-        Assert.assertFalse(authenticationHelper.isAuthorized(request));
+        Assert.assertFalse(authenticationHelper.getAuth(request).isAuthorized());
 
         setup(true, "123");
-        Assert.assertTrue(authenticationHelper.isAuthorized(request));
+        Assert.assertTrue(authenticationHelper.getAuth(request).isAuthorized());
     }
 
     public void testIsLogged() {
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
 
         setup(false, "123");
-        Assert.assertFalse(authenticationHelper.isLogged(request));
+        Assert.assertFalse(authenticationHelper.getAuth(request).isLogged());
 
         setup(true, "123");
-        Assert.assertTrue(authenticationHelper.isLogged(request));
+        Assert.assertTrue(authenticationHelper.getAuth(request).isLogged());
 
         setup(false, "");
-        Assert.assertFalse(authenticationHelper.isLogged(request));
+        Assert.assertFalse(authenticationHelper.getAuth(request).isLogged());
 
         setup(true, "");
-        Assert.assertTrue(authenticationHelper.isLogged(request));
+        Assert.assertTrue(authenticationHelper.getAuth(request).isLogged());
     }
 
     @Test
@@ -120,6 +120,6 @@ public class AuthenticationHelperTest {
 
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
         authenticationHelper.logout(request);
-        verify(session).removeAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_SECURED);
+        verify(session).removeAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED);
     }
 }

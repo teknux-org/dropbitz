@@ -26,11 +26,6 @@ public class Auth {
     private boolean isLogged;
     private boolean isAuthorized;
 
-    public Auth(boolean isLogged, boolean isAuthorized) {
-        this.isLogged = isLogged;
-        this.isAuthorized = isAuthorized;
-    }
-
     public boolean isLogged() {
         return isLogged;
     }

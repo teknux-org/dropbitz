@@ -19,7 +19,6 @@
 package org.teknux.dropbitz.freemarker.helper;
 
 import freemarker.template.TemplateModelException;
-import org.teknux.dropbitz.model.Auth;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
@@ -51,6 +50,6 @@ public class AuthHelper extends AbstractHelper {
             throw new TemplateModelException("Can not get HttpServletRequest");
         }
 
-        return new Auth(authenticationHelper.isLogged(httpServletRequest), authenticationHelper.isAuthorized(httpServletRequest));
+        return authenticationHelper.getAuth(httpServletRequest);
     }
 }

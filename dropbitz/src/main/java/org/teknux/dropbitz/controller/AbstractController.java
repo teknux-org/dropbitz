@@ -34,9 +34,11 @@ import javax.ws.rs.core.Context;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teknux.dropbitz.freemarker.View;
+import org.teknux.dropbitz.model.Auth;
 import org.teknux.dropbitz.model.Message;
 import org.teknux.dropbitz.model.view.IModel;
 import org.teknux.dropbitz.model.view.Model;
+import org.teknux.dropbitz.provider.AuthenticationHelper;
 import org.teknux.dropbitz.service.II18nService;
 import org.teknux.dropbitz.service.IServiceManager;
 import org.teknux.dropbitz.service.ServiceManager;
@@ -62,6 +64,11 @@ abstract public class AbstractController {
 
     protected HttpSession getSession() {
         return Objects.requireNonNull(httpServletRequest).getSession();
+    }
+    
+    protected Auth getAuth() {
+        AuthenticationHelper authenticationHelper = new AuthenticationHelper();
+        return authenticationHelper.getAuth(getHttpServletRequest());
     }
 
     protected IServiceManager getServiceManager() {

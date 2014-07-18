@@ -56,7 +56,7 @@ public class MainController extends AbstractController {
         authenticationHelper.logout(getHttpServletRequest());
         
         //If authorized, redirect to index page, else redirect to auth page
-        if (authenticationHelper.isAuthorized(getHttpServletRequest())) {
+        if (getAuth().isAuthorized()) {
             return Response.seeOther(uri(Route.INDEX)).build();
         } else {
             return Response.seeOther(uri(Route.AUTH)).build();
@@ -66,8 +66,8 @@ public class MainController extends AbstractController {
 	@GET
 	@Path(Route.AUTH)
     public Response auth() throws URISyntaxException {
-	    //If already logged, redirect to index page
-	    if (authenticationHelper.isLogged(getHttpServletRequest())) {
+        //If authorized, we don't need to login
+        if (getAuth().isAuthorized()) {
 	        return Response.seeOther(uri(Route.INDEX)).build();
 	    }
 	    
@@ -86,10 +86,10 @@ public class MainController extends AbstractController {
 	
 	@POST
 	@Path(Route.AUTH)
-    public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {
-	
+    public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {	    
 		if (! authenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
 			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
+			return Response.seeOther(uri(Route.AUTH)).build();
 		}
 
 		return Response.seeOther(uri(Route.INDEX)).build();

@@ -41,6 +41,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.controller.MainController;
+import org.teknux.dropbitz.model.Auth;
 import org.teknux.dropbitz.provider.AuthenticationFilter;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 
@@ -70,7 +71,7 @@ public class AuthenticationFilterTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private void setup(String ctxPath, String url, Boolean isSecured) {
+    private void setup(String ctxPath, String url, Boolean isAuthorized) {
         when(servletContext.getContextPath()).thenReturn(ctxPath);
 
         UriInfo uriInfo = mock(UriInfo.class);
@@ -78,7 +79,11 @@ public class AuthenticationFilterTest {
 
         when(containerContext.getUriInfo()).thenReturn(uriInfo);
         when(request.getSession()).thenReturn(session);
-        when(authenticationHelper.isAuthorized(request)).thenReturn(isSecured);
+        
+        Auth auth = new Auth();
+        auth.setAuthorized(isAuthorized);
+        
+        when(authenticationHelper.getAuth(request)).thenReturn(auth);
     }
 
     @Test
