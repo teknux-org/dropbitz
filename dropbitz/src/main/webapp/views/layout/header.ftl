@@ -9,7 +9,18 @@
 				<span class="icon-bar"></span>
 			</button>
 		</#if>
-    <a class="navbar-brand brand" href="${url(route.INDEX)}">${statics["org.teknux.dropbitz.Application"].getConfiguration().getTitle()}</a>
+		<div class="navbar-inner">
+			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderLogo()??>
+				<a href="${url(route.INDEX)}">
+					<img src="${url(route.RESOURCE)}/${statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderLogo()}" alt="logo"/>
+				</a>
+			</#if>
+			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderTitle()??>
+	    		<a class="brand" href="${url(route.INDEX)}">
+	    			${statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderTitle()}
+	    		</a>
+	    	</#if>
+    	</div>
     </div>
     <#if auth().isAuthorized() || auth().isLogged()>
 	    <div class="navbar-collapse collapse">

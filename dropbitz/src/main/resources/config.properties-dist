@@ -5,6 +5,9 @@ directory=/tmp
 ;port=8080
 ;ssl=false
 ;title=DropBitz
+header.title=DropBitz
+;header.logo=logo.png
+
 ;email.enable=false
 ;email.host=
 ;email.port=25

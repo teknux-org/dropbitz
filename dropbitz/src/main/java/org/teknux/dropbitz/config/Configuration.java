@@ -54,6 +54,14 @@ public interface Configuration {
 	@Default("DropBitz")
 	String getTitle();
 	
+    @Config("header.title")
+    @DefaultNull
+    String getHeaderTitle();
+	
+	@Config("header.logo")
+    @DefaultNull
+    String getHeaderLogo();
+	
 	@Config("email.enable")
 	@Default("false")
 	boolean isEmailEnable();

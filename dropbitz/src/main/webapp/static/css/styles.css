@@ -39,6 +39,11 @@ a:focus {
     border-width: 0 0 4px;
 }
 
+.navbar-inner a {
+	padding: 5px;
+	display: inline-block;
+}
+
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
