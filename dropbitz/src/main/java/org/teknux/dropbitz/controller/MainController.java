@@ -54,12 +54,23 @@ public class MainController extends AbstractController {
     @Path(Route.LOGOUT)
     public Response logout() throws URISyntaxException {
         authenticationHelper.logout(getHttpServletRequest());
-        return Response.seeOther(uri(Route.AUTH)).build();
+        
+        //If authorized, redirect to index page, else redirect to auth page
+        if (authenticationHelper.isAuthorized(getHttpServletRequest())) {
+            return Response.seeOther(uri(Route.INDEX)).build();
+        } else {
+            return Response.seeOther(uri(Route.AUTH)).build();
+        }
     }
 	
 	@GET
 	@Path(Route.AUTH)
-    public Response auth() {
+    public Response auth() throws URISyntaxException {
+	    //If already logged, redirect to index page
+	    if (authenticationHelper.isLogged(getHttpServletRequest())) {
+	        return Response.seeOther(uri(Route.INDEX)).build();
+	    }
+	    
 	    Status status = Status.OK;
 	    
         String errorMessage = (String) getSession().getAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
