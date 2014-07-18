@@ -19,7 +19,9 @@
 package org.teknux.dropbitz.controller;
 
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -27,13 +29,19 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.util.Md5Util;
 import org.teknux.dropbitz.util.PathUtil;
 
 @Path(Route.RESOURCE)
@@ -46,7 +54,7 @@ public class ResourceController extends AbstractController {
     @GET
     @Path("{resource}")
     @Produces(MEDIA_TYPE_IMAGE)
-    public Response index(@PathParam("resource") String resource) {
+    public Response index(@Context Request request, @PathParam("resource") String resource) throws NoSuchAlgorithmException {
 
         if (! isAuthorizedResource(resource)) {
             logger.warn("Resource [{}] unauthorized", resource);
@@ -59,9 +67,20 @@ public class ResourceController extends AbstractController {
             logger.warn("Resource [{}] don't exists", resource);
             return Response.status(Status.NOT_FOUND).build();
         }
+        
+        //ETag is md5 sum of file path
+        final EntityTag entityTag = new EntityTag(Md5Util.hash(resource));
 
-        String contentType = new MimetypesFileTypeMap().getContentType(file);
-        return Response.ok(file, contentType).build();
+        //Cache is based on modification date + ETag
+        ResponseBuilder responseBuilder = request.evaluatePreconditions(new Date(file.lastModified()), entityTag);
+        if (responseBuilder == null) { //If missing or different, send file
+            String contentType = new MimetypesFileTypeMap().getContentType(file);
+            return Response.ok(file, contentType).lastModified(new Date(file.lastModified())).tag(entityTag).build();
+        } else { //If the same, send "Not Modified" status (HTTP 304)
+            final CacheControl cacheControl = new CacheControl();
+            cacheControl.setMaxAge(-1);
+            return responseBuilder.cacheControl(cacheControl).lastModified(new Date(file.lastModified())).tag(entityTag).build();
+        }
     }
 
     private boolean isAuthorizedResource(String resource) {
