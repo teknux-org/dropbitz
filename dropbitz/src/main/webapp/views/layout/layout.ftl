@@ -6,8 +6,12 @@
 			<meta charset="utf-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 			<title>${statics["org.teknux.dropbitz.Application"].getConfiguration().getTitle()}</title>
-			<link rel="icon" type="image/png" href="${url("static/favicon.ico")}" />
-			
+			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getIcon()??>
+				<link rel="icon" type="image/png" href="${url(route.RESOURCE)}/${statics["org.teknux.dropbitz.Application"].getConfiguration().getIcon()}" />
+			<#else>
+				<link rel="icon" type="image/png" href="${url("static/favicon.ico")}" />
+			</#if>
+
 			<!--[if lt IE 9]>
 				<script src="${url("/static/lib/html5shiv/html5shiv.min.js")}" type="text/javascript"></script>
 			<![endif]-->

@@ -19,6 +19,8 @@
 package org.teknux.dropbitz.controller;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.GET;
@@ -63,11 +65,32 @@ public class ResourceController extends AbstractController {
     }
 
     private boolean isAuthorizedResource(String resource) {
-        String logo = getServiceManager().getService(IConfigurationService.class).getConfiguration().getHeaderLogo();
-        if (logo != null && resource != null && resource.equals(logo)) {
-            return true;
+        if (resource == null || resource.isEmpty()) {
+            return false;
+        }
+        
+        for (String authorizedResource : getAuthorizedResource()) {
+            if (resource.equals(authorizedResource)) {
+                return true;
+            }
         }
         
         return false;
+    }
+
+    private List<String> getAuthorizedResource() {
+        List<String> authorizedResources = new ArrayList<String>();
+        
+        String icon = getServiceManager().getService(IConfigurationService.class).getConfiguration().getIcon();
+        if (icon != null && ! icon.isEmpty()) {
+            authorizedResources.add(icon);
+        }
+        
+        String logo = getServiceManager().getService(IConfigurationService.class).getConfiguration().getHeaderLogo();
+        if (logo != null && ! logo.isEmpty()) {
+            authorizedResources.add(logo);
+        }
+        
+        return authorizedResources;
     }
 }

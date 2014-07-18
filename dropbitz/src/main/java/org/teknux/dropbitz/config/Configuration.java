@@ -54,6 +54,10 @@ public interface Configuration {
 	@Default("DropBitz")
 	String getTitle();
 	
+    @Config("icon")
+	@DefaultNull
+	String getIcon();
+	
     @Config("header.title")
     @DefaultNull
     String getHeaderTitle();
