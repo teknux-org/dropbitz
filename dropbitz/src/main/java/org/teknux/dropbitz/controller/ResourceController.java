@@ -18,40 +18,40 @@
 
 package org.teknux.dropbitz.controller;
 
-import java.io.File;
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.config.Configuration;
+import org.teknux.dropbitz.contant.ResourceItem;
+import org.teknux.dropbitz.contant.Route;
+import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.util.Md5Util;
+import org.teknux.dropbitz.util.PathUtil;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.config.Configuration;
-import org.teknux.dropbitz.contant.Route;
-import org.teknux.dropbitz.service.IConfigurationService;
-import org.teknux.dropbitz.util.Md5Util;
-import org.teknux.dropbitz.util.PathUtil;
+import java.io.File;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path(Route.RESOURCE)
 public class ResourceController extends AbstractController {
 
     private final static String MEDIA_TYPE_IMAGE = "image/*";
-    
+
     private final Logger logger = LoggerFactory.getLogger(ResourceController.class);
+
+    private static final int CACHE_EXPIRES_NEVER = -1;
+
+    private Object lock = new Object();
+    private Map<String, String> resourcePaths;
 
     @GET
     @Path("{resource}")
@@ -62,9 +62,9 @@ public class ResourceController extends AbstractController {
         if (resourcePath == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
-        
+
         File file;
-        if(new File(resourcePath).isAbsolute()) {
+        if (new File(resourcePath).isAbsolute()) {
             file = new File(resourcePath);
         } else {
             file = new File(PathUtil.getJarDir(), resourcePath);
@@ -74,7 +74,7 @@ public class ResourceController extends AbstractController {
             logger.warn("Resource [{}] don't exists", resource);
             return Response.status(Status.NOT_FOUND).build();
         }
-        
+
         //ETag is md5 sum of file path
         final EntityTag entityTag = new EntityTag(Md5Util.hash(resource));
 
@@ -85,7 +85,7 @@ public class ResourceController extends AbstractController {
             return Response.ok(file, contentType).lastModified(new Date(file.lastModified())).tag(entityTag).build();
         } else { //If the same, send "Not Modified" status (HTTP 304)
             final CacheControl cacheControl = new CacheControl();
-            cacheControl.setMaxAge(-1);
+            cacheControl.setMaxAge(CACHE_EXPIRES_NEVER);
             return responseBuilder.cacheControl(cacheControl).lastModified(new Date(file.lastModified())).tag(entityTag).build();
         }
     }
@@ -94,19 +94,16 @@ public class ResourceController extends AbstractController {
         if (resource == null || resource.isEmpty()) {
             return null;
         }
-        
-        Configuration configuration = getServiceManager().getService(IConfigurationService.class).getConfiguration();
-        
-        Map<String, String> resourcePaths = new HashMap<String, String>();
-        resourcePaths.put("logo", configuration.getHeaderLogo());
-        resourcePaths.put("icon", configuration.getIcon());
-        
-        for (Entry<String, String> entry: resourcePaths.entrySet()) {
-            if (resource.equals(entry.getKey())) {
-                return entry.getValue();
+
+        if (resourcePaths == null) {
+            synchronized (lock) {
+                Configuration configuration = getServiceManager().getService(IConfigurationService.class).getConfiguration();
+                resourcePaths = new HashMap<>();
+                resourcePaths.put(ResourceItem.LOGO, configuration.getHeaderLogo());
+                resourcePaths.put(ResourceItem.ICON, configuration.getIcon());
             }
         }
-        
-        return null;
+
+        return resourcePaths.getOrDefault(resource, null);
     }
 }

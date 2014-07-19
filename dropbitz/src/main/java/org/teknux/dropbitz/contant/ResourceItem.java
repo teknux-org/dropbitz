@@ -18,12 +18,10 @@
 
 package org.teknux.dropbitz.contant;
 
-public interface Route {
-    String INDEX = "/";
-    String AUTH = "/auth";
-    String LOGOUT = "/logout";
-    String DROP = "/drop";
-    String RESOURCE = "/resource";
-    String RESOURCE_LOGO = "/resource/" + ResourceItem.LOGO;
-    String RESOURCE_ICON = "/resource/" + ResourceItem.ICON;
+/**
+ * This interface provides keys for supported resources
+ */
+public interface ResourceItem {
+    String ICON = "icon";
+    String LOGO = "logo";
 }

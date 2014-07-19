@@ -12,6 +12,10 @@ a:focus {
     color: #07C0B9;
 }
 
+a.brand {
+    vertical-align: middle;
+}
+
 .progress-bar {
     background-color: #07C0B9;
 }
