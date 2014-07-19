@@ -24,4 +24,6 @@ public interface Route {
     String LOGOUT = "/logout";
     String DROP = "/drop";
     String RESOURCE = "/resource";
+    String RESOURCE_LOGO = "/resource/logo";
+    String RESOURCE_ICON = "/resource/icon";
 }

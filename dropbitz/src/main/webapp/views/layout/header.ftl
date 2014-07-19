@@ -12,7 +12,7 @@
 		<div class="navbar-inner">
 			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderLogo()??>
 				<a href="${url(route.INDEX)}">
-					<img src="${url(route.RESOURCE)}/${statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderLogo()}" alt="logo"/>
+					<img src="${url(route.RESOURCE_LOGO)}" alt="logo"/>
 				</a>
 			</#if>
 			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getHeaderTitle()??>

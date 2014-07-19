@@ -7,7 +7,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 			<title>${statics["org.teknux.dropbitz.Application"].getConfiguration().getTitle()}</title>
 			<#if statics["org.teknux.dropbitz.Application"].getConfiguration().getIcon()??>
-				<link rel="icon" type="image/png" href="${url(route.RESOURCE)}/${statics["org.teknux.dropbitz.Application"].getConfiguration().getIcon()}" />
+				<link rel="icon" type="image/png" href="${url(route.RESOURCE_ICON)}" />
 			<#else>
 				<link rel="icon" type="image/png" href="${url("static/favicon.ico")}" />
 			</#if>

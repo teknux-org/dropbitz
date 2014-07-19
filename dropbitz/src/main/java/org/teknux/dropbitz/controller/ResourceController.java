@@ -20,9 +20,10 @@ package org.teknux.dropbitz.controller;
 
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.GET;
@@ -39,6 +40,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.util.Md5Util;
@@ -56,12 +58,17 @@ public class ResourceController extends AbstractController {
     @Produces(MEDIA_TYPE_IMAGE)
     public Response index(@Context Request request, @PathParam("resource") String resource) throws NoSuchAlgorithmException {
 
-        if (! isAuthorizedResource(resource)) {
-            logger.warn("Resource [{}] unauthorized", resource);
+        String resourcePath = getResourcePath(resource);
+        if (resourcePath == null) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         
-        File file = new File(PathUtil.getJarDir() + File.separator + resource);
+        File file;
+        if(new File(resourcePath).isAbsolute()) {
+            file = new File(resourcePath);
+        } else {
+            file = new File(PathUtil.getJarDir(), resourcePath);
+        }
 
         if (!file.exists()) {
             logger.warn("Resource [{}] don't exists", resource);
@@ -83,33 +90,23 @@ public class ResourceController extends AbstractController {
         }
     }
 
-    private boolean isAuthorizedResource(String resource) {
+    private String getResourcePath(String resource) {
         if (resource == null || resource.isEmpty()) {
-            return false;
+            return null;
         }
         
-        for (String authorizedResource : getAuthorizedResource()) {
-            if (resource.equals(authorizedResource)) {
-                return true;
+        Configuration configuration = getServiceManager().getService(IConfigurationService.class).getConfiguration();
+        
+        Map<String, String> resourcePaths = new HashMap<String, String>();
+        resourcePaths.put("logo", configuration.getHeaderLogo());
+        resourcePaths.put("icon", configuration.getIcon());
+        
+        for (Entry<String, String> entry: resourcePaths.entrySet()) {
+            if (resource.equals(entry.getKey())) {
+                return entry.getValue();
             }
         }
         
-        return false;
-    }
-
-    private List<String> getAuthorizedResource() {
-        List<String> authorizedResources = new ArrayList<String>();
-        
-        String icon = getServiceManager().getService(IConfigurationService.class).getConfiguration().getIcon();
-        if (icon != null && ! icon.isEmpty()) {
-            authorizedResources.add(icon);
-        }
-        
-        String logo = getServiceManager().getService(IConfigurationService.class).getConfiguration().getHeaderLogo();
-        if (logo != null && ! logo.isEmpty()) {
-            authorizedResources.add(logo);
-        }
-        
-        return authorizedResources;
+        return null;
     }
 }
