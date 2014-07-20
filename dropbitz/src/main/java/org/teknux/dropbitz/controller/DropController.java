@@ -56,6 +56,7 @@ import org.teknux.dropbitz.model.view.DropEmailModel;
 import org.teknux.dropbitz.provider.Authenticated;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.email.IEmailService;
+import org.teknux.dropbitz.util.FileUtil;
 import org.teknux.dropbitz.util.I18nUtil;
 
 @Path(Route.DROP)
@@ -111,6 +112,12 @@ public class DropController extends AbstractController {
     		}   	
     		Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
         	java.nio.file.Path outputPath = FileSystems.getDefault().getPath(config.getDirectory().getAbsolutePath(), destFileName);
+        	
+        	//Checks destination directory
+        	if (!FileUtil.isChildOfDirectory(outputPath.toFile(), config.getDirectory())) {
+        	    return getResponse(fallback, Status.FORBIDDEN, fileName, i18n(I18nKey.DROP_FILE_MISSING));
+        	}
+        	
             Files.copy(inputStream, outputPath);
         } catch (IOException e) {
         	logger.error("Can not copy file", e);

@@ -24,6 +24,7 @@ import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.contant.ResourceItem;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.service.IConfigurationService;
+import org.teknux.dropbitz.util.FileUtil;
 import org.teknux.dropbitz.util.Md5Util;
 import org.teknux.dropbitz.util.PathUtil;
 
@@ -63,12 +64,7 @@ public class ResourceController extends AbstractController {
             return Response.status(Status.UNAUTHORIZED).build();
         }
 
-        File file;
-        if (new File(resourcePath).isAbsolute()) {
-            file = new File(resourcePath);
-        } else {
-            file = new File(PathUtil.getJarDir(), resourcePath);
-        }
+        File file = FileUtil.getFile(PathUtil.getJarDir(), resourcePath);
 
         if (!file.exists()) {
             logger.warn("Resource [{}] don't exists", resource);
