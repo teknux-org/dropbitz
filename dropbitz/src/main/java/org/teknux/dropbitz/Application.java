@@ -118,7 +118,7 @@ public class Application {
             checkConfiguration(Application.configuration);
 
             logger.debug("Init Server...");
-            startJetty();
+            initServer();
 
         } catch (JoranException e) {
             logger.error("Logger error", e);
@@ -195,12 +195,12 @@ public class Application {
 	}
 
 	/**
-	 * Start Jetty Container
+	 * Init Jetty Container
 	 * 
 	 * @throws JettyBootstrapException
 	 *             on error
 	 */
-	protected void startJetty() throws JettyBootstrapException {
+	protected void initServer() throws JettyBootstrapException {
 		JettyConfiguration jettyConfiguration = new JettyConfiguration();
 		if (configuration.isSsl()) {
 			jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
