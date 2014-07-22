@@ -50,7 +50,8 @@ public class StartApplicationRule implements
 
 	protected void startIfRequired() {
 		if (application == null) {
-			application = new Application(null, false);
+			application = new Application(null);
+			application.start();
 		}
 	}
 
