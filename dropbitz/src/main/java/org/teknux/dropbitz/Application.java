@@ -129,9 +129,6 @@ public class Application {
         } catch (ConfigurationException | IllegalArgumentException e) {
             logger.error("Configuration file error", e);
             System.exit(EXIT_CODE_CONFIG_ERROR);
-        } catch (JettyBootstrapException e) {
-            logger.error("Internal Server Error", e);
-            System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
         }
     }
 
@@ -194,13 +191,10 @@ public class Application {
 
 	}
 
-	/**
-	 * Init Jetty Container
-	 * 
-	 * @throws JettyBootstrapException
-	 *             on error
-	 */
-	protected void initServer() throws JettyBootstrapException {
+    /**
+     * Init Jetty Container
+     */
+	protected void initServer() {
 		JettyConfiguration jettyConfiguration = new JettyConfiguration();
 		if (configuration.isSsl()) {
 			jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
