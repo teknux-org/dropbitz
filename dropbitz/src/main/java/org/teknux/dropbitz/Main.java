@@ -21,6 +21,7 @@ package org.teknux.dropbitz;
 public class Main {
 
 	public static void main(String[] args) {
-		new Application();
+		Application application = new Application();
+		application.start(true);
 	}
 }

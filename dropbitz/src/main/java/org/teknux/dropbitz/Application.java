@@ -59,42 +59,81 @@ public class Application {
 	private JettyBootstrap jettyBootstrap;
 
 	public Application() {
-		this(null, true);
+		this(null);
 	}
 
-	public Application(Configuration configuration, boolean join) {
-		try {
-			if (configuration == null) {
-				logger.debug("Loading application configuration...");
-				Application.configuration = loadConfiguration();
-			} else {
-				logger.debug("Using provided application configuration...");
-				Application.configuration = configuration;
-			}
-			
-			logger.debug("Init logger...");
-			initLogger(Application.configuration.isDebug());
-			
-			logger.debug("Validating application configuration...");
-			checkConfiguration(Application.configuration);
+	public Application(Configuration configuration) {
+	    Application.configuration = configuration;
+	}
+	
+	public void start() {
+        start(false);
+    }
+    
+    public void start(boolean join) {
+        if (jettyBootstrap == null) {
+            init();
+        }
+        
+        try {
+            logger.debug("Starting Application...");
+            jettyBootstrap.startServer(join);
+        } catch (JettyBootstrapException e) {
+            logger.error("Internal Server Error", e);
+            System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
+        }
+    }
+    
+    public void stop() {
+        if (!isStarted()) {
+            throw new IllegalArgumentException("Application is not started");
+        }
+        try {
+            logger.debug("Stopping Application...");
+            jettyBootstrap.stopServer();
+        } catch (JettyBootstrapException e) {
+            logger.error("Error while stopping application", e);
+        }
+    }
+    
+    public boolean isStarted() {
+        return jettyBootstrap != null && jettyBootstrap.isServerStarted();
+    }
+    
+    private void init() {
+        logger.debug("Init application...");
+        
+        try {
+            if (configuration == null) {
+                logger.debug("Loading application configuration...");
+                Application.configuration = loadConfiguration();
+            } else {
+                logger.debug("Using provided application configuration...");
+            }
+            
+            logger.debug("Init logger...");
+            initLogger(Application.configuration.isDebug());
+            
+            logger.debug("Validating application configuration...");
+            checkConfiguration(Application.configuration);
 
-			logger.debug("Starting Application...");
-			startApplication(join);
+            logger.debug("Init Server...");
+            startJetty();
 
-		} catch (JoranException e) {
-		    logger.error("Logger error", e);
+        } catch (JoranException e) {
+            logger.error("Logger error", e);
             System.exit(EXIT_CODE_LOGGER_ERROR);
         } catch (ConfigurationValidationException e) {
-			logger.error("Configuration validation error", e);
-			System.exit(EXIT_CODE_CONFIG_VALIDATION_ERROR);
-		} catch (ConfigurationException | IllegalArgumentException e) {
-			logger.error("Configuration file error", e);
-			System.exit(EXIT_CODE_CONFIG_ERROR);
-		} catch (JettyBootstrapException e) {
-			logger.error("Internal Server Error", e);
-			System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
-		}
-	}
+            logger.error("Configuration validation error", e);
+            System.exit(EXIT_CODE_CONFIG_VALIDATION_ERROR);
+        } catch (ConfigurationException | IllegalArgumentException e) {
+            logger.error("Configuration file error", e);
+            System.exit(EXIT_CODE_CONFIG_ERROR);
+        } catch (JettyBootstrapException e) {
+            logger.error("Internal Server Error", e);
+            System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
+        }
+    }
 
 	/**
 	 * Load configuration
@@ -161,7 +200,7 @@ public class Application {
 	 * @throws JettyBootstrapException
 	 *             on error
 	 */
-	protected void startApplication(boolean join) throws JettyBootstrapException {
+	protected void startJetty() throws JettyBootstrapException {
 		JettyConfiguration jettyConfiguration = new JettyConfiguration();
 		if (configuration.isSsl()) {
 			jettyConfiguration.setJettyConnectors(JettyConnector.HTTPS);
@@ -170,29 +209,10 @@ public class Application {
 			jettyConfiguration.setPort(configuration.getPort());
 		}
 		jettyBootstrap = new JettyBootstrap(jettyConfiguration);
-		jettyBootstrap.addSelf(configuration.getBasePath()).startServer(join);
+		jettyBootstrap.addSelf(configuration.getBasePath());
 	}
 
 	public static Configuration getConfiguration() {
 		return configuration;
-	}
-
-	public JettyBootstrap getJettyBootstrap() {
-		return jettyBootstrap;
-	}
-
-	public boolean isStarted() {
-	    return jettyBootstrap.isServerStarted();
-	}
-
-	public void stop() {
-		if (!isStarted()) {
-			throw new IllegalArgumentException("Application is not started");
-		}
-		try {
-			jettyBootstrap.stopServer();
-		} catch (JettyBootstrapException e) {
-			logger.error("Error while stopping application", e);
-		}
 	}
 }
