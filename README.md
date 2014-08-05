@@ -5,6 +5,8 @@ DropBitz - Community Edition
 
 Share files securely with your customers directly on your network !
 
+[ ![Download](https://api.bintray.com/packages/teknux/DropBitz-CE/Dropbitz/images/download.png) ](https://bintray.com/teknux/DropBitz-CE/Dropbitz/_latestVersion)
+
 ### Description
 
 DropBitz allows your customers to securely upload files in one drag&drop! No FTP, no complex infrastructure and security policy needed, nothing to install on client, only a secure web page access with a slick user interface. Works on any web browser with or without Javascript enabled.

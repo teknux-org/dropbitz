@@ -151,37 +151,52 @@ public class DropController extends AbstractController {
 		}
 	}
 	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName, String email) {
-	    Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
+	private void sendEmail(boolean success, String name, String fileName, String finalFileName, String email) {	    
+
+		DropEmailModel dropEmailModel = new DropEmailModel();
+		if (! email.isEmpty()) {
+		    dropEmailModel.setEmail(email);
+		}
+		dropEmailModel.setSuccess(success);
+		dropEmailModel.setFileName(fileName);
+		dropEmailModel.setFinalFileName(finalFileName);
+		
+		sendEmailToManager(success, name, dropEmailModel);
+		
+		if (! email.isEmpty()) {
+		    sendEmailToUploader(success, name, dropEmailModel, email);
+		}
+	}
+	
+	private void sendEmailToManager(boolean success, String name, DropEmailModel dropEmailModel) {
+	    IEmailService emailService = getServiceManager().getService(IEmailService.class);
 	    
-	    Locale locale = null;
-	    if (config.getEmailLang() != null) {
+	    Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
+        Locale locale = null;
+        if (config.getEmailLang() != null) {
             try {
                 locale = I18nUtil.getLocaleFromString(config.getEmailLang());
             } catch (I18nServiceException e) {
                 logger.warn("Bad email lang configuration property : [{}]", config.getEmailLang(), e);
             }
         }
-	    if (locale == null) {
+        if (locale == null) {
             locale = getHttpServletRequest().getLocale();
         }
-	    
-		DropEmailModel dropEmailModel = new DropEmailModel();
-		dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
-		if (! email.isEmpty()) {
-		    dropEmailModel.setEmail(email);
-		}
-		dropEmailModel.setFileName(fileName);
-		dropEmailModel.setFinalFileName(finalFileName);
-		dropEmailModel.setSuccess(success);
-		dropEmailModel.setLocale(locale);
-
-		IEmailService emailService = getServiceManager().getService(IEmailService.class);
-		
+        
+        dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
+        dropEmailModel.setLocale(locale);
         emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
-		
-		if (! email.isEmpty()) {
-		    emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", Arrays.asList(email));
-		}
 	}
+	
+	private void sendEmailToUploader(boolean success, String name, DropEmailModel dropEmailModel, String email) {
+	    IEmailService emailService = getServiceManager().getService(IEmailService.class);
+	    
+	    Locale locale = getHttpServletRequest().getLocale();
+	    
+        dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
+        dropEmailModel.setLocale(locale);
+        
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", Arrays.asList(email));
+    }
 }
