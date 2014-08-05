@@ -20,6 +20,7 @@
 #basePath=/dropbitz
 #secureId=
 directory=/tmp
+#tmp.directory=/tmp
 #port=8080
 #ssl=false
 #title=DropBitz

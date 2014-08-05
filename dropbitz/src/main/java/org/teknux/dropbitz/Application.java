@@ -18,6 +18,7 @@
 
 package org.teknux.dropbitz;
 
+import java.io.File;
 import java.net.URL;
 import java.text.MessageFormat;
 
@@ -74,6 +75,9 @@ public class Application {
 			
 			logger.debug("Init logger...");
 			initLogger(Application.configuration.isDebug());
+
+            logger.debug("Init Temporary Directory...");
+            initTempDirectory();
 			
 			logger.debug("Validating application configuration...");
 			checkConfiguration(Application.configuration);
@@ -95,6 +99,15 @@ public class Application {
 			System.exit(EXIT_CODE_JETTY_STARTUP_ERROR);
 		}
 	}
+
+    /**
+     * Initialize the application temporary directory.
+     */
+    private void initTempDirectory() {
+        if (getConfiguration().getTemporaryDirectory() != null) {
+            System.setProperty("java.io.tmpdir", getConfiguration().getTemporaryDirectory().getPath());
+        }
+    }
 
 	/**
 	 * Load configuration
@@ -153,6 +166,9 @@ public class Application {
 			throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configuration.getDirectory().getPath()));
 		}
 
+        if (configuration.getTemporaryDirectory() != null && (!configuration.getTemporaryDirectory().isDirectory() || !configuration.getTemporaryDirectory().canWrite() )) {
+            throw new ConfigurationValidationException(MessageFormat.format("Can not write into Temporary Directory : [{0}]", configuration.getTemporaryDirectory().getPath()));
+        }
 	}
 
 	/**
