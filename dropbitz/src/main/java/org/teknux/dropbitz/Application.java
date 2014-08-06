@@ -113,11 +113,11 @@ public class Application {
             logger.debug("Init logger...");
             initLogger(Application.configuration.isDebug());
 
-            logger.debug("Init Temporary Directory...");
-            initTempDirectory();
-
             logger.debug("Validating application configuration...");
             checkConfiguration(Application.configuration);
+
+            logger.debug("Init Temporary Directory...");
+            initTempDirectory();
 
             logger.debug("Init Server...");
             initServer();
