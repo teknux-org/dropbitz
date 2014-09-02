@@ -18,31 +18,34 @@
 
 package org.teknux.dropbitz.controller;
 
-import java.net.URISyntaxException;
-
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.teknux.dropbitz.contant.I18nKey;
 import org.teknux.dropbitz.contant.Route;
 import org.teknux.dropbitz.freemarker.View;
 import org.teknux.dropbitz.model.Message.Type;
 import org.teknux.dropbitz.provider.Authenticated;
+import org.teknux.dropbitz.provider.AuthenticationFilter;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
+
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.net.URISyntaxException;
+
 
 @Path(Route.INDEX)
 public class MainController extends AbstractController {
-	
+
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
 	private AuthenticationHelper authenticationHelper;
 
-    public MainController() {
-        authenticationHelper = new AuthenticationHelper();
-    }
+	public MainController() {
+		authenticationHelper = new AuthenticationHelper();
+	}
 
 	@GET
 	@Authenticated
@@ -50,48 +53,53 @@ public class MainController extends AbstractController {
 		return Response.seeOther(uri(Route.DROP)).build();
 	}
 
-    @GET
-    @Path(Route.LOGOUT)
-    public Response logout() throws URISyntaxException {
-        authenticationHelper.logout(getHttpServletRequest());
-        
-        //If authorized, redirect to index page, else redirect to auth page
-        if (getAuth().isAuthorized()) {
-            return Response.seeOther(uri(Route.INDEX)).build();
-        } else {
-            return Response.seeOther(uri(Route.AUTH)).build();
-        }
-    }
-	
+	@GET
+	@Path(Route.LOGOUT)
+	public Response logout() throws URISyntaxException {
+		authenticationHelper.logout(getHttpServletRequest());
+
+		//If authorized, redirect to index page, else redirect to auth page
+		if (getAuth().isAuthorized()) {
+			return Response.seeOther(uri(Route.INDEX)).build();
+		} else {
+			return Response.seeOther(uri(Route.AUTH)).build();
+		}
+	}
+
 	@GET
 	@Path(Route.AUTH)
-    public Response auth() throws URISyntaxException {
-        //If authorized, we don't need to login
-        if (getAuth().isAuthorized()) {
-	        return Response.seeOther(uri(Route.INDEX)).build();
-	    }
-	    
-	    Status status = Status.OK;
-	    
-        String errorMessage = (String) getSession().getAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
-        if (errorMessage != null) {
-            getSession().removeAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE);
-            
-            status = Status.FORBIDDEN;
-            addMessage(errorMessage, Type.DANGER);
-        }      
-	    
-        return Response.status(status).entity(viewable(View.AUTH)).build();
-    }
-	
+	public Response getAuthentication(@DefaultValue("") @QueryParam("secureId") final String secureId) throws URISyntaxException {
+		// if already logged, redirect to index page
+		if (AuthenticationHelper.isAuthenticated(getHttpServletRequest())) {
+			return Response.seeOther(uri(Route.INDEX)).build();
+		}
+
+		// user provided an upload secure id to upload it's files
+		if (secureId != null) {
+			return postAuthentication(secureId);
+		}
+
+		// show the code login
+		Status status = Status.OK;
+		String errorMessage = (String) getSession().getAttribute(AuthenticationFilter.SESSION_ATTRIBUTE_ERROR_MESSAGE);
+		if (errorMessage != null) {
+			getSession().removeAttribute(AuthenticationFilter.SESSION_ATTRIBUTE_ERROR_MESSAGE);
+
+			status = Status.FORBIDDEN;
+			addMessage(errorMessage, Type.DANGER);
+		}
+
+		return Response.status(status).entity(viewable(View.AUTH)).build();
+	}
+
 	@POST
 	@Path(Route.AUTH)
-    public Response authenticate(@FormParam("secureId") final String secureId) throws URISyntaxException {	    
-		if (! authenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
-			getSession().setAttribute(SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
+	public Response postAuthentication(@FormParam("secureId") final String secureId) throws URISyntaxException {
+		if (!AuthenticationHelper.authenticate(getHttpServletRequest(), secureId)) {
+			getSession().setAttribute(AuthenticationFilter.SESSION_ATTRIBUTE_ERROR_MESSAGE, i18n(I18nKey.AUTH_SECUREID_ERROR));
 			return Response.seeOther(uri(Route.AUTH)).build();
 		}
 
 		return Response.seeOther(uri(Route.INDEX)).build();
-    }
+	}
 }

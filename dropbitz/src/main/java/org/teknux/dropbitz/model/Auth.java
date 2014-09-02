@@ -23,15 +23,20 @@ package org.teknux.dropbitz.model;
  */
 public class Auth {
 
-    private boolean isLogged;
+	private String code;
     private boolean isAuthorized;
 
-    public boolean isLogged() {
-        return isLogged;
-    }
+	public Auth(String code) {
+		this();
+		this.code = code;
+	}
 
-    public void setLogged(boolean isLogged) {
-        this.isLogged = isLogged;
+	public Auth() {
+		super();
+	}
+
+	public boolean isLogged() {
+        return code != null;
     }
 
     public boolean isAuthorized() {

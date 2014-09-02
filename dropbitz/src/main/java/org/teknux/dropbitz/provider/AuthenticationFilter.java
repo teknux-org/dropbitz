@@ -18,7 +18,9 @@
 
 package org.teknux.dropbitz.provider;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teknux.dropbitz.contant.Route;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -27,11 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
+import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.teknux.dropbitz.contant.Route;
-import org.teknux.dropbitz.controller.MainController;
 
 /**
  * Custom authentication filter used to control decorated Jax-RS resource with @Authenticated annotation.
@@ -41,43 +40,39 @@ import org.teknux.dropbitz.controller.MainController;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
-	
+
 	public static final String FORBIDDEN_ERROR_MESSAGE = "You don't have authorisation. Thank you to authenticate";
-		
+	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
+
 	@Inject
 	private ServletContext servletContext;
-	
-    @Context
-    private HttpServletRequest httpServletRequest;
-    
-    @Context  
-    private HttpServletResponse httpServletResponse;
 
-    private AuthenticationHelper authenticationHelper;
+	@Context
+	private HttpServletRequest httpServletRequest;
 
-    public AuthenticationFilter(AuthenticationHelper helper) {
-        authenticationHelper = helper;
-    }
+	@Context
+	private HttpServletResponse httpServletResponse;
 
-    public AuthenticationFilter() {
-        this(new AuthenticationHelper());
-    }
+	@Override
+	public void filter(ContainerRequestContext containerRequestContext) throws IOException {
+		final String requestPath = "/" + containerRequestContext.getUriInfo().getPath();
+		logger.trace("Request on URI [{}]...", requestPath);
 
-    @Override
-    public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-    	logger.trace("Request on URI [{}]...", containerRequestContext.getUriInfo().getPath());
+		if (requestPath.startsWith(Route.AUTH)) {
+			return; // already on auth page no more work to do here
+		}
 
-    	//Check if authenticated
-        if (!authenticationHelper.getAuth(httpServletRequest).isAuthorized()) {
-        	logger.debug("Not authenticate, redirect to auth view...");
-        	
-        	//If page is different to root page, set error message
-        	if (! containerRequestContext.getUriInfo().getPath().isEmpty()) {
-        	    httpServletRequest.getSession().setAttribute(MainController.SESSION_ATTRIBUTE_ERROR_MESSAGE, FORBIDDEN_ERROR_MESSAGE);
-        	}
-        	
-        	//Redirect to auth page
-    	    httpServletResponse.sendRedirect(servletContext.getContextPath() + Route.AUTH);
-        }
-    }
+		// check if authenticated
+		if (!AuthenticationHelper.isAuthenticated(httpServletRequest)) {
+			logger.debug("User is not authenticated, redirecting to authentication page...");
+
+			// store the URL the user is coming from
+			AuthenticationHelper.setRefererUrl(httpServletRequest, requestPath);
+			logger.trace("Storing referer URL {}", requestPath);
+
+			// when page is different than root page, set error message
+			httpServletRequest.getSession().setAttribute(AuthenticationFilter.SESSION_ATTRIBUTE_ERROR_MESSAGE, FORBIDDEN_ERROR_MESSAGE);
+			httpServletResponse.sendRedirect(servletContext.getContextPath() + Route.AUTH);// redirect to code authentication page
+		}
+	}
 }

@@ -159,22 +159,22 @@ public class FreemarkerTest {
 
         //test 1
         when(configuration.getSecureId()).thenReturn("");
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(Boolean.FALSE);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER)).thenReturn(Boolean.FALSE);
         Assert.assertEquals("false|true", resolve(view, null));
 
         //test 2
         when(configuration.getSecureId()).thenReturn("");
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(Boolean.TRUE);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER)).thenReturn(Boolean.TRUE);
         Assert.assertEquals("true|true", resolve(view, null));
 
         //test 3
         when(configuration.getSecureId()).thenReturn("123");
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(Boolean.FALSE);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER)).thenReturn(Boolean.FALSE);
         Assert.assertEquals("false|false", resolve(view, null));
 
         //test 4
         when(configuration.getSecureId()).thenReturn("123");
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(Boolean.TRUE);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER)).thenReturn(Boolean.TRUE);
         Assert.assertEquals("true|true", resolve(view, null));
     }
 }

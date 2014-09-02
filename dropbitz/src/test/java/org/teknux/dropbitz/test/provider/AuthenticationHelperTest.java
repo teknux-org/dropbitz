@@ -52,7 +52,7 @@ public class AuthenticationHelperTest {
 
     private void setup(Boolean isSecured, String secureId) {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED)).thenReturn(isSecured);
+        when(session.getAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER)).thenReturn(isSecured);
 
         ServletContext servletContext = mock(ServletContext.class);
         when(request.getServletContext()).thenReturn(servletContext);
@@ -73,19 +73,19 @@ public class AuthenticationHelperTest {
 
         setup(true, "123");
         Assert.assertTrue(authenticationHelper.authenticate(request, "123"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER, Boolean.TRUE);
 
         setup(true, "123");
         Assert.assertFalse(authenticationHelper.authenticate(request, "321"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.FALSE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER, Boolean.FALSE);
 
         setup(true, "");
         Assert.assertTrue(authenticationHelper.authenticate(request, "123"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER, Boolean.TRUE);
 
         setup(true, "");
         Assert.assertTrue(authenticationHelper.authenticate(request, "321"));
-        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED, Boolean.TRUE);
+        verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER, Boolean.TRUE);
     }
 
     public void testIsAuthorized() {
@@ -120,6 +120,6 @@ public class AuthenticationHelperTest {
 
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
         authenticationHelper.logout(request);
-        verify(session).removeAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_IS_LOGGED);
+        verify(session).removeAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER);
     }
 }

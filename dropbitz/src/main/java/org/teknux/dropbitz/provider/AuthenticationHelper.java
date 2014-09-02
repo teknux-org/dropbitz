@@ -36,43 +36,72 @@ public class AuthenticationHelper {
 
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationHelper.class);
 
-	public static final String SESSION_ATTRIBUTE_IS_LOGGED = "IS_LOGGED";
-	
-	public Auth getAuth(HttpServletRequest request) {
-	    final String securityID = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
-	    
-	    HttpSession session = request.getSession();
-	    Object isLoggedSession = session.getAttribute(SESSION_ATTRIBUTE_IS_LOGGED);
-	    boolean isLogged = false;
-	    if (isLoggedSession != null && isLoggedSession instanceof Boolean) {
-	        isLogged = (boolean) isLoggedSession;
-	    }
-	    boolean isAuthorized = isLogged || securityID.isEmpty();
-	    
-	    Auth auth = new Auth();
-	    auth.setLogged(isLogged);
-	    auth.setAuthorized(isAuthorized);
-	    
-	    return auth;
+	private static final String SESSION_ATTRIBUTE_PREFIX = "DropBitz-";
+	public static final String SESSION_ATTRIBUTE_USER = SESSION_ATTRIBUTE_PREFIX + "USER";
+	public static final String SESSION_ATTRIBUTE_REFERER = SESSION_ATTRIBUTE_PREFIX + "REFURL";
+
+	public static final String getUserFromSession(final HttpServletRequest request) {
+		return (String) request.getSession().getAttribute(SESSION_ATTRIBUTE_USER);
 	}
-	
-	public boolean authenticate(HttpServletRequest request, String secureId) {
-		logger.trace("Try to authenticate...");
 
-		final String securityID = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
-		final boolean isLogged = Objects.equals(securityID, secureId);
-		request.getSession().setAttribute(SESSION_ATTRIBUTE_IS_LOGGED, isLogged);
+	public static Auth getAuth(final HttpServletRequest request) {
+		return new Auth(getUserFromSession(request));
+	}
 
-		if (isLogged) {
-			logger.debug("Authentication success");
-		} else {
-			logger.warn("Authentication failed");
+	public static boolean isAuthenticated(final HttpServletRequest request) {
+		String user = getUserFromSession(request);
+		if (user == null) {
+			return false;
 		}
-		return isLogged;
+
+		return true;
 	}
 
-    public void logout(HttpServletRequest request) {
-        request.getSession().removeAttribute(SESSION_ATTRIBUTE_IS_LOGGED);
+	public static boolean authenticate(final HttpServletRequest request, final String secureId) {
+		Objects.requireNonNull(request);
+		Objects.requireNonNull(secureId);
+
+		final String storedSecureId = ServiceManager.get(request.getServletContext()).getService(IConfigurationService.class).getConfiguration().getSecureId();
+		if (!Objects.equals(storedSecureId, secureId)) {
+			logger.warn("Authentication failed for code {}", secureId);
+			return false;
+		}
+
+		request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, secureId);
+		logger.debug("Authentication by code successful for {}", secureId);
+
+		return true;
+	}
+
+    public static void logout(final HttpServletRequest request) {
+        request.getSession().removeAttribute(SESSION_ATTRIBUTE_USER);
         logger.trace("Logout success");
     }
+
+	/**
+	 * Store a the original URL the user came from in the session.
+	 *
+	 * @param request
+	 *            the http request
+	 * @param url
+	 *            the url to store in the session
+	 */
+	public static void setRefererUrl(final HttpServletRequest request, final String url) {
+		Objects.requireNonNull(request).getSession().setAttribute(SESSION_ATTRIBUTE_REFERER, url);
+	}
+
+	/**
+	 * Get the original URL the user came from. Calling this method will remove the previously stored URL from the
+	 * session.
+	 *
+	 * @param request
+	 *            the http request
+	 * @return <code>null</code> if no url were stored, or the URL path.
+	 */
+	public static String getRefererUrl(final HttpServletRequest request) {
+		final HttpSession session = Objects.requireNonNull(request).getSession();
+		final String referer = (String) session.getAttribute(SESSION_ATTRIBUTE_REFERER);
+		session.removeAttribute(SESSION_ATTRIBUTE_REFERER);
+		return referer;
+	}
 }
