@@ -101,8 +101,4 @@ public interface Configuration {
 	@Config("email.lang")
     @DefaultNull
     String getEmailLang();
-
-    @Config("tmp.directory")
-    @DefaultNull
-    File getTemporaryDirectory();
 }

@@ -116,9 +116,6 @@ public class Application {
             logger.debug("Validating application configuration...");
             checkConfiguration(Application.configuration);
 
-            logger.debug("Init Temporary Directory...");
-            initTempDirectory();
-
             logger.debug("Init Server...");
             initServer();
 
@@ -179,15 +176,6 @@ public class Application {
     }
 
     /**
-     * Initialize the application temporary directory.
-     */
-    private void initTempDirectory() {
-        if (getConfiguration().getTemporaryDirectory() != null) {
-            System.setProperty("java.io.tmpdir", getConfiguration().getTemporaryDirectory().getPath());
-        }
-    }
-
-    /**
      * Check configuration
      *
      * @param configuration
@@ -198,10 +186,6 @@ public class Application {
     protected void checkConfiguration(Configuration configuration) throws ConfigurationValidationException {
         if (!configuration.getDirectory().isDirectory() || !configuration.getDirectory().canWrite()) {
             throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configuration.getDirectory().getPath()));
-        }
-
-        if (configuration.getTemporaryDirectory() != null && (!configuration.getTemporaryDirectory().isDirectory() || !configuration.getTemporaryDirectory().canWrite() )) {
-            throw new ConfigurationValidationException(MessageFormat.format("Can not write into Temporary Directory : [{0}]", configuration.getTemporaryDirectory().getPath()));
         }
     }
 
