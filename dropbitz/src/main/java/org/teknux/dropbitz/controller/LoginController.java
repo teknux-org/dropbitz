@@ -38,32 +38,26 @@ import java.net.URISyntaxException;
 
 
 @Path(Route.INDEX)
-public class MainController extends AbstractController {
+public class LoginController extends AbstractController {
 
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
 	private AuthenticationHelper authenticationHelper;
 
-	public MainController() {
+	public LoginController() {
 		authenticationHelper = new AuthenticationHelper();
 	}
 
 	@GET
 	@Authenticated
 	public Response index() throws URISyntaxException {
-		return Response.seeOther(uri(Route.DROP)).build();
+		return Response.seeOther(uri(Route.UPLOAD)).build();
 	}
 
 	@GET
 	@Path(Route.LOGOUT)
 	public Response logout() throws URISyntaxException {
 		authenticationHelper.logout(getHttpServletRequest());
-
-		//If authorized, redirect to index page, else redirect to auth page
-		if (getAuth().isAuthorized()) {
-			return Response.seeOther(uri(Route.INDEX)).build();
-		} else {
-			return Response.seeOther(uri(Route.AUTH)).build();
-		}
+		return Response.seeOther(uri(Route.INDEX)).build();
 	}
 
 	@GET
@@ -75,7 +69,7 @@ public class MainController extends AbstractController {
 		}
 
 		// user provided an upload secure id to upload it's files
-		if (secureId != null) {
+		if (secureId != null && !secureId.isEmpty()) {
 			return postAuthentication(secureId);
 		}
 

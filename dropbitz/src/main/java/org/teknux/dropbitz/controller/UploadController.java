@@ -59,10 +59,10 @@ import org.teknux.dropbitz.service.email.IEmailService;
 import org.teknux.dropbitz.util.FileUtil;
 import org.teknux.dropbitz.util.I18nUtil;
 
-@Path(Route.DROP)
-public class DropController extends AbstractController {
+@Path(Route.UPLOAD)
+public class UploadController extends AbstractController {
 
-	private final Logger logger = LoggerFactory.getLogger(DropController.class);
+	private final Logger logger = LoggerFactory.getLogger(UploadController.class);
 	
 	private final static String DROPZONE_ERROR_ATTRIBUTE = "error";
 	
