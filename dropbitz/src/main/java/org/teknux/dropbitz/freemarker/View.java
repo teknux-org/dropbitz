@@ -21,8 +21,8 @@ package org.teknux.dropbitz.freemarker;
 public enum View {
     AUTH("/main/auth"),
     ADMIN("/admin/admin"),
-    DROP("/drop/drop"),
-    FALLBACK("/drop/fallback");
+    UPLOAD("/upload/upload"),
+    FALLBACK("/upload/fallback");
     
     private String templateName;
 

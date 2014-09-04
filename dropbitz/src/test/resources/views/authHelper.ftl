@@ -1,1 +1,1 @@
-${auth().isLogged()?c}|${auth().isAuthorized()?c}
+${auth().isLogged()?c}

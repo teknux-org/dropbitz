@@ -88,16 +88,6 @@ public class AuthenticationHelperTest {
         verify(session).setAttribute(AuthenticationHelper.SESSION_ATTRIBUTE_USER, Boolean.TRUE);
     }
 
-    public void testIsAuthorized() {
-        AuthenticationHelper authenticationHelper = new AuthenticationHelper();
-
-        setup(false, "123");
-        Assert.assertFalse(authenticationHelper.getAuth(request).isAuthorized());
-
-        setup(true, "123");
-        Assert.assertTrue(authenticationHelper.getAuth(request).isAuthorized());
-    }
-
     public void testIsLogged() {
         AuthenticationHelper authenticationHelper = new AuthenticationHelper();
 

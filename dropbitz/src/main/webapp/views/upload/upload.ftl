@@ -8,7 +8,7 @@
 
     <div class="container">
 
-        <form  id="drop-file-area" method="post" action="${url(route.DROP)}" enctype="multipart/form-data">
+        <form  id="drop-file-area" method="post" action="${url(route.UPLOAD)}" enctype="multipart/form-data">
 
             <div class="control-group">
                 <label>${i18n(i18nKey.DROP_NAME_LABEL)}</label>

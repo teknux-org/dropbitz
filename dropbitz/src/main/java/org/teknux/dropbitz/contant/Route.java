@@ -22,7 +22,7 @@ public interface Route {
     String INDEX = "/";
     String AUTH = "/auth";
     String LOGOUT = "/logout";
-    String DROP = "/drop";
+    String UPLOAD = "/upload";
     String RESOURCE = "/resource";
     String RESOURCE_LOGO = "/resource/" + ResourceItem.LOGO;
     String RESOURCE_ICON = "/resource/" + ResourceItem.ICON;

@@ -73,7 +73,7 @@ public class UploadController extends AbstractController {
     @GET
     @Authenticated
     public Viewable index() {
-        return viewable(View.DROP);
+        return viewable(View.UPLOAD);
     }
 	
 	@POST
@@ -186,7 +186,7 @@ public class UploadController extends AbstractController {
         
         dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
         dropEmailModel.setLocale(locale);
-        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/upload", dropEmailModel, "/dropalt");
 	}
 	
 	private void sendEmailToUploader(boolean success, String name, DropEmailModel dropEmailModel, String email) {
@@ -197,6 +197,6 @@ public class UploadController extends AbstractController {
         dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
         dropEmailModel.setLocale(locale);
         
-        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", Arrays.asList(email));
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/upload", dropEmailModel, "/dropalt", Arrays.asList(email));
     }
 }
