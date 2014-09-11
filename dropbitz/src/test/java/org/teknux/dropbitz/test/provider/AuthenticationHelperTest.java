@@ -36,7 +36,7 @@ import org.teknux.dropbitz.config.Configuration;
 import org.teknux.dropbitz.provider.AuthenticationHelper;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.IServiceManager;
-import org.teknux.dropbitz.util.DropBitzServlet;
+import org.teknux.dropbitz.DropBitzServlet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationHelperTest {

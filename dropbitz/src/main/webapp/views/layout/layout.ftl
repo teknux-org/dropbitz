@@ -1,4 +1,5 @@
 <#macro layout>
+    <#escape x as x?html>
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -43,4 +44,5 @@
 		    </div>
 		</body>
 	</html>
+    </#escape>
 </#macro>

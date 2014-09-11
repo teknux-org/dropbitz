@@ -51,7 +51,7 @@ import org.teknux.dropbitz.service.I18nService;
 import org.teknux.dropbitz.service.IConfigurationService;
 import org.teknux.dropbitz.service.II18nService;
 import org.teknux.dropbitz.service.IServiceManager;
-import org.teknux.dropbitz.util.DropBitzServlet;
+import org.teknux.dropbitz.DropBitzServlet;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

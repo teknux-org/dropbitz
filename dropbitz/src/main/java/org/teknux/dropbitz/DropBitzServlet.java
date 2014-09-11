@@ -16,7 +16,7 @@
  * along with dropbitz Community Source Code.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.teknux.dropbitz.util;
+package org.teknux.dropbitz;
 
 import java.util.Objects;
 

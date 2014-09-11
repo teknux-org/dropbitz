@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.teknux.dropbitz.exception.ServiceException;
 import org.teknux.dropbitz.service.email.EmailService;
 import org.teknux.dropbitz.service.email.IEmailService;
-import org.teknux.dropbitz.util.DropBitzServlet;
+import org.teknux.dropbitz.DropBitzServlet;
 
 
 /**

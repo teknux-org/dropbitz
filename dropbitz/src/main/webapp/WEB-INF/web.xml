@@ -24,7 +24,7 @@
    
 	<filter>
 		<filter-name>default</filter-name>
-		<filter-class>org.teknux.dropbitz.util.DropBitzServlet</filter-class>
+		<filter-class>org.teknux.dropbitz.DropBitzServlet</filter-class>
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
 			<param-value>org.teknux.dropbitz.controller;org.teknux.dropbitz.provider</param-value>
