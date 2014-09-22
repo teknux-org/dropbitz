@@ -17,68 +17,26 @@
 				<tr>
 					<td>
 						<div style="padding:2px">
-							<table cellpadding="0" cellspacing="0" border="0">
-								<tr>
-									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n(i18nKey.DROP_EMAIL_NAME)}
-									</td>
-									<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
-										${model.name}
-									</td>
-								</tr>
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <@entry name="${i18n(i18nKey.DROP_EMAIL_NAME)}" value="${model.name}" />
 								<#if model.email??>
-									<tr>
-										<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-											${i18n(i18nKey.DROP_EMAIL_EMAIL)}
-										</td>
-										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
-											${model.email}
-										</td>
-									</tr>
+                                    <@entry name="${i18n(i18nKey.DROP_EMAIL_EMAIL)}" value="${model.email}" />
 								</#if>
-								<tr>
-									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n(i18nKey.DROP_EMAIL_FILENAME_ORIGIN)}
-									</td>
-									<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
-										${model.fileName}
-									</td>
-								</tr>
+                                <@entry name="${i18n(i18nKey.DROP_EMAIL_FILENAME_ORIGIN)}" value="${model.fileName}" />
 								<#if model.finalFileName??>
-									<tr>
-										<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-											${i18n(i18nKey.DROP_EMAIL_FILENAME_FINAL)}
-										</td>
-										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
-											${model.finalFileName}
-										</td>
-									</tr>
+                                    <@entry name="${i18n(i18nKey.DROP_EMAIL_FILENAME_FINAL)}" value="${model.finalFileName}" />
 								</#if>
                                 <#if model.success>
-                                    <tr>
-                                        <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-                                        ${i18n(i18nKey.DROP_EMAIL_FILE_LENGHT)}
-                                        </td>
-                                        <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
-                                            <@utils.readableFileSize size=model.fileLength/>
-                                        </td>
-                                    </tr>
+                                    <#global fileSize>
+                                        <@utils.readableFileSize size=model.fileLength/>
+                                    </#global>
+                                    <@entry name="${i18n(i18nKey.DROP_EMAIL_FILE_LENGHT)}" value="${fileSize}" />
                                 </#if>
-								<tr>
-									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
-										${i18n(i18nKey.DROP_EMAIL_STATUS)}
-									</td>
-									<#if model.success>
-										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#2CA255;font-weight:bold" valign="top">
-											${i18n(i18nKey.DROP_EMAIL_STATUS_OK)}
-										</td>
-									<#else>
-										<td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#E92F21;font-weight:bold" valign="top">
-											${i18n(i18nKey.DROP_EMAIL_STATUS_ERROR)}
-										</td>
-									</#if>
-									</td>
-								</tr>
+                                <#if model.success>
+                                    <@entry name="${i18n(i18nKey.DROP_EMAIL_STATUS)}" value="${i18n(i18nKey.DROP_EMAIL_STATUS_OK)}" />
+                                <#else>
+                                    <@entry name="${i18n(i18nKey.DROP_EMAIL_STATUS)}" value="${i18n(i18nKey.DROP_EMAIL_STATUS_ERROR)}" />
+                                </#if>
 							</table>
 						</div>
 					</td>
@@ -87,3 +45,14 @@
 		</div>
 	</body>
 </html>
+
+<#macro entry name value>
+<tr>
+    <td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
+        ${name}
+    </td>
+    <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
+        ${value}
+    </td>
+</tr>
+</#macro>
