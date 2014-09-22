@@ -18,21 +18,35 @@
 
 package org.teknux.dropbitz.model.view;
 
-public class DropEmailModel extends Model{
-	public String name;
-	public String email;
-	public String fileName;
-	public String finalFileName;
-	public boolean success;
+public class DropEmailModel extends Model {
 
-	public String getName() {
-		return name;
-	}
+    private String name;
+    private String email;
+    private String fileName;
+    private String finalFileName;
+    private long fileLength;
+    private boolean success;
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+    public DropEmailModel(String fileName, String finalFileName, long fileLength, boolean success) {
+        this();
+        this.fileName = fileName;
+        this.finalFileName = finalFileName;
+        this.fileLength = fileLength;
+        this.success = success;
+    }
+
+    public DropEmailModel() {
+        super();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -41,27 +55,35 @@ public class DropEmailModel extends Model{
         this.email = email;
     }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public String getFinalFileName() {
-		return finalFileName;
-	}
+    public String getFinalFileName() {
+        return finalFileName;
+    }
 
-	public void setFinalFileName(String finalFileName) {
-		this.finalFileName = finalFileName;
-	}
+    public void setFinalFileName(String finalFileName) {
+        this.finalFileName = finalFileName;
+    }
 
-	public boolean isSuccess() {
-		return success;
-	}
+    public long getFileLength() {
+        return fileLength;
+    }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+    public void setFileLength(long fileLength) {
+        this.fileLength = fileLength;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 }

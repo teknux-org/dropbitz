@@ -119,15 +119,15 @@ public class UploadController extends AbstractController {
         	}
         	
             Files.copy(inputStream, outputPath);
+
+            long fileSize = outputPath.toFile().length();
+            sendEmail(true, name, fileName, destFileName, fileSize, email);
         } catch (IOException e) {
         	logger.error("Can not copy file", e);
-        
-            sendEmail(false, name, fileName, null, email);
-        	
+
+            sendEmail(false, name, fileName, null, 0L, email);
         	return getResponse(fallback, Status.INTERNAL_SERVER_ERROR, fileName, i18n(I18nKey.DROP_FILE_ERROR));
         }
-        
-        sendEmail(true, name, fileName, destFileName, email);
         
         return getResponse(fallback, Status.OK, fileName, null);
     }
@@ -150,25 +150,22 @@ public class UploadController extends AbstractController {
 		    return Response.status(status.getStatusCode()).entity(map).build();	
 		}
 	}
-	
-	private void sendEmail(boolean success, String name, String fileName, String finalFileName, String email) {	    
 
-		DropEmailModel dropEmailModel = new DropEmailModel();
-		if (! email.isEmpty()) {
-		    dropEmailModel.setEmail(email);
-		}
-		dropEmailModel.setSuccess(success);
-		dropEmailModel.setFileName(fileName);
-		dropEmailModel.setFinalFileName(finalFileName);
-		
-		sendEmailToManager(success, name, dropEmailModel);
-		
-		if (! email.isEmpty()) {
-		    sendEmailToUploader(success, name, dropEmailModel, email);
-		}
-	}
-	
-	private void sendEmailToManager(boolean success, String name, DropEmailModel dropEmailModel) {
+    private void sendEmail(boolean success, String name, String fileName, String finalFileName, long fileSize, String email) {
+        DropEmailModel dropEmailModel = new DropEmailModel(fileName, finalFileName, fileSize, success);
+
+        dropEmailModel.setName(name);
+        if (email != null && !email.isEmpty()) {
+            dropEmailModel.setEmail(email);
+        }
+
+        sendEmailToManager(success, name, dropEmailModel);
+        if (email != null && !email.isEmpty()) {
+            sendEmailToUploader(success, name, dropEmailModel, email);
+        }
+    }
+
+    private void sendEmailToManager(boolean success, String name, DropEmailModel dropEmailModel) {
 	    IEmailService emailService = getServiceManager().getService(IEmailService.class);
 	    
 	    Configuration config = getServiceManager().getService(IConfigurationService.class).getConfiguration();
@@ -186,7 +183,7 @@ public class UploadController extends AbstractController {
         
         dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
         dropEmailModel.setLocale(locale);
-        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/upload", dropEmailModel, "/dropalt");
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt");
 	}
 	
 	private void sendEmailToUploader(boolean success, String name, DropEmailModel dropEmailModel, String email) {
@@ -197,6 +194,6 @@ public class UploadController extends AbstractController {
         dropEmailModel.setName(name.isEmpty()?i18n(I18nKey.DROP_EMAIL_NAME_UNKNOWN, locale):name);
         dropEmailModel.setLocale(locale);
         
-        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/upload", dropEmailModel, "/dropalt", Arrays.asList(email));
+        emailService.sendEmail(i18n(success?I18nKey.DROP_EMAIL_SUBJECT_OK:I18nKey.DROP_EMAIL_SUBJECT_ERROR, locale), "/drop", dropEmailModel, "/dropalt", Arrays.asList(email));
     }
 }

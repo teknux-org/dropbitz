@@ -1,3 +1,5 @@
+<#import "../lib/utils.ftl" as utils>
+
 ${i18n(i18nKey.DROP_EMAIL_INFO)}
 
 - ${i18n(i18nKey.DROP_EMAIL_NAME)} : ${model.name}
@@ -9,6 +11,7 @@ ${i18n(i18nKey.DROP_EMAIL_INFO)}
 - ${i18n(i18nKey.DROP_EMAIL_FILENAME_FINAL)} : ${model.finalFileName}
 </#if>
 <#if model.success>
+- ${i18n(i18nKey.DROP_EMAIL_FILE_LENGHT)} : <@utils.readableFileSize size=model.fileLength/>
 - ${i18n(i18nKey.DROP_EMAIL_STATUS)} : ${i18n(i18nKey.DROP_EMAIL_STATUS_OK)}
 <#else>
 - ${i18n(i18nKey.DROP_EMAIL_STATUS)} : ${i18n(i18nKey.DROP_EMAIL_STATUS_ERROR)}

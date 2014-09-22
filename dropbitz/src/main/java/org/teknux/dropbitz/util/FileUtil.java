@@ -20,9 +20,14 @@ package org.teknux.dropbitz.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class FileUtil {
+
+    private static final int ONE_KILOBYTE_IN_BYTE = 1024;
+    private static final String[] FILE_SIZE_UNITS = new String[] { "B", "KiB", "MiB", "GiB", "TiB" };
+    private static final DecimalFormat FILE_SIZE_FORMAT = new DecimalFormat("#,##0.#");
 
     /**
      * Get file from Absolute or Relative Path
@@ -53,5 +58,23 @@ public class FileUtil {
         }
 
         return file.getCanonicalPath().startsWith(directory.getCanonicalPath() + File.separator);
+    }
+
+    /**
+     * Utility method to format a given size in Byte to a human readable format.
+     * 1 ==> "1 B";
+     * 1024 ==> "1 KiB";
+     * 2537253 ==> "2.3 MiB"
+     *
+     * @param sizeInByte
+     * @return
+     */
+    public static String formatSize(long sizeInByte) {
+        if (sizeInByte <= 0) {
+            return "0";
+        }
+
+        final int digitGroups = (int) (Math.log10(sizeInByte) / Math.log10(ONE_KILOBYTE_IN_BYTE));
+        return FILE_SIZE_FORMAT.format(sizeInByte / Math.pow(ONE_KILOBYTE_IN_BYTE, digitGroups)) + " " + FILE_SIZE_UNITS[digitGroups];
     }
 }

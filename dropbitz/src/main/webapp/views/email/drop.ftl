@@ -1,3 +1,5 @@
+<#import "../lib/utils.ftl" as utils>
+
 <html>
 	<body>
 		<div>
@@ -52,6 +54,16 @@
 										</td>
 									</tr>
 								</#if>
+                                <#if model.success>
+                                    <tr>
+                                        <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
+                                        ${i18n(i18nKey.DROP_EMAIL_FILE_LENGHT)}
+                                        </td>
+                                        <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
+                                            <@utils.readableFileSize size=model.fileLength/>
+                                        </td>
+                                    </tr>
+                                </#if>
 								<tr>
 									<td style="padding:0 1em 10px 0; font-family:Arial,Sans-serif;font-size:13px;color:#666" valign="top">
 										${i18n(i18nKey.DROP_EMAIL_STATUS)}

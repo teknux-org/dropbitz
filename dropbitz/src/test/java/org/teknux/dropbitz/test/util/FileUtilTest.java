@@ -31,6 +31,16 @@ import org.teknux.dropbitz.util.FileUtil;
 
 public class FileUtilTest {
 
+    @Test
+    public void formatSizeTest() {
+        Assert.assertEquals(FileUtil.formatSize(0L), "0");
+        Assert.assertEquals(FileUtil.formatSize(1L), "1 B");
+        Assert.assertEquals(FileUtil.formatSize(1024L), "1 KB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L), "1 MB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L), "1 GB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L*1024L), "1 TB");
+    }
+
     @Test 
     public void test01getFile() throws IOException {
         if (! isWindowsOs()) {
