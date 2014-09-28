@@ -62,9 +62,9 @@ public class FileUtil {
 
     /**
      * Utility method to format a given size in Byte to a human readable format.
-     * 1 ==> "1 B";
-     * 1024 ==> "1 KiB";
-     * 2537253 ==> "2.3 MiB"
+     * 1 : "1 B"
+     * 1024 : "1 KiB"
+     * 2537253 : "2.3 MiB"
      *
      * @param sizeInByte
      * @return
