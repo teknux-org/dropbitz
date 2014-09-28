@@ -5,7 +5,7 @@ DropBitz - Community Edition
 
 Share files securely with your customers directly on your network !
 
-[ ![Download](https://api.bintray.com/packages/teknux/DropBitz-CE/Dropbitz/images/download.png) ](https://bintray.com/teknux/DropBitz-CE/Dropbitz/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/teknux/DropBitz-CE/Dropbitz/images/download.svg) ](https://bintray.com/teknux/DropBitz-CE/Dropbitz/_latestVersion)
 
 ### Description
 
