@@ -35,10 +35,10 @@ public class FileUtilTest {
     public void formatSizeTest() {
         Assert.assertEquals(FileUtil.formatSize(0L), "0");
         Assert.assertEquals(FileUtil.formatSize(1L), "1 B");
-        Assert.assertEquals(FileUtil.formatSize(1024L), "1 KB");
-        Assert.assertEquals(FileUtil.formatSize(1024L*1024L), "1 MB");
-        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L), "1 GB");
-        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L*1024L), "1 TB");
+        Assert.assertEquals(FileUtil.formatSize(1024L), "1 KiB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L), "1 MiB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L), "1 GiB");
+        Assert.assertEquals(FileUtil.formatSize(1024L*1024L*1024L*1024L), "1 TiB");
     }
 
     @Test 
