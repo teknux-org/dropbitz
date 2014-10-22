@@ -31,20 +31,22 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import java.net.URISyntaxException;
 
 
 @Path(Route.INDEX)
+@Produces({ MediaType.TEXT_HTML })
 public class LoginController extends AbstractController {
 
 	public static final String SESSION_ATTRIBUTE_ERROR_MESSAGE = "ERROR_MESSAGE";
-	private AuthenticationHelper authenticationHelper;
-
+	
 	public LoginController() {
-		authenticationHelper = new AuthenticationHelper();
 	}
 
 	@GET
@@ -56,7 +58,7 @@ public class LoginController extends AbstractController {
 	@GET
 	@Path(Route.LOGOUT)
 	public Response logout() throws URISyntaxException {
-		authenticationHelper.logout(getHttpServletRequest());
+	    AuthenticationHelper.logout(getHttpServletRequest());
 		return Response.seeOther(uri(Route.INDEX)).build();
 	}
 

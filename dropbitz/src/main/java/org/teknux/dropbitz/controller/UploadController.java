@@ -60,6 +60,7 @@ import org.teknux.dropbitz.util.FileUtil;
 import org.teknux.dropbitz.util.I18nUtil;
 
 @Path(Route.UPLOAD)
+@Produces({ MediaType.TEXT_HTML })
 public class UploadController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(UploadController.class);

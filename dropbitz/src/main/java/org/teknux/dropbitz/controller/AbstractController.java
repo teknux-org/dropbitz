@@ -67,8 +67,7 @@ abstract public class AbstractController {
     }
     
     protected Auth getAuth() {
-        AuthenticationHelper authenticationHelper = new AuthenticationHelper();
-        return authenticationHelper.getAuth(getHttpServletRequest());
+        return AuthenticationHelper.getAuth(getHttpServletRequest());
     }
 
     protected IServiceManager getServiceManager() {

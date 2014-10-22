@@ -27,16 +27,6 @@ import java.util.List;
 
 public class AuthHelper extends AbstractHelper {
 
-    private AuthenticationHelper authenticationHelper;
-
-    public AuthHelper() {
-        this(new AuthenticationHelper());
-    }
-
-    public AuthHelper(AuthenticationHelper authenticationHelper) {
-        this.authenticationHelper = authenticationHelper;
-    }
-
     @Override
     public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException {
         if (arguments.size() != 0) {
@@ -50,6 +40,6 @@ public class AuthHelper extends AbstractHelper {
             throw new TemplateModelException("Can not get HttpServletRequest");
         }
 
-        return authenticationHelper.getAuth(httpServletRequest);
+        return AuthenticationHelper.getAuth(httpServletRequest);
     }
 }
