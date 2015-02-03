@@ -18,11 +18,9 @@
 
 package org.teknux.dropbitz;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.classic.util.ContextInitializer;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
+import java.net.URL;
+import java.text.MessageFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -35,8 +33,12 @@ import org.teknux.jettybootstrap.JettyBootstrapException;
 import org.teknux.jettybootstrap.configuration.JettyConfiguration;
 import org.teknux.jettybootstrap.configuration.JettyConnector;
 
-import java.net.URL;
-import java.text.MessageFormat;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.util.ContextInitializer;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
+
 
 public class Application {
 
@@ -116,6 +118,9 @@ public class Application {
             logger.debug("Validating application configuration...");
             checkConfiguration(Application.configuration);
 
+            logger.debug("Init Temporary Directory...");
+            initTempDirectory();
+
             logger.debug("Init Server...");
             initServer();
 
@@ -176,6 +181,15 @@ public class Application {
     }
 
     /**
+     * Initialize the application temporary directory.
+     */
+    private void initTempDirectory() {
+        if (getConfiguration().getTemporaryDirectory() != null) {
+            System.setProperty("java.io.tmpdir", getConfiguration().getTemporaryDirectory().getPath());
+        }
+    }
+
+    /**
      * Check configuration
      *
      * @param configuration
@@ -186,6 +200,10 @@ public class Application {
     protected void checkConfiguration(Configuration configuration) throws ConfigurationValidationException {
         if (!configuration.getDirectory().isDirectory() || !configuration.getDirectory().canWrite()) {
             throw new ConfigurationValidationException(MessageFormat.format("Can not write into Upload Directory : [{0}]", configuration.getDirectory().getPath()));
+        }
+
+        if (configuration.getTemporaryDirectory() != null && (!configuration.getTemporaryDirectory().isDirectory() || !configuration.getTemporaryDirectory().canWrite())) {
+            throw new ConfigurationValidationException(MessageFormat.format("Can not write into Temporary Directory : [{0}]", configuration.getTemporaryDirectory().getPath()));
         }
     }
 
