@@ -1,5 +1,4 @@
 <#import "../lib/utils.ftl" as utils>
-
 ${i18n(i18nKey.DROP_EMAIL_INFO)}
 
 - ${i18n(i18nKey.DROP_EMAIL_NAME)} : ${model.name}

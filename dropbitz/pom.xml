@@ -4,7 +4,7 @@
 
 	<groupId>org.teknux</groupId>
 	<artifactId>dropbitz</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2-SNAPSHOT</version>
 
 	<name>Dropbitz</name>
 	<url>http://www.dropbitz.com</url>

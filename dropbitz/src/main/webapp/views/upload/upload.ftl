@@ -1,5 +1,4 @@
 <#import "/views/layout/layout.ftl" as layout>
-
 <@layout.layout>
 	<link href="${url("/static/lib/dropzone/dropzone.css")}" rel="stylesheet" type="text/css"/>
 	<link href="${url("/static/css/drop.css")}" rel="stylesheet" type="text/css"/>

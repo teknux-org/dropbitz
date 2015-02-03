@@ -1,5 +1,4 @@
 <#import "../lib/utils.ftl" as utils>
-
 <html>
 	<body>
 		<div>
