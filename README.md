@@ -1,8 +1,6 @@
 DropBitz - Community Edition
 ========
 
-[![Build Status](https://drone.io/github.com/teknux-org/dropbitz/status.png)](https://drone.io/github.com/teknux-org/dropbitz/latest)
-
 Share files securely with your customers directly on your network !
 
 [ ![Download](https://api.bintray.com/packages/teknux/DropBitz-CE/Dropbitz/images/download.svg) ](https://bintray.com/teknux/DropBitz-CE/Dropbitz/_latestVersion)
